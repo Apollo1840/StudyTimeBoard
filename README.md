@@ -11,5 +11,7 @@ then add the client_email to the share list of the `record_study_time` on cloud.
 
 
 
-## How to build web app
+## reference: How to build web app
 https://www.freecodecamp.org/news/how-to-build-a-web-application-using-flask-and-deploy-it-to-the-cloud-3551c985e492/
+
+https://dev.to/techparida/how-to-deploy-a-flask-app-on-heroku-heb (recommended by DiQing Chang [https://github.com/changdiqing])

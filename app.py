@@ -20,7 +20,7 @@ def demo():
     bar_chart_folder = os.path.dirname(PATH_TO_BARCHART)
     if os.path.exists(bar_chart_folder):
         shutil.rmtree(bar_chart_folder)
-    os.mkdir(os.path.dirname(PATH_TO_BARCHART))
+    os.makedirs(os.path.dirname(PATH_TO_BARCHART))
 
     # add datetime time to avoid read from cache
     chart_name, img_format = os.path.split(PATH_TO_BARCHART)[1].split(".")
@@ -33,6 +33,6 @@ def demo():
 
 
 if __name__ == '__main__':
-    app.run(host='192.168.178.51', port=5555)
+    app.run(host='0.0.0.0', port=5555)
 
 
