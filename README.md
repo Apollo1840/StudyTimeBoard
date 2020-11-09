@@ -10,6 +10,12 @@ to get the `client_secret.json` and put it in `./utils/creds`.
 then add the client_email to the share list of the `record_study_time` on cloud.
 
 
+## live demo
+
+Use your browser, go to https://studyboard.herokuapp.com/.
+
+Ask the author to get editing permits to the data sheet.
+
 
 ## reference: How to build web app
 https://www.freecodecamp.org/news/how-to-build-a-web-application-using-flask-and-deploy-it-to-the-cloud-3551c985e492/
