@@ -1,0 +1,8 @@
+flask==1.1.2
+pandas
+matplotlib
+gunicorn
+
+seaborn
+gspread
+oauth2client
