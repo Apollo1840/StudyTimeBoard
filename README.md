@@ -14,7 +14,7 @@ then add the client_email to the share list of the `record_study_time` on cloud.
 
 Use your browser, go to https://studyboard.herokuapp.com/.
 
-Ask the author to get editing permits to the data sheet.
+Ask the author to get editing permits to the data sheet (`record_study_time` on cloud).
 
 
 ## reference: How to build web app
