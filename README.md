@@ -12,7 +12,7 @@ then add the client_email to the share list of the `record_study_time` on cloud.
 
 ## live demo
 
-Use your browser, go to https://studyboard.herokuapp.com/.
+Use your browser, go to https://study-time-board.herokuapp.com/.
 
 Ask the author to get editing permits to the data sheet (`record_study_time` on cloud).
 
