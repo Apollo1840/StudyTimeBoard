@@ -4,12 +4,21 @@ This is the server of the study-time-board web app.
 
 ## For developers
 
-To develop this web app you should first follow the steps from：
+To debug your program locally you need to follow those steps:
 
-https://www.youtube.com/watch?v=w533wJuilao&ab_channel=JayMartMedia
+1. follow the steps from：
 
-to get the `client_secret.json` and put it in `./utils/creds`. 
-then add the client_email to the share list of the `record_study_time` on cloud.
+    https://www.youtube.com/watch?v=w533wJuilao&ab_channel=JayMartMedia
+
+    to get the `client_secret.json` and put it in `./utils/creds`. 
+
+
+2. Ask me to give you the access to this google sheet:
+    https://docs.google.com/spreadsheets/d/1FGoY2IrXavkyiRGZQkvTIgHwHmIrlohR-IDoQ5K4hw4/edit?usp=sharing
+    
+3. Add the "client_email" in `./utils/creds/client_secret.json` to the share list of that google sheet.
+
+Now you are ready to go.
 
 run:
 
@@ -22,7 +31,8 @@ to start a server locally. go to `http://0.0.0.0:5555/` to view the main page of
 
 Use your browser, go to https://study-time-board.herokuapp.com/.
 
-Ask the author to get editing permits to the data sheet (`record_study_time` on cloud).
+Ask the author to get editing permits to the data sheet 
+(`record_study_time` on cloud, url:  https://docs.google.com/spreadsheets/d/1FGoY2IrXavkyiRGZQkvTIgHwHmIrlohR-IDoQ5K4hw4/edit?usp=sharing).
 
 
 ## Reference: How to build web app
