@@ -16,7 +16,7 @@ To debug your program locally you need to follow those steps:
 2. Ask me to give you the access to this google sheet:
     https://docs.google.com/spreadsheets/d/1FGoY2IrXavkyiRGZQkvTIgHwHmIrlohR-IDoQ5K4hw4/edit?usp=sharing
     
-3. Add the "client_email" in `./utils/creds/client_secret.json` to the share list of that google sheet.
+3. Add the "client_email" in `./utils/creds/client_secret.json` to the share list of that googrm le sheet.
 
 Now you are ready to go.
 
@@ -26,6 +26,12 @@ run:
     python app.py
    
 to start a server locally. go to `http://0.0.0.0:5555/` to view the main page of thie web app.
+
+### todo:
+
+- add this_week time board and put it before the whole time board.
+- show the study king of today.
+- combine bootstrap (component-wise develop of the web app)
 
 ## Live demo
 
