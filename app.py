@@ -27,7 +27,10 @@ def main_page():
     new_chart_name = "{}_{}.{}".format(chart_name, datetime.now().strftime('%H_%M_%S'), img_format)
     path_to_chart = os.path.join(os.path.dirname(PATH_TO_BARCHART), new_chart_name)
 
+    # component 1: the bar chart
     df_r = plot_the_bar_chart(df, output_path=path_to_chart)
+
+    # component 2: name_winner and duration_str
     name_winner = list(df_r[NAME])[0]
     duration_str = min2duration_str(list(df_r[MINUTES])[0])
 

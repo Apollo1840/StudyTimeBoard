@@ -5,15 +5,13 @@ import matplotlib.pyplot as plt
 from constant import *
 
 
-def duration_in_mins(t_start, t_end):
-    t_start = datetime.strptime(str(t_start), "%H:%M")
-    t_end = datetime.strptime(str(t_end), "%H:%M")
-    return (t_end - t_start).seconds / 60
+def time_to_datetime(time):
+    return datetime.strptime(str(time), "%H:%M")
 
 
 def min2duration_str(minutes):
     duration_str = ""
-    hour = int(minutes//60)
+    hour = int(minutes // 60)
     min = int(minutes % 60)
 
     if hour != 0:
@@ -29,7 +27,13 @@ def min2duration_str(minutes):
 
 
 def plot_the_bar_chart(df, output_path="sample.png"):
-    df[MINUTES] = [duration_in_mins(t_start, t_end) for t_start, t_end in zip(df[START_TIME], df[END_TIME])]
+
+    # process the data table
+    df[START_TIME_DT] = df[START_TIME].apply(time_to_datetime)
+    df[END_TIME_DT] = df[END_TIME].apply(time_to_datetime)
+    df[MINUTES] = [(t_end - t_start).seconds / 60 for t_start, t_end in zip(df[START_TIME_DT], df[END_TIME_DT])]
+
+    # transfer it to plot-ready data table
     df_r = df.groupby(NAME)[MINUTES].apply(sum)
     df_r = df_r.reset_index()
     df_r = df_r.sort_values(by=MINUTES, ascending=False)
@@ -41,5 +45,3 @@ def plot_the_bar_chart(df, output_path="sample.png"):
     fig.savefig(output_path)
 
     return df_r
-
-
