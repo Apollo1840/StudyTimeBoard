@@ -2,8 +2,10 @@
 
 {% block title %} Home {% endblock %}
 {% block body %}
-  <body>
 
+<body>
+
+  <!-- quote -->
   <div class="container">
     <blockquote class="blockquote text-right">
       <p class="mb-0">You only need 1000 hours of hard practice to master anything in the world.</p>
@@ -13,25 +15,30 @@
 
   <br />
 
+
+  <!-- honor display -->
   <div style="font-size: 200%;">
     <p> The leader of this board is:<b> {{ name_winner }}</b> (with {{duration_str}})</p>
   </div>
 
-    <div>
-      <img src={{path_to_chart}}>
-    </div>
 
-    <hr>
+  <!-- chart display -->
+  <div><img src={{path_to_chart}}></div>
 
-    <div>
+  <hr>
+
+
+  <!-- contacts -->
+  <div>
       <p> You are very welcome to join the the STB study group, please contact wechat: zoucongyu1109. </p>
         <a href="https://docs.google.com/spreadsheets/d/1FGoY2IrXavkyiRGZQkvTIgHwHmIrlohR-IDoQ5K4hw4/edit?usp=sharing">click here to edit the google data sheet</a>
       <p>You are very welcome to join the develop team of the StudyTimeBoard (this webapp), this is our repository:
         <a href="https://github.com/Apollo1840/StudyTimeBoard">https://github.com/Apollo1840/StudyTimeBoard</a>
       </p>
 
-    </div>
-  </body>
+  </div>
+
+</body>
 
 {% endblock %}
 
