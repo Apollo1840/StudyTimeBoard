@@ -40,5 +40,10 @@ def main_page():
                            duration_str=duration_str)
 
 
+@app.route('/About')
+def about_page():
+    return render_template('about.html')
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5555)
+    app.run(host='0.0.0.0', port=5555, debug=True)

@@ -1,24 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %} Home {% endblock %}
+{% block title %} About {% endblock %}
 {% block body %}
   <body>
 
-  <div class="container">
-    <blockquote class="blockquote text-right">
-      <p class="mb-0">You only need 1000 hours of hard practice to master anything in the world.</p>
-      <footer class="blockquote-footer">Gladwell's 1000 hours rule</footer>
-    </blockquote>
-  </div>
-
-  <br />
-
-  <div style="font-size: 200%;">
-    <p> The leader of this board is:<b> {{ name_winner }}</b> (with {{duration_str}})</p>
-  </div>
-
     <div>
-      <img src={{path_to_chart}}>
+      Author: Congyu Zou
     </div>
 
     <hr>
@@ -35,9 +22,10 @@
 
 {% endblock %}
 
+
 <script>
   $(document).ready(function(){
      $(".active").removeClass("active");
-     $("#nav-home").addClass("active");
+     $("#nav-about").addClass("active");
   });
 </script>
