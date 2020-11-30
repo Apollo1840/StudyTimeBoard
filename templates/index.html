@@ -5,7 +5,17 @@
 
 <body>
 
-  <!-- quote -->
+  <br />
+
+  <div style="font-size: 200%;">
+    <p> (NEW!) Leaderboard of the last week: </p>
+    <img src={{path_to_chart_last_week}}>
+  </div>
+
+  <br />
+
+
+    <!-- quote -->
   <div class="container">
     <blockquote class="blockquote text-right">
       <p class="mb-0">You only need 1000 hours of hard practice to master anything in the world.</p>
@@ -13,17 +23,16 @@
     </blockquote>
   </div>
 
-  <br />
-
 
   <!-- honor display -->
   <div style="font-size: 200%;">
+    <p> Leaderboard of the entire time: </p>
     <p> The leader of this board is:<b> {{ name_winner }}</b> (with {{duration_str}})</p>
   </div>
 
 
   <!-- chart display -->
-  <div><img src={{path_to_chart}}></div>
+  <div><img src={{path_to_chart_all}}></div>
 
   <hr>
 

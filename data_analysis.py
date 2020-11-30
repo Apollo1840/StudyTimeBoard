@@ -63,7 +63,7 @@ def df_eve2df_dur(df_eve):
             if row[ACT] == ACT_START:
                 studying_dict.update({row[NAME]: StudyEvent(start_time=row[TIME], name=row[NAME], date=row[DATE])})
 
-            else:   # row[ACT] == ACT_END  -> close a non.existed event
+            else:  # row[ACT] == ACT_END  -> close a non.existed event
                 study_event = StudyEvent(end_time=row[TIME])
                 dur.append((row[NAME], row[DATE], study_event.default_start_time, study_event.end_time))
 
@@ -91,22 +91,39 @@ def df_eve2df_dur(df_eve):
     return pd.DataFrame(dur, columns=[NAME, DATE, START_TIME, END_TIME])
 
 
-def plot_the_bar_chart(df, output_path="sample.png"):
-
-    # process the data table
+def preprocess_data(df):
     df[START_TIME_DT] = df[START_TIME].apply(time2datetime)
     df[END_TIME_DT] = df[END_TIME].apply(time2datetime)
     df[MINUTES] = [(t_end - t_start).seconds / 60 for t_start, t_end in zip(df[START_TIME_DT], df[END_TIME_DT])]
 
-    # transfer it to plot-ready data table
+    df[DATE_DT] = pd.to_datetime(df[DATE])
+
+    return df
+
+
+def to_minutes_leaderboard(df):
     df_r = df.groupby(NAME)[MINUTES].apply(sum)
     df_r = df_r.reset_index()
     df_r = df_r.sort_values(by=MINUTES, ascending=False)
 
+    return df_r
+
+
+def this_week_table(df):
+    d = datetime.today()
+    sun_offset = (d.weekday() - 6) % 7
+    last_sunday = d - timedelta(days=sun_offset)
+
+    last_sunday = pd.Timestamp(last_sunday)
+    filter_mask = df[DATE_DT] > last_sunday
+    filtered_df = df[filter_mask]
+
+    return filtered_df
+
+
+def plot_the_bar_chart(df, output_path="sample.png"):
     sns.set_style("darkgrid")
     fig = plt.figure(figsize=(10, 10))
-    sns.barplot(data=df_r, y=df_r[NAME], x=df_r[MINUTES])
+    sns.barplot(data=df, y=df[NAME], x=df[MINUTES])
     plt.title("The study time of the candidates (in minutes)")
     fig.savefig(output_path)
-
-    return df_r

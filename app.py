@@ -4,7 +4,7 @@ from datetime import datetime
 import shutil
 
 from utils.gsheet import GoogleSheet
-from data_analysis import plot_the_bar_chart, min2duration_str, merge_dur_eve
+from data_analysis import *
 from constant import *
 
 # in deploy_branch
@@ -20,6 +20,16 @@ def main_page():
     df_eve = gs.sheet(sheet_name=SHEET2, least_col_name=NAME)
     df = merge_dur_eve(df_dur, df_eve)
 
+    # process the data table
+    df_all = preprocess_data(df)
+
+    # transfer it to plot-ready data table
+    df_min_all = to_minutes_leaderboard(df_all)
+
+    df_last_week = this_week_table(df_all)
+
+    df_min_last_week = to_minutes_leaderboard(df_last_week)
+
     # rm the folder to avoid multiple rendering data explode
     bar_chart_folder = os.path.dirname(PATH_TO_BARCHART)
     if os.path.exists(bar_chart_folder):
@@ -29,17 +39,22 @@ def main_page():
     # add datetime time to avoid read from cache
     chart_name, img_format = os.path.split(PATH_TO_BARCHART)[1].split(".")
     new_chart_name = "{}_{}.{}".format(chart_name, datetime.now().strftime('%H_%M_%S'), img_format)
-    path_to_chart = os.path.join(os.path.dirname(PATH_TO_BARCHART), new_chart_name)
 
-    # component 1: the bar chart
-    df_r = plot_the_bar_chart(df, output_path=path_to_chart)
+    # component 1: the last week bar chart
+    path_to_chart_last_week = os.path.join(os.path.dirname(PATH_TO_BARCHART), "last_week_" + new_chart_name)
+    plot_the_bar_chart(df_min_last_week, output_path=path_to_chart_last_week)
 
-    # component 2: name_winner and duration_str
-    name_winner = list(df_r[NAME])[0]
-    duration_str = min2duration_str(list(df_r[MINUTES])[0])
+    # component 2: the bar chart
+    path_to_chart_all = os.path.join(os.path.dirname(PATH_TO_BARCHART), "all_" + new_chart_name)
+    plot_the_bar_chart(df_min_all, output_path=path_to_chart_all)
+
+    # component 3: name_winner and duration_str
+    name_winner = list(df_min_all[NAME])[0]
+    duration_str = min2duration_str(list(df_min_all[MINUTES])[0])
 
     return render_template('index.html',
-                           path_to_chart=path_to_chart,
+                           path_to_chart_last_week=path_to_chart_last_week,
+                           path_to_chart_all=path_to_chart_all,
                            name_winner=name_winner,
                            duration_str=duration_str)
 
