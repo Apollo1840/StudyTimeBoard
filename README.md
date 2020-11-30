@@ -30,7 +30,6 @@ to start a server locally. go to `http://0.0.0.0:5555/` to view the main page of
 ### todo:
 
 - add some content for personal analysis.
-- add this_week time board and put it before the whole time board.
 - show the study king of today.
 - use Database software to check updates then update the charts regularly, instead of tigered by visit the web.
 
