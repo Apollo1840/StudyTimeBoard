@@ -1,12 +1,17 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import seaborn as sns
+import pandas as pd
 import matplotlib.pyplot as plt
 
 from constant import *
 
 
-def time_to_datetime(time):
+def time2datetime(time: str):
     return datetime.strptime(str(time), "%H:%M")
+
+
+def datetime2time(time: datetime.time):
+    return datetime.strftime(time, "%H:%M")
 
 
 def min2duration_str(minutes):
@@ -26,11 +31,71 @@ def min2duration_str(minutes):
     return duration_str
 
 
+def merge_dur_eve(df_dur, df_eve):
+    df_dur2 = df_eve2df_dur(df_eve)
+    return pd.concat([df_dur, df_dur2])
+
+
+class StudyEvent:
+
+    def __init__(self, start_time: str = None, end_time: str = None, name=None, date=None):
+        self.start_time = start_time
+        self.end_time = end_time
+        self.name = name
+        self.date = date
+
+    @property
+    def default_end_time(self):
+        return datetime2time(time2datetime(self.start_time) + timedelta(minutes=30))
+
+    @property
+    def default_start_time(self):
+        return datetime2time(time2datetime(self.end_time) - timedelta(minutes=30))
+
+
+def df_eve2df_dur(df_eve):
+    dur = []  # tuple of (name, date, start_time, end_time)
+
+    studying_dict = {}  # name: Study_event
+    for _, row in df_eve.iterrows():
+        if row[NAME] not in studying_dict:
+            # expect to be act_start
+            if row[ACT] == ACT_START:
+                studying_dict.update({row[NAME]: StudyEvent(start_time=row[TIME], name=row[NAME], date=row[DATE])})
+
+            else:   # row[ACT] == ACT_END  -> close a non.existed event
+                study_event = StudyEvent(end_time=row[TIME])
+                dur.append((row[NAME], row[DATE], study_event.default_start_time, study_event.end_time))
+
+        else:  # row[NAME] in studying_dict
+            study_event: StudyEvent = studying_dict[row[NAME]]
+
+            # expect to be act_end
+            if row[ACT] == ACT_END:
+                study_event.end_time = row[TIME]
+
+                # assert study_event.date == row[DATE]
+                dur.append((study_event.name, study_event.date, study_event.start_time, study_event.end_time))
+                studying_dict.pop(study_event.name)
+
+            else:  # row[ACT] == ACT_START  -> a new event on a not-closed event
+
+                # assert study_event.date == row[DATE]
+                dur.append((study_event.name, study_event.date, study_event.start_time, study_event.default_end_time))
+                studying_dict.update({row[NAME]: StudyEvent(start_time=row[TIME], name=row[NAME], date=row[DATE])})
+
+    for study_event in studying_dict.values():
+        if study_event.end_time is None:
+            dur.append((study_event.name, study_event.date, study_event.start_time, study_event.default_end_time))
+
+    return pd.DataFrame(dur, columns=[NAME, DATE, START_TIME, END_TIME])
+
+
 def plot_the_bar_chart(df, output_path="sample.png"):
 
     # process the data table
-    df[START_TIME_DT] = df[START_TIME].apply(time_to_datetime)
-    df[END_TIME_DT] = df[END_TIME].apply(time_to_datetime)
+    df[START_TIME_DT] = df[START_TIME].apply(time2datetime)
+    df[END_TIME_DT] = df[END_TIME].apply(time2datetime)
     df[MINUTES] = [(t_end - t_start).seconds / 60 for t_start, t_end in zip(df[START_TIME_DT], df[END_TIME_DT])]
 
     # transfer it to plot-ready data table

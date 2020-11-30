@@ -3,8 +3,8 @@ import os
 from datetime import datetime
 import shutil
 
-from utils.gsheet import gs_read_excel
-from data_analysis import plot_the_bar_chart, min2duration_str
+from utils.gsheet import GoogleSheet
+from data_analysis import plot_the_bar_chart, min2duration_str, merge_dur_eve
 from constant import *
 
 # in deploy_branch
@@ -14,7 +14,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def main_page():
-    df = gs_read_excel(STUDY_TIME_TABLE_NAME, least_col_name=START_TIME)
+
+    gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
+    df_dur = gs.sheet(sheet_name=SHEET1, least_col_name=START_TIME)
+    df_eve = gs.sheet(sheet_name=SHEET2, least_col_name=NAME)
+    df = merge_dur_eve(df_dur, df_eve)
 
     # rm the folder to avoid multiple rendering data explode
     bar_chart_folder = os.path.dirname(PATH_TO_BARCHART)
