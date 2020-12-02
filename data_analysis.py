@@ -4,31 +4,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from constant import *
+from data_utils import *
 
 
-def time2datetime(time: str):
-    return datetime.strptime(str(time), "%H:%M")
+def preprocess_data(df):
+    df[START_TIME_DT] = df[START_TIME].apply(time2datetime)
+    df[END_TIME_DT] = df[END_TIME].apply(time2datetime)
+    df[MINUTES] = [(t_end - t_start).seconds / 60 for t_start, t_end in zip(df[START_TIME_DT], df[END_TIME_DT])]
 
+    df[DATE_DT] = pd.to_datetime(df[DATE])
 
-def datetime2time(time: datetime.time):
-    return datetime.strftime(time, "%H:%M")
-
-
-def min2duration_str(minutes):
-    duration_str = ""
-    hour = int(minutes // 60)
-    min = int(minutes % 60)
-
-    if hour != 0:
-        if hour == 1:
-            duration_str += "1 hour"
-        else:
-            duration_str += "{} hours".format(hour)
-
-    if min != 0:
-        duration_str += " {} minutes".format(min)
-
-    return duration_str
+    return df
 
 
 def merge_dur_eve(df_dur, df_eve):
@@ -91,17 +77,13 @@ def df_eve2df_dur(df_eve):
     return pd.DataFrame(dur, columns=[NAME, DATE, START_TIME, END_TIME])
 
 
-def preprocess_data(df):
-    df[START_TIME_DT] = df[START_TIME].apply(time2datetime)
-    df[END_TIME_DT] = df[END_TIME].apply(time2datetime)
-    df[MINUTES] = [(t_end - t_start).seconds / 60 for t_start, t_end in zip(df[START_TIME_DT], df[END_TIME_DT])]
-
-    df[DATE_DT] = pd.to_datetime(df[DATE])
-
-    return df
-
-
 def to_minutes_leaderboard(df):
+    """
+
+    :param df:
+    :return:
+    """
+
     df_r = df.groupby(NAME)[MINUTES].apply(sum)
     df_r = df_r.reset_index()
     df_r = df_r.sort_values(by=MINUTES, ascending=False)
@@ -109,7 +91,14 @@ def to_minutes_leaderboard(df):
     return df_r
 
 
-def this_week_table(df):
+def to_this_week_table(df):
+    """
+
+
+    :param df:
+    :return:
+    """
+
     d = datetime.today()
     sun_offset = (d.weekday() - 6) % 7
     last_sunday = d - timedelta(days=sun_offset)
@@ -119,6 +108,31 @@ def this_week_table(df):
     filtered_df = df[filter_mask]
 
     return filtered_df
+
+
+def to_personal_analysis_table(df, name):
+    """
+
+    :param df:
+    :param name:
+    :return:
+    """
+
+    df_r = df.loc[df[NAME] == name, :]
+    df_r = df_r.groupby(DATE)[MINUTES].apply(sum)
+    df_r = df_r.reset_index()
+    return df_r
+
+
+# visualization
+
+def plot_hours_per_day(df, output_path="sample.png", **plot_kwargs):
+    fig = plt.figure(figsize=(10, 10))
+    sns.barplot(y=DATE, x=MINUTES, data=df, **plot_kwargs)
+    plt.axvline(x=8*60, color="r", ls=":")
+
+    plt.title("The study time of every day")
+    fig.savefig(output_path)
 
 
 def plot_the_bar_chart(df, output_path="sample.png"):
