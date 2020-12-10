@@ -19,5 +19,6 @@ ACT_END = "hold"
 TIME = "time"
 
 MINUTES = "minutes"
+WEEKDAY = "weekday"
 
 PATH_TO_BARCHART = "./static/charts/barchart.png"

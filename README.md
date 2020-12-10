@@ -28,11 +28,19 @@ run:
 to start a server locally. go to `http://0.0.0.0:5555/` to view the main page of thie web app.
 
 ### todo:
-
 - add some content for personal analysis.
 - show the study king of today.
 - use Database software to check updates then update the charts regularly, instead of tigered by visit the web.
 
+
+### outlook:
+- new way to record time
+- gamefication
+- join study group to see group leadboard.
+- study time can earn study-coin
+- study zone (decoration use study-coin)
+- earn study-coin with group
+- visit others study zone
 
 ## Live demo
 

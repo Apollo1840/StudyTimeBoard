@@ -2,6 +2,9 @@ from datetime import datetime, timedelta
 import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.dates import DateFormatter
+from matplotlib.dates import HourLocator
+plt.style.use("seaborn")
 
 from constant import *
 from data_utils import *
@@ -13,6 +16,7 @@ def preprocess_data(df):
     df[MINUTES] = [(t_end - t_start).seconds / 60 for t_start, t_end in zip(df[START_TIME_DT], df[END_TIME_DT])]
 
     df[DATE_DT] = pd.to_datetime(df[DATE])
+    df[WEEKDAY] = df[DATE_DT].dt.day_name()
 
     return df
 
@@ -110,17 +114,19 @@ def to_this_week_table(df):
     return filtered_df
 
 
-def to_personal_analysis_table(df, name):
+def to_minutes_by_day_table(df):
     """
 
     :param df:
-    :param name:
     :return:
     """
 
-    df_r = df.loc[df[NAME] == name, :]
-    df_r = df_r.groupby(DATE)[MINUTES].apply(sum)
+    df_r = df.groupby(DATE)[MINUTES].apply(sum)
     df_r = df_r.reset_index()
+
+    # df_r[DATE_DT] = pd.to_datetime(df_r[DATE])
+    # df_r[WEEKDAY] = df_r[DATE_DT].dt.week
+
     return df_r
 
 
@@ -140,4 +146,29 @@ def plot_the_bar_chart(df, output_path="sample.png"):
     fig = plt.figure(figsize=(10, 10))
     sns.barplot(data=df, y=df[NAME], x=df[MINUTES])
     plt.title("The study time of the candidates (in minutes)")
+    fig.savefig(output_path)
+
+
+def plot_study_events(df, output_path="sample.png"):
+    date = df[DATE].tolist()
+    ts = df[START_TIME_DT].tolist()
+    te = df[END_TIME_DT].tolist()
+
+    fig = plt.figure(figsize=(15, 15))
+    ax = plt.subplot()
+
+    for i in range(len(df)):
+        ax.plot([date[i], date[i]], [ts[i], te[i]], ".-", linewidth=20)
+
+    ax.yaxis.set_major_locator(HourLocator())
+    ax.yaxis.set_major_formatter(DateFormatter('%H:%M'))
+
+    plt.axhline(y=datetime.strptime("08:00", "%H:%M"), color="r", ls=":")
+    plt.axhline(y=datetime.strptime("12:30", "%H:%M"), color="r", ls=":")
+    plt.axhline(y=datetime.strptime("18:30", "%H:%M"), color="r", ls=":")
+
+    plt.ylim((datetime.strptime("00:00", "%H:%M"), datetime.strptime("23:59", "%H:%M")))
+    plt.gca().invert_yaxis()
+
+    plt.title("The study events of the candidates")
     fig.savefig(output_path)
