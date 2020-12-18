@@ -6,11 +6,13 @@ from matplotlib.dates import DateFormatter
 from matplotlib.dates import HourLocator
 plt.style.use("seaborn")
 
+from mpld3 import fig_to_html
+
 from constant import *
 from data_utils import *
 
 
-def preprocess_data(df):
+def add_analysis_columns(df):
     df[START_TIME_DT] = df[START_TIME].apply(time2datetime)
     df[END_TIME_DT] = df[END_TIME].apply(time2datetime)
     df[MINUTES] = [(t_end - t_start).seconds / 60 for t_start, t_end in zip(df[START_TIME_DT], df[END_TIME_DT])]
@@ -105,6 +107,7 @@ def to_this_week_table(df):
 
     d = datetime.today()
     sun_offset = (d.weekday() - 6) % 7
+    sun_offset = sun_offset if sun_offset != 0 else 7
     last_sunday = d - timedelta(days=sun_offset)
 
     last_sunday = pd.Timestamp(last_sunday)
@@ -144,9 +147,13 @@ def plot_hours_per_day(df, output_path="sample.png", **plot_kwargs):
 def plot_the_bar_chart(df, output_path="sample.png"):
     sns.set_style("darkgrid")
     fig = plt.figure(figsize=(10, 10))
-    sns.barplot(data=df, y=df[NAME], x=df[MINUTES])
+
+    if df.shape[0] > 0:
+        sns.barplot(data=df, y=NAME, x=MINUTES)
+
     plt.title("The study time of the candidates (in minutes)")
     fig.savefig(output_path)
+    # return fig_to_html(fig)
 
 
 def plot_study_events(df, output_path="sample.png"):
@@ -154,11 +161,11 @@ def plot_study_events(df, output_path="sample.png"):
     ts = df[START_TIME_DT].tolist()
     te = df[END_TIME_DT].tolist()
 
-    fig = plt.figure(figsize=(15, 15))
+    fig = plt.figure(figsize=(10, 10))
     ax = plt.subplot()
 
     for i in range(len(df)):
-        ax.plot([date[i], date[i]], [ts[i], te[i]], ".-", linewidth=20)
+        ax.plot([date[i], date[i]], [ts[i], te[i]], ".-", linewidth=15)
 
     ax.yaxis.set_major_locator(HourLocator())
     ax.yaxis.set_major_formatter(DateFormatter('%H:%M'))
@@ -167,8 +174,9 @@ def plot_study_events(df, output_path="sample.png"):
     plt.axhline(y=datetime.strptime("12:30", "%H:%M"), color="r", ls=":")
     plt.axhline(y=datetime.strptime("18:30", "%H:%M"), color="r", ls=":")
 
+    plt.xticks(rotation=45)
     plt.ylim((datetime.strptime("00:00", "%H:%M"), datetime.strptime("23:59", "%H:%M")))
     plt.gca().invert_yaxis()
 
-    plt.title("The study events of the candidates")
+    plt.title("The study events of the candidate")
     fig.savefig(output_path)

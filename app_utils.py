@@ -25,7 +25,10 @@ def get_the_basic_dataframe():
     df = merge_dur_eve(df_dur, df_eve)
 
     # process the data table
-    df_all = preprocess_data(df)
+    df_all = add_analysis_columns(df)
+
+    df_all = df_all.sort_values(by=DATE_DT)
+
     return df_all
 
 
