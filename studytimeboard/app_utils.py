@@ -1,16 +1,16 @@
 import os
 import shutil
 
-from utils.gsheet import GoogleSheet
-from constant import *
-from data_analysis import *
+from .constant import *
+from .data_analysis import *
+from .utils.gsheet import GoogleSheet
 
 
 def clean_chart_folder():
-    bar_chart_folder = os.path.dirname(PATH_TO_BARCHART)
+    bar_chart_folder = os.path.dirname(os.path.join(APP_PATH, PATH_TO_BARCHART))
     if os.path.exists(bar_chart_folder):
         shutil.rmtree(bar_chart_folder)
-    os.makedirs(os.path.dirname(PATH_TO_BARCHART))
+    os.makedirs(bar_chart_folder)
 
 
 def get_the_basic_dataframe():

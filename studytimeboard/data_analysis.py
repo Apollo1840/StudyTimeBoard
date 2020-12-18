@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 import seaborn as sns
 import pandas as pd
@@ -8,8 +9,8 @@ plt.style.use("seaborn")
 
 from mpld3 import fig_to_html
 
-from constant import *
-from data_utils import *
+from .constant import *
+from .utils.data_utils import *
 
 
 def add_analysis_columns(df):
@@ -141,7 +142,7 @@ def plot_hours_per_day(df, output_path="sample.png", **plot_kwargs):
     plt.axvline(x=8*60, color="r", ls=":")
 
     plt.title("The study time of every day")
-    fig.savefig(output_path)
+    fig.savefig(os.path.join(APP_PATH, output_path))
 
 
 def plot_the_bar_chart(df, output_path="sample.png"):
@@ -152,7 +153,7 @@ def plot_the_bar_chart(df, output_path="sample.png"):
         sns.barplot(data=df, y=NAME, x=MINUTES)
 
     plt.title("The study time of the candidates (in minutes)")
-    fig.savefig(output_path)
+    fig.savefig(os.path.join(APP_PATH, output_path))
     # return fig_to_html(fig)
 
 
@@ -179,4 +180,4 @@ def plot_study_events(df, output_path="sample.png"):
     plt.gca().invert_yaxis()
 
     plt.title("The study events of the candidate")
-    fig.savefig(output_path)
+    fig.savefig(os.path.join(APP_PATH, output_path))

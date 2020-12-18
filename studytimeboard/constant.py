@@ -1,7 +1,11 @@
+APP_PATH = "./studytimeboard"
+
 STUDY_TIME_TABLE_NAME = "record_study_time"
+
 
 SHEET1 = "duration"
 SHEET2 = "event"
+
 
 # sheet 1 columns
 NAME = "name"
@@ -21,4 +25,4 @@ TIME = "time"
 MINUTES = "minutes"
 WEEKDAY = "weekday"
 
-PATH_TO_BARCHART = "./static/charts/barchart.png"
+PATH_TO_BARCHART = "static/charts/barchart.png"
