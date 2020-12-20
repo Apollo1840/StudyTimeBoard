@@ -8,11 +8,18 @@ from datetime import datetime
 from .app_utils import *
 from .constant import *
 
-
 app = Flask(__name__)
 
-@app.route('/')
+
+@app.route('/', methods=["GET", "POST"])
 def main_page():
+
+    # handle the time input
+    if request.method == "POST":
+        if request.form.get("username") in REGISTED_USERS:
+            parse_request_to_db(request)
+
+    # show the charts:
 
     # rm the folder to avoid multiple rendering data explode
     clean_chart_folder()
@@ -24,8 +31,7 @@ def main_page():
     df_min_last_week = to_minutes_leaderboard(to_this_week_table(df_all))
 
     # add datetime time: for nothing, if we already remove the chart folder
-    chart_name, img_format = os.path.split(PATH_TO_BARCHART)[1].split(".")
-    new_chart_name = "{}_{}.{}".format(chart_name, datetime.now().strftime('%H_%M_%S'), img_format)
+    new_chart_name = extract_chartname_addtime(PATH_TO_BARCHART)
 
     # component 1: the last week bar chart
     path_to_chart_last_week = os.path.join(os.path.dirname(PATH_TO_BARCHART), "last_week_" + new_chart_name)
@@ -39,7 +45,7 @@ def main_page():
     name_winner = list(df_min_all[NAME])[0]
     duration_str = min2duration_str(list(df_min_all[MINUTES])[0])
 
-    return render_template('index.html',
+    return render_template('home.html',
                            path_to_chart_last_week=path_to_chart_last_week,
                            path_to_chart_all=path_to_chart_all,
                            name_winner=name_winner,
@@ -86,7 +92,3 @@ def personal_analysis_page():
         name_warning = "visibility: hidden"
 
     return render_template('personal_analysis_login.html', name_warning=name_warning)
-
-
-
-

@@ -4,6 +4,30 @@ import shutil
 from .constant import *
 from .data_analysis import *
 from .utils.gsheet import GoogleSheet
+from .utils.lcsheet import LocalSheet
+
+
+def parse_request_to_db(request):
+    if request.form.get("start_time") and request.form.get("end_time"):
+        # print(request.form.get("username"), request.form.get("start_time"), request.form.get("end_time"),)
+        LocalSheet.read_from(PATH_TO_LOCALDB).add_row(SHEET1, [
+            request.form.get("username"),
+            datetime2date(datetime.today()),
+            request.form.get("start_time"),
+            request.form.get("end_time"),
+        ])
+
+    elif "go" in request.form or "hold" in request.form:
+        # print(datetime.now())
+
+        act = "go" if "go" in request.form else "hold"
+
+        LocalSheet.read_from(PATH_TO_LOCALDB).add_row(SHEET2, [
+            request.form.get("username"),
+            act,
+            datetime2date(datetime.today()),
+            datetime2time(datetime.now()),
+        ])
 
 
 def clean_chart_folder():
@@ -22,7 +46,16 @@ def get_the_basic_dataframe():
     gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
     df_dur = gs.sheet(sheet_name=SHEET1, least_col_name=START_TIME)
     df_eve = gs.sheet(sheet_name=SHEET2, least_col_name=NAME)
+
     df = merge_dur_eve(df_dur, df_eve)
+
+    ls = LocalSheet.read_from(PATH_TO_LOCALDB)
+    df_dur = ls.sheet(sheet_name=SHEET1)
+    df_eve = ls.sheet(sheet_name=SHEET2)
+
+    df2 = merge_dur_eve(df_dur, df_eve)
+
+    df = pd.concat([df, df2])
 
     # process the data table
     df_all = add_analysis_columns(df)

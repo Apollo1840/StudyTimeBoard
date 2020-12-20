@@ -1,4 +1,5 @@
 APP_PATH = "./studytimeboard"
+PATH_TO_LOCALDB = "./studytimeboard/data/db"
 
 STUDY_TIME_TABLE_NAME = "record_study_time"
 
@@ -26,3 +27,21 @@ MINUTES = "minutes"
 WEEKDAY = "weekday"
 
 PATH_TO_BARCHART = "static/charts/barchart.png"
+
+
+REGISTED_USERS = [
+    "Congyu",
+    "Shangsu",
+    "Nia.Dai",
+    "Amber",
+    "LiuYang",
+    "Lanlan",
+    "L.path",
+    "Hanyu",
+    "Matcha",
+    "Chen Dong",
+    "Diqing",
+    "vivi",
+    "Vicky.Huang"
+]
+
