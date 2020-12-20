@@ -4,8 +4,6 @@ import shutil
 from .constant import *
 from .data_analysis import *
 from .utils.gsheet import GoogleSheet
-from .utils.lcsheet import LocalSheet
-
 
 def parse_request_to_db(request):
 
@@ -50,12 +48,6 @@ def get_the_basic_dataframe():
 
     df = merge_dur_eve(df_dur, df_eve)
 
-    # ls = LocalSheet.read_from(PATH_TO_LOCALDB)
-    # df_dur = ls.sheet(sheet_name=SHEET1)
-    # df_eve = ls.sheet(sheet_name=SHEET2)
-    # df2 = merge_dur_eve(df_dur, df_eve)
-    # df = pd.concat([df, df2])
-
     # process the data table
     df_all = add_analysis_columns(df)
 
@@ -83,41 +75,3 @@ def path_to_chart_user_study_events(username):
 
 def path_to_chart_user_min_by_day(username):
     return regular_chart_path(username + "_md")
-
-
-# depracated
-def initialize_db():
-    # initiate database
-    sheet_columns = {
-        SHEET1: [NAME, DATE, START_TIME, END_TIME],
-        SHEET2: [NAME, ACT, DATE, TIME]
-    }
-    for sheet_name in [SHEET1, SHEET2]:
-        path_df = os.path.join(PATH_TO_LOCALDB, sheet_name + ".csv")
-        if not os.path.exists(path_df):
-            df = pd.DataFrame(columns=sheet_columns[sheet_name])
-            df.to_csv(path_df, index=False)
-            print("initialize {}.csv".format(sheet_name))
-
-
-def parse_request_to_local_db(request):
-    if request.form.get("start_time") and request.form.get("end_time"):
-        # print(request.form.get("username"), request.form.get("start_time"), request.form.get("end_time"),)
-        LocalSheet.read_from(PATH_TO_LOCALDB).add_row(SHEET1, [
-            request.form.get("username"),
-            datetime2date(datetime.today()),
-            request.form.get("start_time"),
-            request.form.get("end_time"),
-        ])
-
-    elif "go" in request.form or "hold" in request.form:
-        # print(datetime.now())
-
-        act = "go" if "go" in request.form else "hold"
-
-        LocalSheet.read_from(PATH_TO_LOCALDB).add_row(SHEET2, [
-            request.form.get("username"),
-            act,
-            datetime2date(datetime.today()),
-            datetime2time(datetime.now()),
-        ])
