@@ -5,8 +5,8 @@ from .constant import *
 from .data_analysis import *
 from .utils.gsheet import GoogleSheet
 
-def parse_request_to_db(request):
 
+def parse_request_to_db(request):
     if request.form.get("start_time") and request.form.get("end_time"):
         # print(request.form.get("username"), request.form.get("start_time"), request.form.get("end_time"),)
         GoogleSheet.read_from(STUDY_TIME_TABLE_NAME).append_row(SHEET1, [

@@ -29,16 +29,16 @@ to start a server locally. go to `http://0.0.0.0:5555/` to view the main page of
 
 ### todo:
 - show the study king of today.
-- use Database software to check updates then update the charts regularly, instead of tigered by visit the web.
-
+- switch it to user-base web-app.
 
 ### outlook:
+- use Database software to check updates then update the charts regularly, instead of tigered by visit the web.
 - new way to record time
 - gamefication
 - join study group to see group leadboard.
 - study time can earn study-coin
-- study zone (decoration use study-coin)
-- earn study-coin with group
+- study zone (decoration using study-coin)
+- earn study-coin within group
 - visit others study zone
 
 ## Live demo

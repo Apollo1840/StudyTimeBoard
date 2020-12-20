@@ -137,7 +137,7 @@ def to_minutes_by_day_table(df):
 # visualization
 
 def plot_hours_per_day(df, output_path="sample.png", **plot_kwargs):
-    fig = plt.figure(figsize=(10, 10))
+    fig = plt.figure(figsize=(10, 8))
     sns.barplot(y=DATE, x=MINUTES, data=df, **plot_kwargs)
     plt.axvline(x=8*60, color="r", ls=":")
 
@@ -147,7 +147,7 @@ def plot_hours_per_day(df, output_path="sample.png", **plot_kwargs):
 
 def plot_the_bar_chart(df, output_path="sample.png"):
     sns.set_style("darkgrid")
-    fig = plt.figure(figsize=(10, 10))
+    fig = plt.figure(figsize=(10, 8))
 
     if df.shape[0] > 0:
         sns.barplot(data=df, y=NAME, x=MINUTES)
@@ -162,7 +162,7 @@ def plot_study_events(df, output_path="sample.png"):
     ts = df[START_TIME_DT].tolist()
     te = df[END_TIME_DT].tolist()
 
-    fig = plt.figure(figsize=(10, 10))
+    fig = plt.figure(figsize=(10, 8))
     ax = plt.subplot()
 
     for i in range(len(df)):
