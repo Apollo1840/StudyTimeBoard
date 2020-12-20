@@ -7,7 +7,7 @@ from matplotlib.dates import DateFormatter
 from matplotlib.dates import HourLocator
 plt.style.use("seaborn")
 
-from mpld3 import fig_to_html
+# from mpld3 import fig_to_html
 
 from .constant import *
 from .utils.data_utils import *

@@ -56,6 +56,10 @@ class GoogleSheet:
 
         return df
 
+    def append_row(self, sheet_name, row):
+        sheet = self.table.worksheet(sheet_name)
+        sheet.append_row(row)
+
     @staticmethod
     def clean_df_from_gsheet(df, least_col_name):
         df = df.loc[df[least_col_name] != "", :]

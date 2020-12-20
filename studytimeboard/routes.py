@@ -14,6 +14,8 @@ app = Flask(__name__)
 @app.route('/', methods=["GET", "POST"])
 def main_page():
 
+    initialize_db()
+
     # handle the time input
     if request.method == "POST":
         if request.form.get("username") in REGISTED_USERS:

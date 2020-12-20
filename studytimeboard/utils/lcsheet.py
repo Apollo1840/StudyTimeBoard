@@ -17,7 +17,7 @@ class LocalSheet:
 
         return df
 
-    def add_row(self, sheet_name, item):
+    def append_row(self, sheet_name, item):
         """
         for sheet1: [name, date, start_time, end_time]
         for sheet2: [name, act, date, time]
