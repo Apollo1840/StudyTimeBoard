@@ -13,7 +13,7 @@ To debug your program locally you need to follow those steps:
     to get the `client_secret.json` and put it in `./utils/creds`. 
 
 
-2. Ask me to give you the access to this google sheet:
+2. Ask me (github account: apollo1840) to give you the access to this google sheet:
     https://docs.google.com/spreadsheets/d/1FGoY2IrXavkyiRGZQkvTIgHwHmIrlohR-IDoQ5K4hw4/edit?usp=sharing
     
 3. Add the "client_email" in `./studytimeboard/utils/creds/client_secret.json` to the share list of that googrm le sheet.

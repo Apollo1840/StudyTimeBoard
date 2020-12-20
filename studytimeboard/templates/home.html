@@ -5,8 +5,30 @@
 
 <br/>
 
+<!-- quote -->
+<div class="row">
+    <div class="col-lg-6 mx-auto">
 
+        <!-- CUSTOM BLOCKQUOTE -->
+        <blockquote class="blockquote blockquote-custom bg-white p-5 shadow rounded">
+            <div class="blockquote-custom-icon bg-info shadow-sm"><i class="fa fa-quote-left text-white"></i></div>
+            <p class="mb-0 mt-2 font-italic">"You only need 1000 hours of hard practice to master anything in the world."</p>
+            <footer class="blockquote-footer pt-4 mt-4 border-top">Gladwell's
+                <cite title="Source Title">1000 hours rule</cite>
+            </footer>
+        </blockquote><!-- END -->
+
+    </div>
+</div>
+
+<br/>
+<br/>
+
+
+
+<!-- record form -->
 <form method="POST">
+    <p style="font-size: 200%;"> Record form: </p>
     <div class="jumbotron">
 
 
@@ -58,24 +80,26 @@
 
 </form>
 
+<br/>
+<br/>
+<br/>
+<br/>
+
+<!-- chart last week display -->
 
 <div style="font-size: 200%;">
-    <p> (NEW!) Leaderboard of the last week: </p>
-    <img src={{path_to_chart_last_week}}>
-    <!-- {{chart_html|safe}} -->
+    <p> Leaderboard of the last week: </p>
+    <div class="text-center">
+        <img src={{path_to_chart_last_week}} width="100%" height="100%">
+        <!-- {{chart_html|safe}} -->
+    </div>
 
 </div>
 
 <br/>
 
 
-<!-- quote -->
-<div class="container">
-    <blockquote class="blockquote text-right">
-        <p class="mb-0">You only need 1000 hours of hard practice to master anything in the world.</p>
-        <footer class="blockquote-footer">Gladwell's 1000 hours rule</footer>
-    </blockquote>
-</div>
+
 
 
 <!-- honor display -->
@@ -86,7 +110,9 @@
 
 
 <!-- chart display -->
-<div><img src={{path_to_chart_all}}></div>
+<div class="text-center">
+    <img src={{path_to_chart_all}} width="100%" height="200%">
+</div>
 
 <hr>
 
@@ -110,6 +136,7 @@
     $(".active").removeClass("active");
     $("#nav-home").addClass("active");
   });
+
 
 
 
