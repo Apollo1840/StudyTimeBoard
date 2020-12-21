@@ -1,9 +1,12 @@
 import os
 import shutil
+import pytz
 
 from .constant import *
 from .data_analysis import *
 from .utils.gsheet import GoogleSheet
+
+tz = pytz.timezone('Europe/Berlin')
 
 
 def parse_request_to_db(request):
@@ -11,7 +14,7 @@ def parse_request_to_db(request):
         # print(request.form.get("username"), request.form.get("start_time"), request.form.get("end_time"),)
         GoogleSheet.read_from(STUDY_TIME_TABLE_NAME).append_row(SHEET1, [
             request.form.get("username"),
-            datetime2date(datetime.today()),
+            datetime2date(datetime.now(tz)),
             request.form.get("start_time"),
             request.form.get("end_time"),
         ])
@@ -24,8 +27,8 @@ def parse_request_to_db(request):
         GoogleSheet.read_from(STUDY_TIME_TABLE_NAME).append_row(SHEET2, [
             request.form.get("username"),
             act,
-            datetime2date(datetime.today()),
-            datetime2time(datetime.now()),
+            datetime2date(datetime.now(tz)),
+            datetime2time(datetime.now(tz)),
         ])
 
 

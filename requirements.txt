@@ -2,6 +2,7 @@ flask==1.1.2
 pandas
 matplotlib
 gunicorn
+pytz
 
 seaborn
 gspread
