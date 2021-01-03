@@ -9,23 +9,25 @@ from .utils.gsheet import GoogleSheet
 tz = pytz.timezone('Europe/Berlin')
 
 
-def parse_request_to_db(request):
-    if request.form.get("start_time") and request.form.get("end_time"):
+def parse_request_to_db(request, username):
+    # NOTE! sometimes, username is not in the request
+
+    if request.form.get(START_TIME) and request.form.get(END_TIME):
         # print(request.form.get("username"), request.form.get("start_time"), request.form.get("end_time"),)
         GoogleSheet.read_from(STUDY_TIME_TABLE_NAME).append_row(SHEET1, [
-            request.form.get("username"),
+            username,
             datetime2date(datetime.now(tz)),
-            request.form.get("start_time"),
-            request.form.get("end_time"),
+            request.form.get(START_TIME),
+            request.form.get(END_TIME),
         ])
 
-    elif "go" in request.form or "hold" in request.form:
+    elif ACT_START in request.form or ACT_END in request.form:
         # print(datetime.now())
 
-        act = "go" if "go" in request.form else "hold"
+        act = ACT_START if ACT_START in request.form else ACT_END
 
         GoogleSheet.read_from(STUDY_TIME_TABLE_NAME).append_row(SHEET2, [
-            request.form.get("username"),
+            username,
             act,
             datetime2date(datetime.now(tz)),
             datetime2time(datetime.now(tz)),

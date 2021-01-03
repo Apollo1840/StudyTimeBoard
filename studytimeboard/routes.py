@@ -20,7 +20,7 @@ def home():
             username = request.form.get("username")
 
         if username in REGISTED_USERS:
-            parse_request_to_db(request)
+            parse_request_to_db(request, username)
 
     # show the charts:
 
