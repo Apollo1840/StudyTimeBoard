@@ -29,7 +29,8 @@ to start a server locally. go to `http://0.0.0.0:5555/` to view the main page of
 
 ### todo:
 - show the study king of today.
-- switch it to user-base web-app.
+- more leaderboards, eg. weekday king bar chart.
+- less information on the record form block, hover on question mark to see how to use.
 
 ### outlook:
 - use Database software to check updates then update the charts regularly, instead of tigered by visit the web.

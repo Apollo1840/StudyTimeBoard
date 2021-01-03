@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block title %} Leaderboard {% endblock %}
+{% block content %}
+
+<br/>
+
+<!-- chart last week display -->
+
+<div style="font-size: 120%;">
+    <p> Leaderboard of the last week: </p>
+    <div>
+        <p> The leader of this board is:<b> {{ name_winner_lastweek }}</b> (with {{duration_str_lastweek}})</p>
+    </div>
+    <div class="text-center">
+        <img src={{path_to_chart_last_week}} width="100%" height="100%">
+        <!-- {{chart_html|safe}} -->
+    </div>
+
+</div>
+
+
+
+<!-- chart display -->
+
+<div style="font-size: 120%;">
+    <p> Leaderboard of the entire time: </p>
+    <div>
+        <p> The leader of this board is:<b> {{ name_winner }}</b> (with {{duration_str}})</p>
+    </div>
+    <div class="text-center">
+        <img src={{path_to_chart_all}} width="100%" height="100%">
+        <!-- {{chart_html|safe}} -->
+    </div>
+
+</div>
+
+{% endblock %}
+
+<script>
+  $(document).ready(function () {
+    $(".active").removeClass("active");
+    $("#nav-home").addClass("active");
+  });
+</script>

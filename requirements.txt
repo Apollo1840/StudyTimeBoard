@@ -7,3 +7,4 @@ pytz
 seaborn
 gspread
 oauth2client
+Flask-Login
