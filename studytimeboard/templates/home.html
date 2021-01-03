@@ -31,14 +31,23 @@
     <p style="font-size: 200%;"> Record form: </p>
     <div class="jumbotron">
 
-
-        <div class="row">
-            <div class="input-group mb-5">
-                <div></div>
-                <input type="text" class="form-control" placeholder="Type here your username" name="username">
+        <!-- username row -->
+        {% if current_user.is_authenticated %}
+            <div class="row">
+                <p>Hi {{current_user.username}},
+                    record your study time,  then you can compete with others, or watch your analysis (right-top corner). </p>
             </div>
-        </div>
 
+        {% else %}
+            <div class="row">
+                <div class="input-group mb-5">
+                    <div></div>
+                    <input type="text" class="form-control" placeholder="Type here your username" name="username">
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- start end time row -->
         <div class="row">
             <div class="col input-group mb-5">
                 <div class="input-group-prepend">
@@ -62,7 +71,7 @@
 
         </div>
 
-
+        <!-- go hold row -->
         <div class="row">
 
             <div class="col text-center">

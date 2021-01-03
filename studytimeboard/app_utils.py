@@ -73,8 +73,10 @@ def regular_chart_path(chart_name):
 
 
 def path_to_chart_user_study_events(username):
+    username = username.replace(" ", "_")
     return regular_chart_path(username + "_se")
 
 
 def path_to_chart_user_min_by_day(username):
+    username = username.replace(" ", "_")
     return regular_chart_path(username + "_md")

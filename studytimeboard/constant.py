@@ -3,10 +3,8 @@ PATH_TO_LOCALDB = "./studytimeboard/data/db"
 
 STUDY_TIME_TABLE_NAME = "record_study_time"
 
-
 SHEET1 = "duration"
 SHEET2 = "event"
-
 
 # sheet 1 columns
 NAME = "name"
@@ -28,7 +26,6 @@ WEEKDAY = "weekday"
 
 PATH_TO_BARCHART = "static/charts/barchart.png"
 
-
 REGISTED_USERS = [
     "Congyu",
     "Shangsu",
@@ -38,10 +35,18 @@ REGISTED_USERS = [
     "Lanlan",
     "L.path",
     "Hanyu",
-    "Matcha",
+    "Ye Liu",
     "Chen Dong",
     "Diqing",
     "vivi",
     "Vicky.Huang"
 ]
 
+
+class FlashMessages:
+    NO_SUCH_USER = "Username not registered, please try another name or register one on the right top corner"
+
+    @staticmethod
+    def NO_SUCH_FUNC(function_name):
+        return 'Sorry, {} function is not open yet. ' \
+               'You are very welcome to join the develop team to speed up the process'.format(function_name)
