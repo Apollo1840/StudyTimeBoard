@@ -4,6 +4,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 
 # internal utils
 from .app_utils import *
+from .path_manager import *
 from .constant import *
 from studytimeboard import app, db
 from studytimeboard.models import User
@@ -12,7 +13,6 @@ from studytimeboard.models import User
 @app.route('/', methods=["GET", "POST"])
 @app.route("/home", methods=["GET", "POST"])
 def home():
-
     # 1. handle the time input
     if request.method == "POST":
         if current_user.is_authenticated:
@@ -23,22 +23,28 @@ def home():
         if username in REGISTED_USERS:
             parse_request_to_db(request, username, db)
 
-    # 2. show the last week chart:
-
     # rm the folder to avoid multiple rendering data explode
     clean_chart_folder()
 
-    # transfer it to plot-ready data table
+    # prepare the data
     df_last_week = to_this_week_table(get_the_basic_dataframe(db))
 
+    # 2. today's study king
+    today_king, duration_str_king, path_to_chart_king = info_today_study_king(df_last_week)
+
+    # 3. show the last week chart:
+
     # get display information
-    name_winner_lw, duration_str_lw, path_to_chart_lw = minutes_dashboard_info(df_last_week, chart_prefix="lastweek",
+    name_winner_lw, duration_str_lw, path_to_chart_lw = info_minutes_dashboard(df_last_week, chart_prefix="lastweek",
                                                                                sep_today=True)
 
     return render_template('home.html',
+                           path_to_chart_king=path_to_chart_king,
+                           today_king=today_king,
+                           duration_str_king=duration_str_king,
                            path_to_chart_lastweek=path_to_chart_lw,
                            name_winner=name_winner_lw,
-                           duration_str=duration_str_lw)
+                           duration_str_winner=duration_str_lw)
 
 
 @app.route("/leaderboard")
@@ -52,8 +58,8 @@ def leaderboard():
     df_last_week = to_this_week_table(df_all)
 
     # get display information
-    name_winner_al, duration_str_al, path_to_chart_al = minutes_dashboard_info(df_all, chart_prefix="all")
-    name_winner_lw, duration_str_lw, path_to_chart_lw = minutes_dashboard_info(df_last_week, chart_prefix="lastweek")
+    name_winner_al, duration_str_al, path_to_chart_al = info_minutes_dashboard(df_all, chart_prefix="all")
+    name_winner_lw, duration_str_lw, path_to_chart_lw = info_minutes_dashboard(df_last_week, chart_prefix="lastweek")
 
     return render_template('leaderboard.html',
                            path_to_chart_lastweek=path_to_chart_lw,
@@ -136,4 +142,3 @@ def about():
 def admin():
     load_google_data_to_db(db)
     return render_template('about.html')
-

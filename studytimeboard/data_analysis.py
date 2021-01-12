@@ -5,6 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 from matplotlib.dates import HourLocator
+
 plt.style.use("seaborn")
 
 # from mpld3 import fig_to_html
@@ -21,6 +22,12 @@ def add_analysis_columns(df):
     df[DATE_DT] = pd.to_datetime(df[DATE])
     df[WEEKDAY] = df[DATE_DT].dt.day_name()
 
+    return df
+
+
+def add_istoday_column(df):
+    today_str = datetime2date(datetime.today())
+    df[TODAY_OR_NOT] = [IS_TODAY if i else NOT_TODAY for i in df[DATE] == today_str]
     return df
 
 
@@ -115,8 +122,7 @@ def to_this_week_table(df):
     filter_mask = df[DATE_DT] > last_sunday
     filtered_df = df[filter_mask]
 
-    today_str = datetime2date(datetime.today())
-    filtered_df[TODAY_OR_NOT] = [IS_TODAY if i else NOT_TODAY for i in filtered_df[DATE] == today_str]
+    filtered_df = add_istoday_column(filtered_df)
 
     return filtered_df
 
@@ -140,17 +146,15 @@ def to_minutes_by_day_table(df):
 # visualization
 
 def plot_hours_per_day(df, output_path="sample.png", **plot_kwargs):
-
     fig = plt.figure(figsize=(10, 8))
     sns.barplot(y=DATE, x=MINUTES, data=df, **plot_kwargs)
-    plt.axvline(x=8*60, color="r", ls=":")
+    plt.axvline(x=8 * 60, color="r", ls=":")
     plt.title("The study time of every day")
 
     fig.savefig(os.path.join(APP_PATH, output_path))
 
 
 def plot_the_bar_chart(df, output_path="sample.png"):
-
     sns.set_style("darkgrid")
 
     fig = plt.figure(figsize=(10, 8))
@@ -205,6 +209,33 @@ def plot_study_events(df, output_path="sample.png"):
     fig.savefig(os.path.join(APP_PATH, output_path))
 
 
+def plot_study_events_singleday(df, output_path="sample.png"):
+    ts = df[START_TIME_DT].tolist()
+    te = df[END_TIME_DT].tolist()
+
+    fig = plt.figure(figsize=(20, 1))
+    ax = plt.subplot()
+
+    for i in range(len(df)):
+        ax.plot([ts[i], te[i]], [0, 0], ".-", linewidth=20)
+
+    ax.xaxis.set_major_locator(HourLocator())
+    ax.xaxis.set_major_formatter(DateFormatter('%H:%M'))
+
+    plt.axvline(x=datetime.strptime("08:00", "%H:%M"), color="r", ls=":")
+    plt.axvline(x=datetime.strptime("12:30", "%H:%M"), color="r", ls=":")
+    plt.axvline(x=datetime.strptime("18:30", "%H:%M"), color="r", ls=":")
+
+    plt.xlim((datetime.strptime("00:00", "%H:%M"), datetime.strptime("23:59", "%H:%M")))
+
+    plt.xticks([datetime.strptime("{:02d}:00".format(hour), "%H:%M") for hour in range(0, 24)], fontsize=18)
+    plt.yticks([])
+
+    plt.tight_layout()
+
+    fig.savefig(os.path.join(APP_PATH, output_path))
+
+
 def starborn_barhplot_stacked(x, y, hue, data, sort_by_x=True, ys=None, hues=None, show=True,
                               color_palette=None):
     """
@@ -247,5 +278,3 @@ def starborn_barhplot_stacked(x, y, hue, data, sort_by_x=True, ys=None, hues=Non
 
     if show:
         plt.show()
-
-

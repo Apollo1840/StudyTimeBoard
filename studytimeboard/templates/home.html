@@ -99,10 +99,6 @@
 
         </div>
 
-
-
-
-
     </div>
 
 </form>
@@ -111,14 +107,32 @@
 <hr/>
 <br>
 
+<!-- Today study king display -->
+
+<div style="font-size: 120%;">
+    <p> 🔥 Today's study king is: <b> {{ today_king }}</b> (with {{duration_str_king}}) </p>
+    <div class="text-center">
+        <img src={{path_to_chart_king}} width="100%" height="100%">
+        <!-- {{chart_html|safe}} -->
+    </div>
+
+
+</div>
+
+
+<br>
+<hr/>
+<br>
 
 <!-- chart last week display -->
 
 <div style="font-size: 120%;">
-    <p> Leaderboard of the last week: </p>
+    <p> Leaderboard of this week: </p>
+
     <div>
-        <p> The leader of this board is:<b> {{ name_winner }}</b> (with {{duration_str}})</p>
+        <p> 🏆 The leader of this board is:<b> {{ name_winner }}</b> (with {{duration_str_winner}})</p>
     </div>
+
     <div class="text-center">
         <img src={{path_to_chart_lastweek}} width="100%" height="100%">
         <!-- {{chart_html|safe}} -->

@@ -3,6 +3,7 @@ import shutil
 import pytz
 
 from .constant import *
+from .path_manager import *
 from .models import StudyEventDB
 from .data_analysis import *
 from .utils.gsheet import GoogleSheet
@@ -103,17 +104,35 @@ def get_the_basic_dataframe(db=None):
     return df_all
 
 
-def minutes_dashboard_info(df_this_week, chart_prefix, sep_today=False):
+def info_today_study_king(df_this_week):
+    df_today = df_this_week.loc[df_this_week[TODAY_OR_NOT] == IS_TODAY, :]
 
+    if len(df_today) > 0:
+        df_minutes = to_minutes_leaderboard(df_today)
+
+        name_winner = list(df_minutes[NAME])[0]
+        duration_str = min2duration_str(list(df_minutes[MINUTES])[0])
+
+        df_user_today = df_today.loc[df_today[NAME] == name_winner, :]
+
+        path_to_chart = path_to_chart_user_today_king(username=name_winner)
+        plot_study_events_singleday(df_user_today, output_path=path_to_chart)
+
+    else:
+        name_winner = "nobody"
+        duration_str = "0 seconds"
+        path_to_chart = "sample.png"
+
+    return name_winner, duration_str, path_to_chart
+
+
+def info_minutes_dashboard(df_this_week, chart_prefix, sep_today=False):
     df_minutes = to_minutes_leaderboard(df_this_week)
     if df_minutes.shape[0] > 0:
         name_winner = list(df_minutes[NAME])[0]
         duration_str = min2duration_str(list(df_minutes[MINUTES])[0])
 
-        # add datetime time: for nothing, if we already remove the chart folder
-        new_chart_name = extract_chartname_addtime(PATH_TO_BARCHART)
-
-        path_to_chart = os.path.join(os.path.dirname(PATH_TO_BARCHART), chart_prefix + "_" + new_chart_name)
+        path_to_chart = path_to_chart_with_prefix(chart_prefix)
 
         if sep_today:
             plot_the_bar_chart_with_today(df_this_week, output_path=path_to_chart)
@@ -126,26 +145,3 @@ def minutes_dashboard_info(df_this_week, chart_prefix, sep_today=False):
         path_to_chart = "static/sample.png"
 
     return name_winner, duration_str, path_to_chart
-
-
-# path manager
-def regular_chart_path(chart_name):
-    # add datetime
-
-    _, img_format = os.path.split(PATH_TO_BARCHART)[1].split(".")  # filename.split(".")
-
-    # reason to add time: no reason
-    new_chart_name = "{}_{}.{}".format(chart_name, datetime.now().strftime('%H_%M_%S'), img_format)
-    the_path = os.path.join(os.path.dirname(PATH_TO_BARCHART), new_chart_name)
-
-    return the_path
-
-
-def path_to_chart_user_study_events(username):
-    username = username.replace(" ", "_")
-    return regular_chart_path(username + "_se")
-
-
-def path_to_chart_user_min_by_day(username):
-    username = username.replace(" ", "_")
-    return regular_chart_path(username + "_md")
