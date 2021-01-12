@@ -14,6 +14,9 @@ END_TIME = "end_time"
 START_TIME_DT = "start_time_datetime"
 END_TIME_DT = "end_time_datetime"
 DATE_DT = "date_datetime"
+TODAY_OR_NOT = "today_or_not"
+IS_TODAY = "is_today"
+NOT_TODAY = "not_today"
 
 # sheet 2 columns
 ACT = "act"

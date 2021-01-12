@@ -2,6 +2,10 @@ from datetime import datetime
 import os
 
 
+def date2datetime(time: str):
+    return datetime.strptime(str(time), "%Y.%m.%d")
+
+
 def time2datetime(time: str):
     return datetime.strptime(str(time), "%H:%M")
 

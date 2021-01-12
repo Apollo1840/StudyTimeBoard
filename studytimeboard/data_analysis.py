@@ -115,6 +115,9 @@ def to_this_week_table(df):
     filter_mask = df[DATE_DT] > last_sunday
     filtered_df = df[filter_mask]
 
+    today_str = datetime2date(datetime.today())
+    filtered_df[TODAY_OR_NOT] = [IS_TODAY if i else NOT_TODAY for i in filtered_df[DATE] == today_str]
+
     return filtered_df
 
 
@@ -159,6 +162,23 @@ def plot_the_bar_chart(df, output_path="sample.png"):
     # return fig_to_html(fig)
 
 
+def plot_the_bar_chart_with_today(df, output_path="sample.png"):
+    def grow_color():
+        for c in ["royalblue", "turquoise"]:
+            yield c
+
+    sns.set_style("darkgrid")
+
+    fig = plt.figure(figsize=(10, 8))
+    starborn_barhplot_stacked(MINUTES, NAME, TODAY_OR_NOT, data=df,
+                              hues=[NOT_TODAY, IS_TODAY],
+                              show=False,
+                              color_palette=grow_color())
+    plt.title("The study time of the candidates (in minutes)")
+
+    fig.savefig(os.path.join(APP_PATH, output_path))
+
+
 def plot_study_events(df, output_path="sample.png"):
     date = df[DATE].tolist()
     ts = df[START_TIME_DT].tolist()
@@ -183,3 +203,49 @@ def plot_study_events(df, output_path="sample.png"):
 
     plt.title("The study events of the candidate")
     fig.savefig(os.path.join(APP_PATH, output_path))
+
+
+def starborn_barhplot_stacked(x, y, hue, data, sort_by_x=True, ys=None, hues=None, show=True,
+                              color_palette=None):
+    """
+
+    > df_test = pd.DataFrame({
+            "x": [20, 35, 30, 35, 27],
+            "y": ['G1', 'G1', 'G2', 'G2', 'G3'],
+            "hue": ["stage1", "stage2", "stage1", "stage2","stage1"]
+        })
+
+    > barhplot_stacked("x", "y", "hue", df_test)
+
+
+    """
+
+    if sort_by_x:
+        df_sort = data.groupby(y)[x].apply(sum)
+        df_sort = df_sort.reset_index()
+        df_sort = df_sort.sort_values(by=x, ascending=True)
+        ys = df_sort[y]
+    elif ys is None:
+        ys = sorted(set(data[y]))
+
+    if hues is None:
+        hues = sorted(set(data[hue]))
+
+    last_xs = [0 for _ in range(len(ys))]
+    for huei in hues:
+        xs = [sum(data.loc[(data[y] == yi) & (data[hue] == huei), x]) for yi in ys]
+
+        if color_palette is not None:
+            plt.barh(ys, xs, left=last_xs, label=huei, color=next(color_palette))
+        else:
+            plt.barh(ys, xs, left=last_xs, label=huei)
+
+        last_xs = xs
+
+    plt.ylabel(y)
+    plt.legend()
+
+    if show:
+        plt.show()
+
+

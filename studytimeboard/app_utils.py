@@ -3,13 +3,53 @@ import shutil
 import pytz
 
 from .constant import *
+from .models import StudyEventDB
 from .data_analysis import *
 from .utils.gsheet import GoogleSheet
 
 tz = pytz.timezone('Europe/Berlin')
 
 
-def parse_request_to_db(request, username):
+def load_google_data_to_db(db):
+    gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
+    df_dur = gs.sheet(sheet_name=SHEET1, least_col_name=START_TIME)
+    df_eve = gs.sheet(sheet_name=SHEET2, least_col_name=NAME)
+
+    df = merge_dur_eve(df_dur, df_eve)
+
+    # delete study events
+    StudyEventDB.query.delete()
+    db.session.commit()
+
+    # load df to db
+    study_events = df2studyeventsdb(df)
+    db.session.add_all(study_events)
+    db.session.commit()
+
+
+def df2studyeventsdb(df):
+    study_events = []
+    for i, row in df.iterrows():
+        study_events.append(StudyEventDB(username=row[NAME],
+                                         date=date2datetime(row[DATE]),
+                                         start_time=time2datetime(row[START_TIME]),
+                                         end_time=time2datetime(row[END_TIME])))
+    return study_events
+
+
+def studyeventsdb2df(db):
+    study_events = StudyEventDB.query.all()
+
+    df_dict = {}
+    df_dict[NAME] = [se.username for se in study_events]
+    df_dict[DATE] = [datetime2date(se.date) for se in study_events]
+    df_dict[START_TIME] = [datetime2time(se.start_time) for se in study_events]
+    df_dict[END_TIME] = [datetime2time(se.end_time) for se in study_events]
+
+    return pd.DataFrame(df_dict)
+
+
+def parse_request_to_db(request, username, db=None):
     # NOTE! sometimes, username is not in the request
 
     if request.form.get(START_TIME) and request.form.get(END_TIME):
@@ -41,7 +81,7 @@ def clean_chart_folder():
     os.makedirs(bar_chart_folder)
 
 
-def get_the_basic_dataframe():
+def get_the_basic_dataframe(db=None):
     """
 
     :return: dataframe, each row is a clip of study duration(event)
@@ -53,12 +93,39 @@ def get_the_basic_dataframe():
 
     df = merge_dur_eve(df_dur, df_eve)
 
+    # df = studyeventsdb2df(db)
+
     # process the data table
     df_all = add_analysis_columns(df)
 
     df_all = df_all.sort_values(by=DATE_DT)
 
     return df_all
+
+
+def minutes_dashboard_info(df_this_week, chart_prefix, sep_today=False):
+
+    df_minutes = to_minutes_leaderboard(df_this_week)
+    if df_minutes.shape[0] > 0:
+        name_winner = list(df_minutes[NAME])[0]
+        duration_str = min2duration_str(list(df_minutes[MINUTES])[0])
+
+        # add datetime time: for nothing, if we already remove the chart folder
+        new_chart_name = extract_chartname_addtime(PATH_TO_BARCHART)
+
+        path_to_chart = os.path.join(os.path.dirname(PATH_TO_BARCHART), chart_prefix + "_" + new_chart_name)
+
+        if sep_today:
+            plot_the_bar_chart_with_today(df_this_week, output_path=path_to_chart)
+        else:
+            plot_the_bar_chart(df_minutes, output_path=path_to_chart)
+
+    else:
+        name_winner = "None"
+        duration_str = "0 minutes"
+        path_to_chart = "static/sample.png"
+
+    return name_winner, duration_str, path_to_chart
 
 
 # path manager

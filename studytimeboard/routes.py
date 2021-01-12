@@ -5,14 +5,15 @@ from flask_login import login_user, current_user, logout_user, login_required
 # internal utils
 from .app_utils import *
 from .constant import *
-from studytimeboard import app
+from studytimeboard import app, db
 from studytimeboard.models import User
 
 
 @app.route('/', methods=["GET", "POST"])
 @app.route("/home", methods=["GET", "POST"])
 def home():
-    # handle the time input
+
+    # 1. handle the time input
     if request.method == "POST":
         if current_user.is_authenticated:
             username = current_user.username
@@ -20,32 +21,24 @@ def home():
             username = request.form.get("username")
 
         if username in REGISTED_USERS:
-            parse_request_to_db(request, username)
+            parse_request_to_db(request, username, db)
 
-    # show the charts:
+    # 2. show the last week chart:
 
     # rm the folder to avoid multiple rendering data explode
     clean_chart_folder()
 
-    df_all = get_the_basic_dataframe()
-
     # transfer it to plot-ready data table
-    df_min_last_week = to_minutes_leaderboard(to_this_week_table(df_all))
+    df_last_week = to_this_week_table(get_the_basic_dataframe(db))
 
-    # add datetime time: for nothing, if we already remove the chart folder
-    new_chart_name = extract_chartname_addtime(PATH_TO_BARCHART)
-
-    # last week dashboard
-    name_winner = list(df_min_last_week[NAME])[0]
-    duration_str = min2duration_str(list(df_min_last_week[MINUTES])[0])
-
-    path_to_chart_last_week = os.path.join(os.path.dirname(PATH_TO_BARCHART), "last_week_" + new_chart_name)
-    plot_the_bar_chart(df_min_last_week, output_path=path_to_chart_last_week)
+    # get display information
+    name_winner_lw, duration_str_lw, path_to_chart_lw = minutes_dashboard_info(df_last_week, chart_prefix="lastweek",
+                                                                               sep_today=True)
 
     return render_template('home.html',
-                           path_to_chart_last_week=path_to_chart_last_week,
-                           name_winner=name_winner,
-                           duration_str=duration_str)
+                           path_to_chart_lastweek=path_to_chart_lw,
+                           name_winner=name_winner_lw,
+                           duration_str=duration_str_lw)
 
 
 @app.route("/leaderboard")
@@ -53,36 +46,22 @@ def leaderboard():
     # rm the folder to avoid multiple rendering data explode
     clean_chart_folder()
 
-    df_all = get_the_basic_dataframe()
+    df_all = get_the_basic_dataframe(db)
 
     # transfer it to plot-ready data table
-    df_min_all = to_minutes_leaderboard(df_all)
-    df_min_last_week = to_minutes_leaderboard(to_this_week_table(df_all))
+    df_last_week = to_this_week_table(df_all)
 
-    # add datetime time: for nothing, if we already remove the chart folder
-    new_chart_name = extract_chartname_addtime(PATH_TO_BARCHART)
-
-    # component 1: the last week bar chart
-    name_winner_lastweek = list(df_min_last_week[NAME])[0]
-    duration_str_lastweek = min2duration_str(list(df_min_last_week[MINUTES])[0])
-
-    path_to_chart_last_week = os.path.join(os.path.dirname(PATH_TO_BARCHART), "last_week_" + new_chart_name)
-    plot_the_bar_chart(df_min_last_week, output_path=path_to_chart_last_week)
-
-    # component 2: the entire time bar charts
-    name_winner = list(df_min_all[NAME])[0]
-    duration_str = min2duration_str(list(df_min_all[MINUTES])[0])
-
-    path_to_chart_all = os.path.join(os.path.dirname(PATH_TO_BARCHART), "all_" + new_chart_name)
-    plot_the_bar_chart(df_min_all, output_path=path_to_chart_all)
+    # get display information
+    name_winner_al, duration_str_al, path_to_chart_al = minutes_dashboard_info(df_all, chart_prefix="all")
+    name_winner_lw, duration_str_lw, path_to_chart_lw = minutes_dashboard_info(df_last_week, chart_prefix="lastweek")
 
     return render_template('leaderboard.html',
-                           path_to_chart_last_week=path_to_chart_last_week,
-                           path_to_chart_all=path_to_chart_all,
-                           name_winner_lastweek=name_winner_lastweek,
-                           duration_str_lastweek=duration_str_lastweek,
-                           name_winner=name_winner,
-                           duration_str=duration_str)
+                           path_to_chart_lastweek=path_to_chart_lw,
+                           path_to_chart_all=path_to_chart_al,
+                           name_winner_lastweek=name_winner_lw,
+                           duration_str_lastweek=duration_str_lw,
+                           name_winner=name_winner_al,
+                           duration_str=duration_str_al)
 
 
 @app.route('/analysis')
@@ -93,7 +72,7 @@ def analysis():
         # rm the folder to avoid multiple rendering data explode
         clean_chart_folder()
 
-        df_all = get_the_basic_dataframe()
+        df_all = get_the_basic_dataframe(db)
 
         if username in df_all[NAME].unique():
             df_user = df_all.loc[df_all[NAME] == username, :]
@@ -151,3 +130,10 @@ def register():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+
+@app.route('/admin_reload_data')
+def admin():
+    load_google_data_to_db(db)
+    return render_template('about.html')
+

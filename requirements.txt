@@ -8,3 +8,4 @@ seaborn
 gspread
 oauth2client
 Flask-Login
+Flask-SQLAlchemy
