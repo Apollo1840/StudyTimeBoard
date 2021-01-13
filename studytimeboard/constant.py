@@ -28,6 +28,8 @@ TIME = "time"
 
 MINUTES = "minutes"
 WEEKDAY = "weekday"
+ORDERED_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+WEEKDAY_COLORS = ["tab:pink", "tab:purple", "tab:blue", "tab:cyan", "tab:green", "tab:olive", "tab:orange"]
 
 PATH_TO_BARCHART = "static/charts/barchart.png"
 

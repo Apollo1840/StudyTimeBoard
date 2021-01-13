@@ -26,7 +26,7 @@ def add_analysis_columns(df):
 
 
 def add_istoday_column(df):
-    today_str = datetime2date(datetime.today(TZ))
+    today_str = datetime2date(datetime.now(TZ))
     df[TODAY_OR_NOT] = [IS_TODAY if i else NOT_TODAY for i in df[DATE] == today_str]
     return df
 

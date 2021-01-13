@@ -95,11 +95,22 @@ def info_user_status(df_eve, username):
     :return: str, str:
     """
 
-    user_status = df_eve.loc[df_eve[NAME] == username, ACT][-1]
+    if username in df_eve[NAME].unique():
 
-    time = time2datetime(df_eve.loc[df_eve[NAME] == username, TIME][-1])
-    up_to_now_minutes = (datetime.now(TZ) - time).seconds / 60
-    user_status_time = min2duration_str(up_to_now_minutes)
+        user_status = list(df_eve.loc[df_eve[NAME] == username, ACT])[-1]
+
+        date_str = list(df_eve.loc[df_eve[NAME] == username, DATE])[-1]
+        time_str = list(df_eve.loc[df_eve[NAME] == username, TIME])[-1]
+        back_then = datetime.strptime(date_str + "_" + time_str, "%Y.%m.%d_%H:%M")
+        now = datetime.now(TZ).replace(tzinfo=None)
+
+        up_to_now_minutes = (now - back_then).seconds / 60
+        user_status_time = min2duration_str(up_to_now_minutes)
+
+    else:
+
+        user_status = "unknown"
+        user_status_time = "unkonwn"
 
     return user_status, user_status_time
 
@@ -126,7 +137,7 @@ def info_today_study_king(df_this_week):
     return name_winner, duration_str, path_to_chart
 
 
-def info_minutes_dashboard(df_this_week, chart_prefix, sep_today=False):
+def info_minutes_dashboard(df_this_week, chart_prefix, sep=None):
     df_minutes = to_minutes_leaderboard(df_this_week)
     if df_minutes.shape[0] > 0:
         name_winner = list(df_minutes[NAME])[0]
@@ -134,8 +145,11 @@ def info_minutes_dashboard(df_this_week, chart_prefix, sep_today=False):
 
         path_to_chart = path_to_chart_with_prefix(chart_prefix)
 
-        if sep_today:
+        if sep == TODAY_OR_NOT:
             plot_the_bar_chart_with_today(df_this_week, output_path=path_to_chart)
+        elif sep == WEEKDAY:
+            print(df_this_week)
+            plot_the_bar_chart_with_weekday(df_this_week, output_path=path_to_chart)
         else:
             plot_the_bar_chart(df_minutes, output_path=path_to_chart)
 

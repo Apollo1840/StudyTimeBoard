@@ -60,6 +60,20 @@ def plot_the_bar_chart_with_today(df, output_path="sample.png"):
     fig.savefig(os.path.join(APP_PATH, output_path))
 
 
+def plot_the_bar_chart_with_weekday(df, output_path="sample.png"):
+    def week_color():
+        for c in WEEKDAY_COLORS:
+            yield c
+    fig = plt.figure(figsize=(10, 8))
+    starborn_barhplot_stacked(MINUTES, NAME, WEEKDAY, data=df,
+                              hues=ORDERED_WEEKDAYS,
+                              show=False,
+                              color_palette=week_color())
+    plt.title("The study time of the candidates (in minutes)")
+
+    fig.savefig(os.path.join(APP_PATH, output_path))
+
+
 def plot_study_events(df, output_path="sample.png"):
     date = df[DATE].tolist()
     ts = df[START_TIME_DT].tolist()
@@ -142,13 +156,12 @@ def starborn_barhplot_stacked(x, y, hue, data, sort_by_x=True, ys=None, hues=Non
     last_xs = [0 for _ in range(len(ys))]
     for huei in hues:
         xs = [sum(data.loc[(data[y] == yi) & (data[hue] == huei), x]) for yi in ys]
-
-        if color_palette is not None:
-            plt.barh(ys, xs, left=last_xs, label=huei, color=next(color_palette))
-        else:
-            plt.barh(ys, xs, left=last_xs, label=huei)
-
-        last_xs = xs
+        if sum(xs) > 0:
+            if color_palette is not None:
+                plt.barh(ys, xs, left=last_xs, label=huei, color=next(color_palette))
+            else:
+                plt.barh(ys, xs, left=last_xs, label=huei)
+        last_xs = [last_xs[i] + xs[i] for i in range(len(ys))]
 
     plt.ylabel(y)
     plt.legend()

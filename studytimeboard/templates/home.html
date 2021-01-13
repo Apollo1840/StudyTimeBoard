@@ -34,7 +34,7 @@
         <!-- username row -->
         {% if current_user.is_authenticated %}
             <div class="row">
-                <div class="ml-3 mb-5">
+                <div class="ml-3">
                     <p>Hi <b>{{current_user.username}}</b>,
                     record your study time,  then you can
                         <a href="{{url_for('leaderboard')}}">compete with others</a>
@@ -43,7 +43,6 @@
                         (right-top corner). </p>
                 </div>
             </div>
-
         {% else %}
             <div class="row">
                 <div class="input-group mb-5 ml-3 mr-3">
@@ -54,19 +53,41 @@
         {% endif %}
 
         <!-- go hold row -->
-        <div class="row" style="color: #AAA">
-            <p class="ml-3">  Click "Go“ or ”Hold“ when you start or end the study period: </p>
+        {% if user_status == "go" %}
+            <div class="row">
+                <p class="ml-3">  You have started <b> {{user_status_time}}</b>!
+                    Keep studying a little more to the next level!
+                </p>
+            </div>
 
-            {% if user_status == "go" %}
-                <p class="ml-3">  You have started {{user_status_time}} ago. So please click "Go" .</p>
-            {% endif %}
+            <div class="row" style="color: #AAA">
+                <p class="ml-3">
+                    Click "Hold" when you have no energy and want a break. click "Go" if you forget to hold last time .
+                </p>
+            </div>
+        {% endif %}
 
-            {% if user_status == "hold" %}
-                <p class="ml-3">  You have holded {{user_status_time}} ago. So please click "Hold" .</p>
-            {% endif %}
+        {% if user_status == "hold" %}
+            <div class="row">
+                <p class="ml-3">  You have holded <b> {{user_status_time}} </b>!
+                    Long time no study, what are you doing !?
+                </p>
+            </div>
 
+            <div class="row" style="color: #AAA">
+                <p class="ml-3">
+                    Please click "Go" and start to study.
+                </p>
+            </div>
 
-        </div>
+        {% endif %}
+
+        {% if user_status == "unknown" %}
+            <div class="row" style="color: #AAA">
+                <p class="ml-3">  Click "Go“ or ”Hold“ when you start or end the study period: </p>
+            </div>
+        {% endif %}
+
 
         <div class="row">
 

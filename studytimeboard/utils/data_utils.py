@@ -30,7 +30,10 @@ def min2duration_str(minutes):
             duration_str += "{} hours".format(hour)
 
     if min != 0:
-        duration_str += " {} minutes".format(min)
+        if min == 1:
+            duration_str += " 1 minute"
+        else:
+            duration_str += " {} minutes".format(min)
 
     return duration_str
 

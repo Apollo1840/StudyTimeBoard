@@ -52,7 +52,7 @@ def home():
     # 2.2 show the last week chart:
     # get display information
     name_winner_lw, duration_str_lw, path_to_chart_lw = info_minutes_dashboard(df_last_week, chart_prefix="lastweek",
-                                                                               sep_today=True)
+                                                                               sep=TODAY_OR_NOT)
 
     return render_template('home.html',
                            user_status=user_status,
@@ -77,7 +77,8 @@ def leaderboard():
 
     # get display information
     name_winner_al, duration_str_al, path_to_chart_al = info_minutes_dashboard(df_all, chart_prefix="all")
-    name_winner_lw, duration_str_lw, path_to_chart_lw = info_minutes_dashboard(df_last_week, chart_prefix="lastweek")
+    name_winner_lw, duration_str_lw, path_to_chart_lw = info_minutes_dashboard(df_last_week, chart_prefix="lastweek",
+                                                                               sep=WEEKDAY)
 
     return render_template('leaderboard.html',
                            path_to_chart_lastweek=path_to_chart_lw,
