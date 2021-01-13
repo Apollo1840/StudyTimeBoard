@@ -1,3 +1,5 @@
+import pytz
+
 APP_PATH = "./studytimeboard"
 PATH_TO_LOCALDB = "./studytimeboard/data/db"
 
@@ -44,6 +46,10 @@ REGISTED_USERS = [
     "vivi",
     "Vicky.Huang"
 ]
+
+SOMEONE = "someone"
+
+TZ = pytz.timezone('Europe/Berlin')
 
 
 class FlashMessages:

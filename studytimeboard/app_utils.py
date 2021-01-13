@@ -1,14 +1,20 @@
+"""
+
+like API of backend.
+
+logic units for routes.
+
+"""
+
 import os
 import shutil
-import pytz
 
 from .constant import *
 from .path_manager import *
 from .models import StudyEventDB
 from .data_analysis import *
+from .plotters import *
 from .utils.gsheet import GoogleSheet
-
-tz = pytz.timezone('Europe/Berlin')
 
 
 def load_google_data_to_db(db):
@@ -57,7 +63,7 @@ def parse_request_to_db(request, username, db=None):
         # print(request.form.get("username"), request.form.get("start_time"), request.form.get("end_time"),)
         GoogleSheet.read_from(STUDY_TIME_TABLE_NAME).append_row(SHEET1, [
             username,
-            datetime2date(datetime.now(tz)),
+            datetime2date(datetime.now(TZ)),
             request.form.get(START_TIME),
             request.form.get(END_TIME),
         ])
@@ -70,8 +76,8 @@ def parse_request_to_db(request, username, db=None):
         GoogleSheet.read_from(STUDY_TIME_TABLE_NAME).append_row(SHEET2, [
             username,
             act,
-            datetime2date(datetime.now(tz)),
-            datetime2time(datetime.now(tz)),
+            datetime2date(datetime.now(TZ)),
+            datetime2time(datetime.now(TZ)),
         ])
 
 
@@ -82,26 +88,20 @@ def clean_chart_folder():
     os.makedirs(bar_chart_folder)
 
 
-def get_the_basic_dataframe(db=None):
+def info_user_status(df_eve, username):
     """
 
-    :return: dataframe, each row is a clip of study duration(event)
+    :param username:
+    :return: str, str:
     """
 
-    gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
-    df_dur = gs.sheet(sheet_name=SHEET1, least_col_name=START_TIME)
-    df_eve = gs.sheet(sheet_name=SHEET2, least_col_name=NAME)
+    user_status = df_eve.loc[df_eve[NAME] == username, ACT][-1]
 
-    df = merge_dur_eve(df_dur, df_eve)
+    time = time2datetime(df_eve.loc[df_eve[NAME] == username, TIME][-1])
+    up_to_now_minutes = (datetime.now(TZ) - time).seconds / 60
+    user_status_time = min2duration_str(up_to_now_minutes)
 
-    # df = studyeventsdb2df(db)
-
-    # process the data table
-    df_all = add_analysis_columns(df)
-
-    df_all = df_all.sort_values(by=DATE_DT)
-
-    return df_all
+    return user_status, user_status_time
 
 
 def info_today_study_king(df_this_week):
@@ -145,3 +145,26 @@ def info_minutes_dashboard(df_this_week, chart_prefix, sep_today=False):
         path_to_chart = "static/sample.png"
 
     return name_winner, duration_str, path_to_chart
+
+
+# depracated
+def get_the_basic_dataframe(db=None):
+    """
+
+    :return: dataframe, each row is a clip of study duration(event)
+    """
+
+    gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
+    df_dur = gs.sheet(sheet_name=SHEET1, least_col_name=START_TIME)
+    df_eve = gs.sheet(sheet_name=SHEET2, least_col_name=NAME)
+
+    df = merge_dur_eve(df_dur, df_eve)
+
+    # df = studyeventsdb2df(db)
+
+    # process the data table
+    df_all = add_analysis_columns(df)
+
+    df_all = df_all.sort_values(by=DATE_DT)
+
+    return df_all

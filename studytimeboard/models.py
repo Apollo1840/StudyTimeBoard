@@ -1,9 +1,11 @@
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask_login import UserMixin
 
+from .utils.data_utils import *
 from studytimeboard import login_manager
 from studytimeboard import db, login_manager
+
 
 
 @login_manager.user_loader
@@ -26,6 +28,23 @@ class User(UserMixin):
 
     def __repr__(self):
         return "User"
+
+
+class StudyEvent:
+
+    def __init__(self, start_time: str = None, end_time: str = None, name=None, date=None):
+        self.start_time = start_time
+        self.end_time = end_time
+        self.name = name
+        self.date = date
+
+    @property
+    def default_end_time(self):
+        return datetime2time(time2datetime(self.start_time) + timedelta(minutes=30))
+
+    @property
+    def default_start_time(self):
+        return datetime2time(time2datetime(self.end_time) - timedelta(minutes=30))
 
 
 class StudyEventDB(db.Model):
