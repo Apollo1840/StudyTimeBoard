@@ -148,7 +148,6 @@ def info_minutes_dashboard(df_this_week, chart_prefix, sep=None):
         if sep == TODAY_OR_NOT:
             plot_the_bar_chart_with_today(df_this_week, output_path=path_to_chart)
         elif sep == WEEKDAY:
-            print(df_this_week)
             plot_the_bar_chart_with_weekday(df_this_week, output_path=path_to_chart)
         else:
             plot_the_bar_chart(df_minutes, output_path=path_to_chart)
