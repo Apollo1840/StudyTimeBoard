@@ -27,19 +27,16 @@ def home():
         if username in REGISTED_USERS:
             parse_request_to_db(request, username, db)
 
-    gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
-    df_eve = gs.sheet(sheet_name=SHEET2, least_col_name=NAME)
+    data = read_data_from_db()
 
     # 1. user previous status
-    user_status, user_status_time = info_user_status(df_eve, username)
+    user_status, user_status_time = info_user_status(data, username)
 
     # 2. other chart info
-    df_dur = gs.sheet(sheet_name=SHEET1, least_col_name=START_TIME)
-    df = merge_dur_eve(df_dur, df_eve)
-
-    # process the data table
+    df, _ = data
     df_all = add_analysis_columns(df)
     df_all = df_all.sort_values(by=DATE_DT)
+
     df_last_week = to_this_week_table(df_all)
 
     # prepare to plot
@@ -70,9 +67,7 @@ def leaderboard():
     # rm the folder to avoid multiple rendering data explode
     clean_chart_folder()
 
-    df_all = get_the_basic_dataframe(db)
-
-    # transfer it to plot-ready data table
+    df_all = get_df_all_from_db(db)
     df_last_week = to_this_week_table(df_all)
 
     # get display information
@@ -97,7 +92,7 @@ def analysis():
         # rm the folder to avoid multiple rendering data explode
         clean_chart_folder()
 
-        df_all = get_the_basic_dataframe(db)
+        df_all = get_df_all_from_db(db)
 
         if username in df_all[NAME].unique():
             df_user = df_all.loc[df_all[NAME] == username, :]

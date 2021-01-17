@@ -81,6 +81,30 @@ def parse_request_to_db(request, username, db=None):
         ])
 
 
+def read_data_from_db(df=None):
+    gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
+    df_eve = gs.sheet(sheet_name=SHEET2, least_col_name=NAME)
+    df_dur = gs.sheet(sheet_name=SHEET1, least_col_name=START_TIME)
+
+    # df = studyeventsdb2df(db)
+
+    df_all = merge_dur_eve(df_eve, df_dur)
+    return [df_all, df_eve]
+
+
+def get_df_all_from_db(db=None):
+    """
+
+    :return: dataframe, each row is a clip of study duration(event)
+    """
+
+    df, _ = read_data_from_db(db)
+    df_all = add_analysis_columns(df)
+    df_all = df_all.sort_values(by=DATE_DT)
+
+    return df_all
+
+
 def clean_chart_folder():
     bar_chart_folder = os.path.dirname(os.path.join(APP_PATH, PATH_TO_BARCHART))
     if os.path.exists(bar_chart_folder):
@@ -88,12 +112,14 @@ def clean_chart_folder():
     os.makedirs(bar_chart_folder)
 
 
-def info_user_status(df_eve, username):
+def info_user_status(data, username):
     """
 
     :param username:
     :return: str, str:
     """
+
+    _, df_eve = data
 
     if username in df_eve[NAME].unique():
 
@@ -158,26 +184,3 @@ def info_minutes_dashboard(df_this_week, chart_prefix, sep=None):
         path_to_chart = "static/sample.png"
 
     return name_winner, duration_str, path_to_chart
-
-
-# depracated
-def get_the_basic_dataframe(db=None):
-    """
-
-    :return: dataframe, each row is a clip of study duration(event)
-    """
-
-    gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
-    df_dur = gs.sheet(sheet_name=SHEET1, least_col_name=START_TIME)
-    df_eve = gs.sheet(sheet_name=SHEET2, least_col_name=NAME)
-
-    df = merge_dur_eve(df_dur, df_eve)
-
-    # df = studyeventsdb2df(db)
-
-    # process the data table
-    df_all = add_analysis_columns(df)
-
-    df_all = df_all.sort_values(by=DATE_DT)
-
-    return df_all
