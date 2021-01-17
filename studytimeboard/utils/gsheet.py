@@ -60,6 +60,10 @@ class GoogleSheet:
         sheet = self.table.worksheet(sheet_name)
         sheet.append_row(row)
 
+    def delete_row(self, sheet_name, row_index):
+        sheet = self.table.worksheet(sheet_name)
+        sheet.delete_row(row_index)
+
     @staticmethod
     def clean_df_from_gsheet(df, least_col_name):
         df = df.loc[df[least_col_name] != "", :]

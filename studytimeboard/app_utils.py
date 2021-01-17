@@ -14,95 +14,8 @@ from .path_manager import *
 from .models import StudyEventDB
 from .data_analysis import *
 from .plotters import *
+from .db_utils import DataBaseAPI
 from .utils.gsheet import GoogleSheet
-
-
-def load_google_data_to_db(db):
-    gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
-    df_dur = gs.sheet(sheet_name=SHEET1, least_col_name=START_TIME)
-    df_eve = gs.sheet(sheet_name=SHEET2, least_col_name=NAME)
-
-    df = merge_dur_eve(df_dur, df_eve)
-
-    # delete study events
-    StudyEventDB.query.delete()
-    db.session.commit()
-
-    # load df to db
-    study_events = df2studyeventsdb(df)
-    db.session.add_all(study_events)
-    db.session.commit()
-
-
-def df2studyeventsdb(df):
-    study_events = []
-    for i, row in df.iterrows():
-        study_events.append(StudyEventDB(username=row[NAME],
-                                         date=date2datetime(row[DATE]),
-                                         start_time=time2datetime(row[START_TIME]),
-                                         end_time=time2datetime(row[END_TIME])))
-    return study_events
-
-
-def studyeventsdb2df(db):
-    study_events = StudyEventDB.query.all()
-
-    df_dict = {}
-    df_dict[NAME] = [se.username for se in study_events]
-    df_dict[DATE] = [datetime2date(se.date) for se in study_events]
-    df_dict[START_TIME] = [datetime2time(se.start_time) for se in study_events]
-    df_dict[END_TIME] = [datetime2time(se.end_time) for se in study_events]
-
-    return pd.DataFrame(df_dict)
-
-
-def parse_request_to_db(request, username, db=None):
-    # NOTE! sometimes, username is not in the request
-
-    if request.form.get(START_TIME) and request.form.get(END_TIME):
-        # print(request.form.get("username"), request.form.get("start_time"), request.form.get("end_time"),)
-        GoogleSheet.read_from(STUDY_TIME_TABLE_NAME).append_row(SHEET1, [
-            username,
-            datetime2date(datetime.now(TZ)),
-            request.form.get(START_TIME),
-            request.form.get(END_TIME),
-        ])
-
-    elif ACT_START in request.form or ACT_END in request.form:
-        # print(datetime.now())
-
-        act = ACT_START if ACT_START in request.form else ACT_END
-
-        GoogleSheet.read_from(STUDY_TIME_TABLE_NAME).append_row(SHEET2, [
-            username,
-            act,
-            datetime2date(datetime.now(TZ)),
-            datetime2time(datetime.now(TZ)),
-        ])
-
-
-def read_data_from_db(df=None):
-    gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
-    df_eve = gs.sheet(sheet_name=SHEET2, least_col_name=NAME)
-    df_dur = gs.sheet(sheet_name=SHEET1, least_col_name=START_TIME)
-
-    # df = studyeventsdb2df(db)
-
-    df_all = merge_dur_eve(df_eve, df_dur)
-    return [df_all, df_eve]
-
-
-def get_df_all_from_db(db=None):
-    """
-
-    :return: dataframe, each row is a clip of study duration(event)
-    """
-
-    df, _ = read_data_from_db(db)
-    df_all = add_analysis_columns(df)
-    df_all = df_all.sort_values(by=DATE_DT)
-
-    return df_all
 
 
 def clean_chart_folder():
@@ -112,7 +25,63 @@ def clean_chart_folder():
     os.makedirs(bar_chart_folder)
 
 
-def info_user_status(data, username):
+def get_df_all_from_db(db=None):
+    """
+
+    :return: dataframe, each row is a clip of study duration(event)
+    """
+
+    df = DataBaseAPI.out_as_dataframe()
+    df_all = add_analysis_columns(df)
+    df_all = df_all.sort_values(by=DATE_DT)
+
+    return df_all
+
+
+def info_studying_users(df):
+    return df.loc[df[END_TIME] == UNKNOWN, NAME].unique().tolist()
+
+
+def info_user_status(df, username):
+    # todo: fix the kind of nested if-else
+
+    if username in df[NAME].unique():
+
+        df_user = df.loc[df[NAME] == username, :]
+
+        if UNKNOWN in df_user[END_TIME].tolist():
+            user_status = ACT_START
+            df_recent = df_user.loc[df_user[END_TIME] == UNKNOWN, :]
+            time_str = df_recent[START_TIME].tolist()[-1]
+
+        else:
+            user_status = ACT_END
+            df_recent = df_user.sort_values([DATE_DT, END_TIME_DT])
+            time_str = df_recent[END_TIME].tolist()[-1]
+
+        if time_str == UNKNOWN:
+            raise ValueError("go branch {}:\n invalid time_str out of :\n".format(
+                UNKNOWN in df_user[END_TIME]),
+                df_recent)
+
+        date_str = df_recent[DATE].tolist()[-1]
+        back_then = datetime.strptime(date_str + "_" + time_str, "%Y.%m.%d_%H:%M")
+        now = datetime.now(TZ).replace(tzinfo=None)
+
+        if now > back_then:
+            up_to_now_minutes = (now - back_then).seconds / 60
+            user_status_time = min2duration_str(up_to_now_minutes)
+        else:
+            user_status_time = ""
+
+    else:
+        user_status = "unknown"
+        user_status_time = "unkonwn"
+
+    return user_status, user_status_time
+
+
+def info_user_status_from_gs1_gs2(data, username):
     """
 
     :param username:
@@ -135,8 +104,8 @@ def info_user_status(data, username):
 
     else:
 
-        user_status = "unknown"
-        user_status_time = "unkonwn"
+        user_status = UNKNOWN
+        user_status_time = UNKNOWN
 
     return user_status, user_status_time
 

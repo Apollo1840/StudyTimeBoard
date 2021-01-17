@@ -8,12 +8,12 @@ from .path_manager import *
 from .constant import *
 from studytimeboard import app, db
 from studytimeboard.models import User
+from studytimeboard.db_utils import *
 
 
 @app.route('/', methods=["GET", "POST"])
 @app.route("/home", methods=["GET", "POST"])
 def home():
-
     if current_user.is_authenticated:
         username = current_user.username
     else:
@@ -25,18 +25,21 @@ def home():
             username = request.form.get("username")
 
         if username in REGISTED_USERS:
-            parse_request_to_db(request, username, db)
+            DataBaseAPI.into_from_request(request, username, db)
 
-    data = read_data_from_db()
+    # if the user type in the form with duration, the next user is unknown, so the username is SOMEONE
+    if not current_user.is_authenticated:
+        username = SOMEONE
+
+    df_all = get_df_all_from_db(db)
+
+    studying_users = info_studying_users(df_all)
+    no_studying_users = len(studying_users) == 0
 
     # 1. user previous status
-    user_status, user_status_time = info_user_status(data, username)
+    user_status, user_status_time = info_user_status(df_all, username)
 
     # 2. other chart info
-    df, _ = data
-    df_all = add_analysis_columns(df)
-    df_all = df_all.sort_values(by=DATE_DT)
-
     df_last_week = to_this_week_table(df_all)
 
     # prepare to plot
@@ -52,6 +55,8 @@ def home():
                                                                                sep=TODAY_OR_NOT)
 
     return render_template('home.html',
+                           studying_users=studying_users,
+                           no_studying_users=no_studying_users,
                            user_status=user_status,
                            user_status_time=user_status_time,
                            path_to_chart_king=path_to_chart_king,
@@ -154,5 +159,5 @@ def about():
 
 @app.route('/admin_reload_data')
 def admin():
-    load_google_data_to_db(db)
+    DataBaseAPI.init_from_gs(db)
     return render_template('about.html')

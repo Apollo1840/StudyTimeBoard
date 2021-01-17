@@ -20,7 +20,7 @@
 <header class="site-header">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">StudyTimeBoard
-            <div style="font-size:50%;color:gray;">(Beta v0.4.5)</div>
+            <div style="font-size:50%;color:gray;">(Beta v0.4.8)</div>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,7 @@
 <main role="main" class="container">
     <div class="row">
 
-        <!--- <div class="col-md-8">  --->
+        <!--- flash message --->
         <div class="col mt-3">
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -68,58 +68,40 @@
 
         </div>
 
-
-        <!---
-            <div class="col-md-4">
-              <div class="content-section">
-                <h3>Our Sidebar</h3>
-                <p class='text-muted'>You can put any information here you'd like.
-                  <ul class="list-group">
-                    <li class="list-group-item list-group-item-light">Latest Posts</li>
-                    <li class="list-group-item list-group-item-light">Announcements</li>
-                    <li class="list-group-item list-group-item-light">Calendars</li>
-                    <li class="list-group-item list-group-item-light">etc</li>
-                  </ul>
-                </p>
-              </div>
-            </div>
-            --->
-
     </div>
 
     <div class=row">
         {% block content %}{% endblock %}
     </div>
 
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
 
 </main>
 
 <!-- contacts -->
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-
 <footer style="font-size: 80%; background-color: gray; color:white;">
-
     <br/>
 
     <div class="row mt-3 ml-3 mr-3 mb-5">
 
-    <p> You are very welcome to join the the STB study group, please contact wechat: zoucongyu1109. </p>
+        <p> You are very welcome to join the the STB study group, please contact wechat: zoucongyu1109. </p>
 
-    <a href="https://docs.google.com/spreadsheets/d/1FGoY2IrXavkyiRGZQkvTIgHwHmIrlohR-IDoQ5K4hw4/edit?usp=sharing">
-         click here to edit the google data sheet
-    </a>
+        <a href="https://docs.google.com/spreadsheets/d/1FGoY2IrXavkyiRGZQkvTIgHwHmIrlohR-IDoQ5K4hw4/edit?usp=sharing">
+            click here to edit the google data sheet
+        </a>
 
     </div>
 
     <div class="row ml-3 mr-3 mb-5">
-    <p>You are very welcome to join the develop team of the StudyTimeBoard (this webapp), this is our repository: </p>
-    <a href="https://github.com/Apollo1840/StudyTimeBoard">
-        https://github.com/Apollo1840/StudyTimeBoard
-    </a>
+        <p>You are very welcome to join the develop team of the StudyTimeBoard (this webapp), this is our
+            repository: </p>
+        <a href="https://github.com/Apollo1840/StudyTimeBoard">
+            https://github.com/Apollo1840/StudyTimeBoard
+        </a>
     </div>
 
     <br/>
@@ -130,9 +112,24 @@
 
 </html>
 
+<script>
+      $(document).ready(function () {
+        $(".active").removeClass("active");
+        $("#nav-home").addClass("active");
+      });
+
+      function submit_show_spinner() {
+        var loading_spinner = '<span class="spinner-border" role="status" aria-hidden="true"></span>';
+        $("#record_form").hide();
+        $("#record_form_spinner").append(loading_spinner);
+        document.forms["record_time"].submit();
+      };
+
+</script>
+
 
 <!--
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.3/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.3/js/bootstrap.min.js"></script>
-  -->
+ -->

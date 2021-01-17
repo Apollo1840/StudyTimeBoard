@@ -3,11 +3,19 @@ import os
 
 
 def date2datetime(time: str):
-    return datetime.strptime(str(time), "%Y.%m.%d")
+    try:
+        return datetime.strptime(str(time), "%Y.%m.%d")
+    except:
+        print("invalid input:", time)
+        return None
 
 
 def time2datetime(time: str):
-    return datetime.strptime(str(time), "%H:%M")
+    try:
+        return datetime.strptime(str(time), "%H:%M")
+    except:
+        print("invalid input:", time)
+        return None
 
 
 def datetime2time(time: datetime.time):
@@ -36,4 +44,3 @@ def min2duration_str(minutes):
             duration_str += " {} minutes".format(min)
 
     return duration_str
-

@@ -50,9 +50,9 @@ class StudyEvent:
 class StudyEventDB(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    end_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date = db.Column(db.DateTime, nullable=False)
+    start_time = db.Column(db.String(20), nullable=False)
+    end_time = db.Column(db.String(20), nullable=False)
 
     def __repr__(self):
         return f"'{self.username}', study from '{self.start_time}' to '{self.end_time}')"

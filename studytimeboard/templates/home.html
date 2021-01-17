@@ -6,13 +6,14 @@
 <br/>
 
 <!-- quote -->
-<div class="row">
+<div class="row" id="the_quote">
     <div class="col-lg-6 mx-auto">
 
         <!-- CUSTOM BLOCKQUOTE -->
         <blockquote class="blockquote blockquote-custom bg-white p-5 shadow rounded">
             <div class="blockquote-custom-icon bg-info shadow-sm"><i class="fa fa-quote-left text-white"></i></div>
-            <p class="mb-0 mt-2 font-italic">"You only need 1000 hours of hard practice to master anything in the world."</p>
+            <p class="mb-0 mt-2 font-italic">"You only need 1000 hours of hard practice to master anything in the
+                world."</p>
             <footer class="blockquote-footer pt-4 mt-4 border-top">Gladwell's
                 <cite title="Source Title">1000 hours rule</cite>
             </footer>
@@ -25,115 +26,149 @@
 <br/>
 
 
-
 <!-- record form -->
-<form method="POST">
-    <p style="font-size: 200%;"> Record form: </p>
+<form method="POST" id="record_time">
+    <h3 style="font-size: 150%;"> Record form: </h3>
+
     <div class="jumbotron">
 
-        <!-- username row -->
-        {% if current_user.is_authenticated %}
-            <div class="row">
-                <div class="ml-3">
-                    <p>Hi <b>{{current_user.username}}</b>,
-                    record your study time,  then you can
-                        <a href="{{url_for('leaderboard')}}">compete with others</a>
-                        , or
-                        <a href="{{url_for('analysis')}}">watch your analysis</a>
-                        (right-top corner). </p>
+        <div id="record_form">
+
+            <div id="greeting_user">
+                <!-- username row -->
+                {% if current_user.is_authenticated %}
+                <div class="row">
+                    <div class="ml-3">
+                        <p>Hi <b>{{current_user.username}}</b>,
+                            record your study time, then you can
+                            <a href="{{url_for('leaderboard')}}">compete with others</a>
+                            , or
+                            <a href="{{url_for('analysis')}}">watch your analysis</a>
+                            (right-top corner). </p>
+                    </div>
                 </div>
-            </div>
-        {% else %}
-            <div class="row">
-                <div class="input-group mb-5 ml-3 mr-3">
-                    <div></div>
-                    <input type="text" class="form-control" placeholder="Type here your username" name="username">
+                {% else %}
+                <!-- input for username -->
+                <div class="row">
+                    <div class="input-group mb-5 ml-3 mr-3">
+                        <div></div>
+                        <input type="text" class="form-control" placeholder="Type here your username" name="username">
+                    </div>
                 </div>
-            </div>
-        {% endif %}
+                {% endif %}
 
-        <!-- go hold row -->
-        {% if user_status == "go" %}
-            <div class="row">
-                <p class="ml-3">  You have started <b> {{user_status_time}}</b>!
-                    Keep studying a little more to the next level!
-                </p>
             </div>
 
-            <div class="row" style="color: #AAA">
-                <p class="ml-3">
-                    Click <b>"Hold"</b> when you have no energy and want a break. click "Go" if you forget to hold last time .
-                </p>
-            </div>
-        {% endif %}
 
-        {% if user_status == "hold" %}
-            <div class="row">
-                <p class="ml-3">  You have holded <b> {{user_status_time}} </b>!
-                    Long time no study, what are you doing !?
-                </p>
-            </div>
+            <!-- button row -->
+            <div id="go_hold_buttons">
 
-            <div class="row" style="color: #AAA">
-                <p class="ml-3">
-                    Please click "Go" and start to study.
-                </p>
-            </div>
-
-        {% endif %}
-
-        {% if user_status == "unknown" %}
-            <div class="row" style="color: #AAA">
-                <p class="ml-3">  Click "Go“ or ”Hold“ when you start or end the study period: </p>
-            </div>
-        {% endif %}
-
-
-        <div class="row">
-
-            <div class="col text-center">
-                <button type="submit" class="btn btn-outline-primary" style="width: 100px; height:100px; font-size:140%; border-radius: 50%;" name="go">Go</button>
-            </div>
-
-            {% if user_status != "hold" %}
-                <div class="col text-center">
-                    <button type="submit" class="btn btn-outline-primary" style="width: 100px; height:100px; font-size:140%; border-radius: 50%;" name="hold">Hold</button>
+                <!-- go user -->
+                {% if user_status == "go" %}
+                <div class="row">
+                    <p class="ml-3"> You have started <b> {{user_status_time}}</b>!
+                        Keep studying a little more to the next level!
+                    </p>
                 </div>
-            {% endif %}
+
+                <div class="row" style="color: #AAA">
+                    <p class="ml-3">
+                        Please click <b>"Hold"</b> when you have no energy and want a break. click another button if you
+                        forget to hold last
+                        time .
+                    </p>
+                </div>
+                {% endif %}
+
+                <!-- hold user -->
+                {% if user_status == "hold" %}
+                <div class="row">
+                    <p class="ml-3"> You have holded <b> {{user_status_time}} </b>!
+                        Long time no study, what are you doing !?
+                    </p>
+                </div>
+
+                <div class="row" style="color: #AAA">
+                    <p class="ml-3">
+                        Please click "Go" and start to study.
+                    </p>
+                </div>
+                {% endif %}
+
+                <!-- unknown user -->
+                {% if user_status == "unknown" %}
+                <div class="row" style="color: #AAA">
+                    <p class="ml-3"> Click "Go“ or ”Hold“ when you start or end the study period: </p>
+                </div>
+                {% endif %}
+
+                <div class="row" id="the_buttons">
+                    <div class="col text-center">
+                        <button class="btn btn-outline-primary"
+                                style="width: 100px; height:100px; font-size:140%; border-radius: 50%;" name="go"
+                                onclick="submit_show_spinner()">
+
+                            {% if user_status == "go" %}
+                            Re-Go
+                            {% else %}
+                            Go
+                            {% endif %}
+
+                        </button>
+                    </div>
+
+                    {% if user_status != "hold" %}
+                    <div class="col text-center">
+                        <button class="btn btn-outline-primary"
+                                style="width: 100px; height:100px; font-size:140%; border-radius: 50%;" name="hold"
+                                onclick="submit_show_spinner()">Hold
+                        </button>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+
+            </div>
+
+
+            <hr/>
+
+            <!-- start end time row -->
+            <div id="duration_input">
+                <div class="row">
+                    <p style="color: #AAA" class="ml-3"> Or input concrete time interval: </p>
+                </div>
+                <div class="row">
+                    <div class="col input-group mb-3 mr-5">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">start time</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="eg. 09:00" name="start_time">
+
+                    </div>
+
+                    <div class="col input-group mb-3 ml-5">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon2">end time</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="eg. 18:00" name="end_time">
+
+                    </div>
+
+                    <div class="col mb-3 ml-5">
+                        <button type="submit" class="btn btn-primary float-right mr-2">Submit</button>
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
-
-
-        <hr/>
-
-        <!-- start end time row -->
-        <div class="row">
-            <p  style="color: #AAA" class="ml-3">  Or input concrete time interval: </p>
-        </div>
-        <div class="row">
-            <div class="col input-group mb-3 mr-5">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">start time</span>
-                </div>
-                <input type="text" class="form-control" placeholder="eg. 09:00" name="start_time">
-
-            </div>
-
-            <div class="col input-group mb-3 ml-5">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon2">end time</span>
-                </div>
-                <input type="text" class="form-control" placeholder="eg. 18:00" name="end_time">
-
-            </div>
-
-            <div class="col mb-3">
-                <button type="submit" class="btn btn-primary float-right mr-2">Submit</button>
-            </div>
-
-        </div>
+        <div id="record_form_spinner" class="text-center"></div>
 
     </div>
+
 
 </form>
 
@@ -141,10 +176,33 @@
 <hr/>
 <br>
 
+<!-- active user display -->
+<div id="studying_users">
+    <h3 style="font-size: 150%;"> Currently studying users: </h3><br>
+
+    {% if no_studying_users %}
+    <p> None. </p>
+    <p style="color: #FF5733"> Good chance, click "Go" and to be the first one! </p>
+    {% else %}
+    <ul>
+        {% for studying_user in studying_users %}
+        <li>{{studying_user}}: <b style="color: #86ff33">active</b></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+
+</div>
+
+<br>
+<hr/>
+<br>
+
 <!-- Today study king display -->
 
-<div style="font-size: 120%;">
-    <p> 🔥 Today's study king is: <b> {{ today_king }}</b> (with {{duration_str_king}}) </p>
+<div id="today_study_king_display">
+    <h3 style="font-size: 150%;">Today's study king:</h3><br>
+    <p style="font-size: 120%;"><b> 🔥 {{ today_king }}</b> (with {{duration_str_king}}) </p>
     <div class="text-center">
         <img src={{path_to_chart_king}} width="100%" height="100%">
         <!-- {{chart_html|safe}} -->
@@ -160,11 +218,12 @@
 
 <!-- chart last week display -->
 
-<div style="font-size: 120%;">
-    <p> Leaderboard of this week: </p>
+<div id="lastweek_leaderboard_display">
+    <h3 style="font-size: 150%;"> Leaderboard of this week: </h3><br>
 
     <div>
-        <p> 🏆 The leader of this board is:<b> {{ name_winner }}</b> (with {{duration_str_winner}})</p>
+        <p style="font-size: 120%;"> 🏆 The leader of this board is:<b> {{ name_winner }}</b> (with
+            {{duration_str_winner}})</p>
     </div>
 
     <div class="text-center">
@@ -177,10 +236,19 @@
 
 {% endblock %}
 
-<script>
-  $(document).ready(function () {
-    $(".active").removeClass("active");
-    $("#nav-home").addClass("active");
-  });
+<!--
+    <script>
+      $(document).ready(function () {
+        $(".active").removeClass("active");
+        $("#nav-home").addClass("active");
+      });
 
-</script>
+      function show_loading_spinner() {
+        var loading_spinner = '<span class="spinner-border" role="status" aria-hidden="true"></span>';
+        console.log("in func");
+        $(".record_form").empty();
+        $(".record_form").append(loading_spinner);
+      };
+
+    </script>
+-->

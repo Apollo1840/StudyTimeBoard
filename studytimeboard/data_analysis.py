@@ -82,7 +82,8 @@ def to_minutes_leaderboard(df):
     :return:
     """
 
-    df_r = df.groupby(NAME)[MINUTES].apply(sum)
+    df_r = df.loc[df[END_TIME] != UNKNOWN, :]
+    df_r = df_r.groupby(NAME)[MINUTES].apply(sum)
     df_r = df_r.reset_index()
     df_r = df_r.sort_values(by=MINUTES, ascending=False)
 
@@ -106,7 +107,9 @@ def to_this_week_table(df):
     filter_mask = df[DATE_DT] > last_sunday
     filtered_df = df[filter_mask]
 
+    # some post preprocess steps
     filtered_df = add_istoday_column(filtered_df)
+    filtered_df = filtered_df.loc[filtered_df[END_TIME] != UNKNOWN, :]
 
     return filtered_df
 

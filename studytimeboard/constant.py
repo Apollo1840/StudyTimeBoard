@@ -7,6 +7,8 @@ STUDY_TIME_TABLE_NAME = "record_study_time"
 
 SHEET1 = "duration"
 SHEET2 = "event"
+SHEET3 = "data"
+DEBUG_SHEET = "data_debug"
 
 # sheet 1 columns
 NAME = "name"
@@ -26,6 +28,10 @@ ACT_START = "go"
 ACT_END = "hold"
 TIME = "time"
 
+# sheet 3 columns
+
+
+# analysis columns
 MINUTES = "minutes"
 WEEKDAY = "weekday"
 ORDERED_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -50,6 +56,7 @@ REGISTED_USERS = [
 ]
 
 SOMEONE = "someone"
+UNKNOWN = "unknown"
 
 TZ = pytz.timezone('Europe/Berlin')
 

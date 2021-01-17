@@ -8,9 +8,12 @@ app.config['SECRET_KEY'] = 'newyear20210103helloworld'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
+db.create_all()
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 from studytimeboard.routes import *
+
+DataBaseAPI.init_from_gs(db)
