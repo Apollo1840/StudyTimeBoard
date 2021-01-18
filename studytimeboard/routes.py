@@ -26,6 +26,8 @@ def home():
 
         if username in REGISTED_USERS:
             DataBaseAPI.into_from_request(request, username, db)
+        else:
+            flash(FlashMessages.NO_SUCH_USER, "danger")
 
     # if the user type in the form with duration, the next user is unknown, so the username is SOMEONE
     if not current_user.is_authenticated:

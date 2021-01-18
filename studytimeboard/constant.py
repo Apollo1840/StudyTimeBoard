@@ -62,7 +62,7 @@ TZ = pytz.timezone('Europe/Berlin')
 
 
 class FlashMessages:
-    NO_SUCH_USER = "Username not registered, please try another name or register one on the right top corner"
+    NO_SUCH_USER = "Username not registered, please try the name in the leaderboard or register one on the right top corner"
 
     @staticmethod
     def NO_SUCH_FUNC(function_name):

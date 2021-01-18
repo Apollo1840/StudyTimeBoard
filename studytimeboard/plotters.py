@@ -83,7 +83,8 @@ def plot_study_events(df, output_path="sample.png"):
     ax = plt.subplot()
 
     for i in range(len(df)):
-        ax.plot([date[i], date[i]], [ts[i], te[i]], ".-", linewidth=15)
+        if te[i]>ts[i]:
+            ax.plot([date[i], date[i]], [ts[i], te[i]], ".-", linewidth=15)
 
     ax.yaxis.set_major_locator(HourLocator())
     ax.yaxis.set_major_formatter(DateFormatter('%H:%M'))
@@ -108,7 +109,8 @@ def plot_study_events_singleday(df, output_path="sample.png"):
     ax = plt.subplot()
 
     for i in range(len(df)):
-        ax.plot([ts[i], te[i]], [0, 0], ".-", linewidth=20)
+        if te[i] > ts[i]:
+            ax.plot([ts[i], te[i]], [0, 0], ".-", linewidth=20)
 
     ax.xaxis.set_major_locator(HourLocator())
     ax.xaxis.set_major_formatter(DateFormatter('%H:%M'))
