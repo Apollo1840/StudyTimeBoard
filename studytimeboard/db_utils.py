@@ -43,7 +43,8 @@ class DataBaseAPI:
                 study_rows = np.where((df[NAME] == username) & (df[END_TIME] == UNKNOWN))[0]
                 if len(study_rows) >= 1:
                     study_index = int(study_rows[0])
-                    gs.delete_row(DataBaseAPI.google_sheet_name, study_index + 2)  # google sheet include header as one row, so + 1,
+                    gs.delete_row(DataBaseAPI.google_sheet_name, study_index + 2)
+                    # google sheet include header as one row, so + 1,
                     # and it starts from 1, so + 1
 
                 row = [username, datetime2date(date), start_time, UNKNOWN]
@@ -70,7 +71,8 @@ class DataBaseAPI:
                     study_index = int(study_rows[0])
                     _, _, start_time, _ = df.iloc[study_index, :]
 
-                    gs.delete_row(DataBaseAPI.google_sheet_name, study_index + 2)  # google sheet include header as one row, so + 1,
+                    gs.delete_row(DataBaseAPI.google_sheet_name, study_index + 2)
+                    # google sheet include header as one row, so + 1,
                     # and it starts from 1, so + 1
 
                     row = [username, datetime2date(date), start_time, end_time]
@@ -80,6 +82,8 @@ class DataBaseAPI:
                     if study_event_studying is not None:
                         db.session.delete(study_event_studying)
                         db.session.commit()
+                    else:
+                        print("there is no go event in flask_sql for {} , when someone clicked hold".format(username))
 
                     study_event = StudyEventDB(username=username, date=date, start_time=start_time, end_time=end_time)
                     db.session.add(study_event)
