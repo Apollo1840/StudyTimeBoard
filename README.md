@@ -2,9 +2,39 @@
 
 This is the server of the study-time-board web app.
 
+## Live demo
+
+Use your browser, go to https://study-time-board.herokuapp.com/.
+
+
 ## For developers
 
-To debug your program locally you need to follow those steps:
+### 1. Dev setup:
+
+#### Minimal dev setup
+
+1. go to `studytimeboard/config.py`, edit:
+
+
+    backup_googlesheet = None
+
+
+2. setup your virtualenv, then run:
+
+
+    pip install -r requiremnts.txt
+    python app.py
+
+to start a server locally.
+
+3. Go to `http://0.0.0.0:5555/` to view the main page of this web app.
+
+5. (optional) Go to `http://0.0.0.0:5555/admin_create_some_data` to create some data into database.
+click "Home" to go back the main page.
+
+---
+   
+#### Full dev setup (with Google Sheet as Manager(backup) database)
 
 1. follow the steps from：
 
@@ -26,13 +56,13 @@ run:
     pip install -r requiremnts.txt
     python app.py
    
-to start a server locally. go to `http://0.0.0.0:5555/` to view the main page of thie web app.
+to start a server locally. go to `http://0.0.0.0:5555/` to view the main page of this web app.
 
-### todo:
+### 2. Todos:
 - more leaderboards, eg. weekday king bar chart.
 - less information on the record form block, hover on question mark to see how to use.
 
-### outlook:
+#### outlook:
 - use Database software to check updates then update the charts regularly, instead of tigered by visit the web.
 - new way to record time
 - gamefication
@@ -41,13 +71,6 @@ to start a server locally. go to `http://0.0.0.0:5555/` to view the main page of
 - study zone (decoration using study-coin)
 - earn study-coin within group
 - visit others study zone
-
-## Live demo
-
-Use your browser, go to https://study-time-board.herokuapp.com/.
-
-Ask the author to get editing permits to the data sheet 
-(`record_study_time` on cloud, url:  https://docs.google.com/spreadsheets/d/1FGoY2IrXavkyiRGZQkvTIgHwHmIrlohR-IDoQ5K4hw4/edit?usp=sharing).
 
 
 ## Reference: How to build web app
