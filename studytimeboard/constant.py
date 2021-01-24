@@ -52,7 +52,11 @@ REGISTED_USERS = [
     "Chen Dong",
     "Diqing",
     "vivi",
-    "Vicky.Huang"
+    "Vicky.Huang",
+    
+    "Alpha",
+    "Beta",
+    "Theta",
 ]
 
 SOMEONE = "someone"

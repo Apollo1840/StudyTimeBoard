@@ -15,5 +15,6 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 from studytimeboard.routes import *
+from studytimeboard.config import backup_googlesheet
 
-DataBaseAPI.init_from_gs(db)
+DataBaseAPI(backup_googlesheet=backup_googlesheet).init_from_gs(db)

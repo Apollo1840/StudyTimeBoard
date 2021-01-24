@@ -8,6 +8,7 @@ from .path_manager import *
 from .constant import *
 from studytimeboard import app, db
 from studytimeboard.models import User
+from studytimeboard.config import backup_googlesheet
 from studytimeboard.db_utils import *
 
 
@@ -25,7 +26,7 @@ def home():
             username = request.form.get("username")
 
         if username in REGISTED_USERS:
-            DataBaseAPI.into_from_request(request, username, db)
+            DataBaseAPI(backup_googlesheet=backup_googlesheet).into_from_request(request, username, db)
         else:
             flash(FlashMessages.NO_SUCH_USER, "danger")
 
@@ -160,6 +161,73 @@ def about():
 
 
 @app.route('/admin_reload_data')
-def admin():
-    DataBaseAPI.init_from_gs(db)
+def admin_reload_data():
+    DataBaseAPI(backup_googlesheet=backup_googlesheet).init_from_gs(db)
+    return render_template('about.html')
+
+
+@app.route('/admin_clean_data')
+def admin_clean_data():
+    # delete study events
+    StudyEventDB.query.delete()
+    db.session.commit()
+
+    return render_template('about.html')
+
+
+@app.route('/admin_create_some_data')
+def admin_create_some_data():
+    yesterday = datetime.today() - timedelta(days=1)
+    yesterday2 = datetime.today() - timedelta(days=2)
+    yesterday3 = datetime.today() - timedelta(days=3)
+
+    dba = DataBaseAPI(backup_googlesheet=backup_googlesheet)
+
+    dba.into_duration(username="Alpha",
+                      date=yesterday3,
+                      start_time="08:00",
+                      end_time="12:00",
+                      db=db)
+
+    dba.into_duration(username="Alpha",
+                      date=yesterday,
+                      start_time="08:00",
+                      end_time="12:00",
+                      db=db)
+
+    dba.into_duration(username="Beta",
+                      date=yesterday3,
+                      start_time="14:00",
+                      end_time="16:00",
+                      db=db)
+
+    dba.into_duration(username="Beta",
+                      date=yesterday2,
+                      start_time="14:00",
+                      end_time="16:00",
+                      db=db)
+
+    dba.into_duration(username="Beta",
+                      date=yesterday,
+                      start_time="11:00",
+                      end_time="12:00",
+                      db=db)
+
+    dba.into_duration(username="Beta",
+                      date=datetime.today(),
+                      start_time="07:00",
+                      end_time="12:00",
+                      db=db)
+
+    dba.into_duration(username="Theta",
+                      date=datetime.today(),
+                      start_time="08:00",
+                      end_time="19:00",
+                      db=db)
+
+    dba.into_go(username="Theta",
+                date=datetime.today(),
+                start_time="20:00",
+                db=db)
+
     return render_template('about.html')
