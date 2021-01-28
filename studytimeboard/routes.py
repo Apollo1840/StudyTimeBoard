@@ -1,3 +1,10 @@
+"""
+
+    UseCase design & Display information generation through app_utils.py ( info_...() )
+
+
+"""
+
 # external utils
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, current_user, logout_user, login_required
