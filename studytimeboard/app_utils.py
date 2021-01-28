@@ -12,6 +12,7 @@ import shutil
 from .constant import *
 from .config import *
 
+from .models import *
 from .utils.database import DataBaseAPI
 from .utils.data_analysis import *
 from .utils.plotters import *

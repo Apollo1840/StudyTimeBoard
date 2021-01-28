@@ -3,11 +3,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, current_user, logout_user, login_required
 
 # internal utils
-from .app_utils import *
 from studytimeboard import app, db
-from studytimeboard.models import User
-from studytimeboard.config import backup_googlesheet
-from studytimeboard.utils.database import *
+from studytimeboard.app_utils import *
 
 
 @app.route('/', methods=["GET", "POST"])
