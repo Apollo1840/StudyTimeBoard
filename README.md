@@ -11,7 +11,7 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 
 ### 1. Dev setup:
 
-#### Minimal dev setup
+#### Minimal dev setup [ 2 steps ]
 
 1. setup your virtualenv, then run:
 
@@ -21,12 +21,12 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 
 to start a server locally.
 
-3. Go to `http://0.0.0.0:5555/` to view the main page of this web app.
+2. Go to `http://0.0.0.0:5555/` to view the main page of this web app.
 
 
 ---
    
-#### Full dev setup (with Google Sheet as Manager(backup) database)
+#### Full dev setup (with Google Sheet as Manager(backup) database) [ 4 steps ]
 
 1. follow the steps from：
 
@@ -48,7 +48,9 @@ run:
     pip install -r requiremnts.txt
     python app.py
    
-to start a server locally. go to `http://0.0.0.0:5555/` to view the main page of this web app.
+to start a server locally. 
+
+4. Go to `http://0.0.0.0:5555/` to view the main page of this web app.
 
 ### 2. Todos:
 - more leaderboards, eg. weekday king bar chart.
@@ -63,6 +65,10 @@ to start a server locally. go to `http://0.0.0.0:5555/` to view the main page of
 - study zone (decoration using study-coin)
 - earn study-coin within group
 - visit others study zone
+
+### 3. Code structure explanation
+
+editing ...
 
 
 ## Reference: How to build web app
