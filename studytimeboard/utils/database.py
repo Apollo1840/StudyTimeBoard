@@ -4,12 +4,10 @@ import numpy as np
 from tqdm import tqdm
 import time
 
-from .constant import *
-from .path_manager import *
-from .models import StudyEventDB
+from ..models import StudyEventDB
+from ..tools.gsheet import GoogleSheet
+
 from .data_analysis import *
-from .plotters import *
-from .utils.gsheet import GoogleSheet
 
 
 class DataBaseAPI:
@@ -188,8 +186,8 @@ class DataBaseAPI:
 
         self.into_some_examples(db)
 
-
     def into_some_examples(self, db):
+
         # load some example to db
         yesterday = datetime.today() - timedelta(days=1)
         yesterday2 = datetime.today() - timedelta(days=2)
@@ -246,7 +244,7 @@ class DataBaseAPI:
     def out_as_dataframe():
         study_events = StudyEventDB.query.all()
 
-        df_dict = {}
+        df_dict = dict()
         df_dict[NAME] = [se.username for se in study_events]
         df_dict[DATE] = [datetime2date(se.date) for se in study_events]
         df_dict[START_TIME] = [se.start_time for se in study_events]
@@ -262,7 +260,7 @@ def read_data_from_db_gs1_gs2(db=None):
 
     # df = studyeventsdb2df(db)
 
-    df_all = merge_dur_eve(df_dur, df_eve)
+    df_all = df_merge_dur_eve(df_dur, df_eve)
     return [df_all, df_eve]
 
 
@@ -277,7 +275,7 @@ def add_gs1_gs2_to_gs3():
     df_dur = gs.sheet(sheet_name=SHEET1, least_col_name=START_TIME)
     df_eve = gs.sheet(sheet_name=SHEET2, least_col_name=NAME)
 
-    df = merge_dur_eve(df_dur, df_eve)
+    df = df_merge_dur_eve(df_dur, df_eve)
 
     gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
     for i, row in tqdm(df.iterrows(), total=len(df)):

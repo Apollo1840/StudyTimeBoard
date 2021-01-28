@@ -1,11 +1,9 @@
-
 from datetime import datetime, timedelta
 from flask_login import UserMixin
 
-from .utils.data_utils import *
+from .tools.data_tools import *
 from studytimeboard import login_manager
 from studytimeboard import db, login_manager
-
 
 
 @login_manager.user_loader

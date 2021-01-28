@@ -4,12 +4,10 @@ from flask_login import login_user, current_user, logout_user, login_required
 
 # internal utils
 from .app_utils import *
-from .path_manager import *
-from .constant import *
 from studytimeboard import app, db
 from studytimeboard.models import User
 from studytimeboard.config import backup_googlesheet
-from studytimeboard.db_utils import *
+from studytimeboard.utils.database import *
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -177,5 +175,5 @@ def admin_clean_data():
 
 @app.route('/admin_create_some_data')
 def admin_create_some_data():
-    app_create_example_data(db)
+    DataBaseAPI(backup_googlesheet=backup_googlesheet).into_some_examples(db)
     return render_template('about.html')

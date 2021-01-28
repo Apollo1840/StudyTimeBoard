@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timedelta
 
-from .constant import *
+from ..constant import *
 
 
 # path manager

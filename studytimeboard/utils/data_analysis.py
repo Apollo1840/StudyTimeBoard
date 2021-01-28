@@ -9,9 +9,9 @@ from datetime import datetime, timedelta
 import seaborn as sns
 import pandas as pd
 
-from .constant import *
-from .utils.data_utils import *
-from .models import StudyEvent
+from ..tools.data_tools import *
+from ..constant import *
+from ..models import StudyEvent
 
 
 def add_analysis_columns(df):
@@ -28,12 +28,6 @@ def add_analysis_columns(df):
 def add_istoday_column(df):
     today_str = datetime2date(datetime.now(TZ))
     df[TODAY_OR_NOT] = [IS_TODAY if i else NOT_TODAY for i in df[DATE] == today_str]
-    return df
-
-
-def merge_dur_eve(df_dur, df_eve):
-    df_dur2 = df_eve2df_dur(df_eve)
-    df = pd.concat([df_dur, df_dur2])
     return df
 
 
@@ -73,6 +67,12 @@ def df_eve2df_dur(df_eve):
             dur.append((study_event.name, study_event.date, study_event.start_time, study_event.default_end_time))
 
     return pd.DataFrame(dur, columns=[NAME, DATE, START_TIME, END_TIME])
+
+
+def df_merge_dur_eve(df_dur, df_eve):
+    df_dur2 = df_eve2df_dur(df_eve)
+    df = pd.concat([df_dur, df_dur2])
+    return df
 
 
 def to_minutes_leaderboard(df):

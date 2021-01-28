@@ -11,12 +11,13 @@ import shutil
 
 from .constant import *
 from .config import *
-from .path_manager import *
-from .models import StudyEventDB
-from .data_analysis import *
-from .plotters import *
-from .db_utils import DataBaseAPI
-from .utils.gsheet import GoogleSheet
+
+from .utils.database import DataBaseAPI
+from .utils.data_analysis import *
+from .utils.plotters import *
+from .utils.plotter_path_manager import *
+
+from .tools.data_tools import min2duration_str
 
 
 def clean_chart_folder():
