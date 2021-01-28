@@ -146,6 +146,16 @@ class DataBaseAPI:
         row = [username, datetime2date(date), start_time, end_time]
         self.gsheet_appendrow(row)
 
+    def init_db(self, db, with_examples=False):
+        if self.backup_googlesheet is not None:
+            self.init_from_gs(db)
+
+            if with_examples:
+                self.into_some_examples(db)
+
+        elif with_examples:
+            self.init_with_examples(db)
+
     def init_from_gs(self, db):
         """
         should be used for database initialization
@@ -169,6 +179,68 @@ class DataBaseAPI:
         # load df to db
         db.session.add_all(study_events)
         db.session.commit()
+
+    def init_with_examples(self, db):
+
+        # delete study events
+        StudyEventDB.query.delete()
+        db.session.commit()
+
+        self.into_some_examples(db)
+
+
+    def into_some_examples(self, db):
+        # load some example to db
+        yesterday = datetime.today() - timedelta(days=1)
+        yesterday2 = datetime.today() - timedelta(days=2)
+        yesterday3 = datetime.today() - timedelta(days=3)
+
+        self.into_duration(username="Alpha",
+                           date=yesterday3,
+                           start_time="08:00",
+                           end_time="12:00",
+                           db=db)
+
+        self.into_duration(username="Alpha",
+                           date=yesterday,
+                           start_time="08:00",
+                           end_time="12:00",
+                           db=db)
+
+        self.into_duration(username="Beta",
+                           date=yesterday3,
+                           start_time="14:00",
+                           end_time="16:00",
+                           db=db)
+
+        self.into_duration(username="Beta",
+                           date=yesterday2,
+                           start_time="14:00",
+                           end_time="16:00",
+                           db=db)
+
+        self.into_duration(username="Beta",
+                           date=yesterday,
+                           start_time="11:00",
+                           end_time="12:00",
+                           db=db)
+
+        self.into_duration(username="Beta",
+                           date=datetime.today(),
+                           start_time="07:00",
+                           end_time="12:00",
+                           db=db)
+
+        self.into_duration(username="Theta",
+                           date=datetime.today(),
+                           start_time="08:00",
+                           end_time="19:00",
+                           db=db)
+
+        self.into_go(username="Theta",
+                     date=datetime.today(),
+                     start_time="20:00",
+                     db=db)
 
     @staticmethod
     def out_as_dataframe():

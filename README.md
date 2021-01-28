@@ -13,13 +13,7 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 
 #### Minimal dev setup
 
-1. go to `studytimeboard/config.py`, edit:
-
-
-    backup_googlesheet = None
-
-
-2. setup your virtualenv, then run:
+1. setup your virtualenv, then run:
 
 
     pip install -r requiremnts.txt
@@ -29,8 +23,6 @@ to start a server locally.
 
 3. Go to `http://0.0.0.0:5555/` to view the main page of this web app.
 
-5. (optional) Go to `http://0.0.0.0:5555/admin_create_some_data` to create some data into database.
-click "Home" to go back the main page.
 
 ---
    

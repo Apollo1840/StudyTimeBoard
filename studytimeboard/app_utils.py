@@ -10,6 +10,7 @@ import os
 import shutil
 
 from .constant import *
+from .config import *
 from .path_manager import *
 from .models import StudyEventDB
 from .data_analysis import *

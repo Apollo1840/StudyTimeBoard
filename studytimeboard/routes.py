@@ -177,57 +177,5 @@ def admin_clean_data():
 
 @app.route('/admin_create_some_data')
 def admin_create_some_data():
-    yesterday = datetime.today() - timedelta(days=1)
-    yesterday2 = datetime.today() - timedelta(days=2)
-    yesterday3 = datetime.today() - timedelta(days=3)
-
-    dba = DataBaseAPI(backup_googlesheet=backup_googlesheet)
-
-    dba.into_duration(username="Alpha",
-                      date=yesterday3,
-                      start_time="08:00",
-                      end_time="12:00",
-                      db=db)
-
-    dba.into_duration(username="Alpha",
-                      date=yesterday,
-                      start_time="08:00",
-                      end_time="12:00",
-                      db=db)
-
-    dba.into_duration(username="Beta",
-                      date=yesterday3,
-                      start_time="14:00",
-                      end_time="16:00",
-                      db=db)
-
-    dba.into_duration(username="Beta",
-                      date=yesterday2,
-                      start_time="14:00",
-                      end_time="16:00",
-                      db=db)
-
-    dba.into_duration(username="Beta",
-                      date=yesterday,
-                      start_time="11:00",
-                      end_time="12:00",
-                      db=db)
-
-    dba.into_duration(username="Beta",
-                      date=datetime.today(),
-                      start_time="07:00",
-                      end_time="12:00",
-                      db=db)
-
-    dba.into_duration(username="Theta",
-                      date=datetime.today(),
-                      start_time="08:00",
-                      end_time="19:00",
-                      db=db)
-
-    dba.into_go(username="Theta",
-                date=datetime.today(),
-                start_time="20:00",
-                db=db)
-
+    app_create_example_data(db)
     return render_template('about.html')
