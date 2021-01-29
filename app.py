@@ -1,10 +1,5 @@
-# import pandas as pd
-# import os
 
-from studytimeboard import app, db
-from studytimeboard.config import debug_mode
-# from studytimeboard.constant import *
-# from studytimeboard.app_utils import initialize_db
+from studytimeboard import app, debug_mode
 
 if __name__ == '__main__':
     # start the app

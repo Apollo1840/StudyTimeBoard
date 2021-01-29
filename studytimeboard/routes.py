@@ -194,10 +194,7 @@ def admin_reload_data():
 
 @app.route('/admin_clean_data')
 def admin_clean_data():
-    # delete study events
-    StudyEventDB.query.delete()
-    db.session.commit()
-
+    dbapi.init_empty()
     return render_template('about.html')
 
 

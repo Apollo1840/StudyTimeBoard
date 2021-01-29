@@ -15,12 +15,14 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 from studytimeboard.utils.database import DataBaseAPI
-from studytimeboard.config import (main_googlesheet_name, user_googlesheet_name,
+from studytimeboard.config import (debug_mode, main_googlesheet_name, user_googlesheet_name,
                                    add_examples, add_users)
 
 dbapi = DataBaseAPI(db,
                     main_googlesheet_name=main_googlesheet_name,
                     user_googlesheet_name=user_googlesheet_name)
 dbapi.init_db(add_examples=add_examples, add_users=add_users)
+
+print("successfully init db")
 
 from studytimeboard.routes import *

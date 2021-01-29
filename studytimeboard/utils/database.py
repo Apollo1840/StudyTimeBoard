@@ -162,7 +162,6 @@ class DataBaseAPI():
 
         :param request:
         :param username:
-        :param db:
         :return:
         """
 
@@ -225,7 +224,6 @@ class DataBaseAPI():
 
         self.init_empty()
 
-        # study_events from gs
         self.into_studyevents_from_gs()
         self.into_users_from_gs()
 
@@ -240,6 +238,7 @@ class DataBaseAPI():
     def into_studyevents_from_gs(self):
         study_events = []
         if self.gsapi_main is not None:
+            print("load study events from google sheet {}".format(self.gsapi_main.sheetname))
             for i, row in self.gsapi_main.gsheet.iterrows():
                 study_events.append(StudyEventDB(username=row[NAME],
                                                  date=date2datetime(row[DATE]),
@@ -250,8 +249,11 @@ class DataBaseAPI():
     def into_users_from_gs(self):
         users = []
         if self.gsapi_user is not None:
+            existed_users = self.all_users()
+            print("load users from google sheet {}".format(self.gsapi_user.sheetname))
             for i, row in self.gsapi_user.gsheet.iterrows():
-                users.append(UserDB(username=row[USERNAME], password=row[PASSWORD]))
+                if row[USERNAME] not in existed_users:
+                    users.append(UserDB(username=row[USERNAME], password=row[PASSWORD]))
         self.fsqlapi.into_users(users)
 
     def init_empty(self):

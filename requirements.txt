@@ -10,4 +10,4 @@ seaborn
 gspread
 oauth2client
 Flask-Login
-Flask-SQLAlchemy
+Flask-SQLAlchemy==2.4.4
