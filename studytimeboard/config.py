@@ -1,5 +1,6 @@
 from .constant import SHEET_EVENTS, SHEET_EVENTS_DEBUG, SHEET_USERBANK, SHEET_USERBANK_DEBUG
 
+user_amount_limit = 100
 debug_mode = True
 
 if debug_mode:

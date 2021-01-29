@@ -166,7 +166,14 @@ def register():
         username = request.form.get('username')
         password = request.form.get("password")
 
-        dbapi.into_user(username, password)
+        all_users = dbapi.all_users()
+        if username not in all_users:
+            if len(all_users) <= user_amount_limit:
+                dbapi.into_user(username, password)
+            else:
+                flash(FlashMessages.TOO_MUCH_USERS, "danger")
+        else:
+            flash(FlashMessages.REGISTERED_USER, "danger")
 
         flash(FlashMessages.WELCOME_NEW_USER(username), 'success')
         return redirect(url_for('login'))
