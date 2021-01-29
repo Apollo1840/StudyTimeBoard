@@ -10,7 +10,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, current_user, logout_user, login_required
 
 # internal utils
-from studytimeboard import app, db
+from studytimeboard import app, db, dbapi
 from studytimeboard.app_utils import *
 
 
@@ -27,8 +27,8 @@ def home():
         if username == SOMEONE:  # user not authenticated
             username = request.form.get("username")
 
-        if username in REGISTED_USERS:
-            DataBaseAPI(backup_googlesheet=backup_googlesheet).into_from_request(request, username, db)
+        if username in dbapi.all_users():
+            dbapi.into_from_request(request, username)
         else:
             flash(FlashMessages.NO_SUCH_USER, "danger")
 
@@ -36,7 +36,7 @@ def home():
     if not current_user.is_authenticated:
         username = SOMEONE
 
-    df_all = get_df_all_from_db(db)
+    df_all = get_df_ana(dbapi)
 
     studying_users = info_studying_users(df_all)
     no_studying_users = len(studying_users) == 0
@@ -77,7 +77,7 @@ def leaderboard():
     # rm the folder to avoid multiple rendering data explode
     clean_chart_folder()
 
-    df_all = get_df_all_from_db(db)
+    df_all = get_df_ana(dbapi)
     df_last_week = to_this_week_table(df_all)
 
     # get display information
@@ -101,8 +101,7 @@ def analysis():
 
         # rm the folder to avoid multiple rendering data explode
         clean_chart_folder()
-
-        df_all = get_df_all_from_db(db)
+        df_all = get_df_ana(dbapi)
 
         if username in df_all[NAME].unique():
             df_user = df_all.loc[df_all[NAME] == username, :]
@@ -118,6 +117,8 @@ def analysis():
                                    username=username,
                                    path_umd=path_umd,
                                    path_use=path_use)
+        else:
+            return redirect(url_for("login"))
     else:
         return redirect(url_for("login"))
 
@@ -129,16 +130,22 @@ def login():
 
     # form = LoginForm()
     # if form.validate_on_submit():
-    if request.method == 'POST':  # this block is only entered when the form is submitted
+
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    elif request.method == 'POST':
         username = request.form.get('username')
-
-        if username in REGISTED_USERS:
-            user = User(username=username)
-            login_user(user, remember=True)
-
-            return redirect(url_for('home'))
-        else:
+        user = UserDB.query.filter_by(username=username).first()
+        if user is None:
             flash(FlashMessages.NO_SUCH_USER, "danger")
+            return render_template('login.html')  # no such user
+        elif user.password == request.form.get("password"):  # todo: use bcrypt
+            login_user(user, remember=True)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
+
+        else:
+            flash(FlashMessages.PASSWD_INCORRECT, "danger")
             return render_template('login.html')  # no such user
 
     else:
@@ -151,10 +158,20 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    flash(FlashMessages.NO_SUCH_FUNC("registration"), 'danger')
-    return render_template('home.html')
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    elif request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get("password")
+
+        dbapi.into_user(username, password)
+
+        flash(FlashMessages.WELCOME_NEW_USER(username), 'success')
+        return redirect(url_for('login'))
+    else:
+        return render_template('login.html')
 
 
 @app.route('/about')
@@ -164,7 +181,7 @@ def about():
 
 @app.route('/admin_reload_data')
 def admin_reload_data():
-    DataBaseAPI(backup_googlesheet=backup_googlesheet).init_from_gs(db)
+    dbapi.init_db()
     return render_template('about.html')
 
 
@@ -179,5 +196,11 @@ def admin_clean_data():
 
 @app.route('/admin_create_some_data')
 def admin_create_some_data():
-    DataBaseAPI(backup_googlesheet=backup_googlesheet).into_some_examples(db)
+    dbapi.into_some_examples()
+    return render_template('about.html')
+
+
+@app.route('/admin_create_some_users')
+def admin_create_some_user():
+    dbapi.into_some_users()
     return render_template('about.html')

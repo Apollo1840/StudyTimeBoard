@@ -28,13 +28,13 @@ def clean_chart_folder():
     os.makedirs(bar_chart_folder)
 
 
-def get_df_all_from_db(db=None):
+def get_df_ana(dbapi: DataBaseAPI):
     """
 
     :return: dataframe, each row is a clip of study duration(event)
     """
 
-    df = DataBaseAPI.out_as_dataframe()
+    df = dbapi.out_as_dataframe()
     df_all = add_analysis_columns(df)
     df_all = df_all.sort_values(by=DATE_DT)
 

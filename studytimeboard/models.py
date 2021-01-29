@@ -2,30 +2,12 @@ from datetime import datetime, timedelta
 from flask_login import UserMixin
 
 from .tools.data_tools import *
-from studytimeboard import login_manager
 from studytimeboard import db, login_manager
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    print("load user {}".format(user_id))
-    return User(username=user_id)
-
-
-class User(UserMixin):
-    id = ""
-    username = ""
-
-    def __init__(self, username):
-        self.username = username
-        self.id = username
-
-    @staticmethod
-    def query_via_username(username):
-        raise NotImplemented
-
-    def __repr__(self):
-        return "User"
+    return UserDB.query.get(int(user_id))
 
 
 class StudyEvent:
@@ -55,4 +37,11 @@ class StudyEventDB(db.Model):
     def __repr__(self):
         return f"'{self.username}', study from '{self.start_time}' to '{self.end_time}')"
 
-# db.create_all()
+
+class UserDB(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
+
+    def __repr__(self):
+        return f"User('{self.username}')"

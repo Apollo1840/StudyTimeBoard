@@ -7,8 +7,10 @@ STUDY_TIME_TABLE_NAME = "record_study_time"
 
 SHEET1 = "duration"
 SHEET2 = "event"
-SHEET3 = "data"
-DEBUG_SHEET = "data_debug"
+SHEET_EVENTS = "data"
+SHEET_EVENTS_DEBUG = "data_debug"
+SHEET_USERBANK = "userbank"
+SHEET_USERBANK_DEBUG = "userbank_debug"
 
 # sheet 1 columns
 NAME = "name"
@@ -29,7 +31,8 @@ ACT_END = "hold"
 TIME = "time"
 
 # sheet 3 columns
-
+USERNAME = "username"
+PASSWORD = "password"
 
 # analysis columns
 MINUTES = "minutes"
@@ -67,8 +70,13 @@ TZ = pytz.timezone('Europe/Berlin')
 
 class FlashMessages:
     NO_SUCH_USER = "Username not registered, please try the name in the leaderboard or register one on the right top corner"
+    PASSWD_INCORRECT = "Wrong password"
 
     @staticmethod
     def NO_SUCH_FUNC(function_name):
         return 'Sorry, {} function is not open yet. ' \
                'You are very welcome to join the develop team to speed up the process'.format(function_name)
+
+    @staticmethod
+    def WELCOME_NEW_USER(username):
+        return "hi, {}. Welcome to study-time-board, you are successfully regiseterd, now please login".format(username)

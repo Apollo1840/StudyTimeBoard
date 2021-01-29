@@ -14,7 +14,13 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
-from studytimeboard.routes import *
-from studytimeboard.config import backup_googlesheet, with_examples
+from studytimeboard.utils.database import DataBaseAPI
+from studytimeboard.config import (main_googlesheet_name, user_googlesheet_name,
+                                   add_examples, add_users)
 
-DataBaseAPI(backup_googlesheet=backup_googlesheet).init_db(db, with_examples=with_examples)
+dbapi = DataBaseAPI(db,
+                    main_googlesheet_name=main_googlesheet_name,
+                    user_googlesheet_name=user_googlesheet_name)
+dbapi.init_db(add_examples=add_examples, add_users=add_users)
+
+from studytimeboard.routes import *
