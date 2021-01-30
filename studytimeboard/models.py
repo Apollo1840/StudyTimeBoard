@@ -7,7 +7,11 @@ from studytimeboard import db, login_manager
 
 @login_manager.user_loader
 def load_user(user_id):
-    return UserDB.query.get(int(user_id))
+    try:
+        user = UserDB.query.get(int(user_id))
+    except:
+        user = None
+    return user
 
 
 class StudyEvent:

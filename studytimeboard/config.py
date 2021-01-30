@@ -1,10 +1,10 @@
 from .constant import SHEET_EVENTS, SHEET_EVENTS_DEBUG, SHEET_USERBANK, SHEET_USERBANK_DEBUG
 
 user_amount_limit = 100
-debug_mode = False
+debug_mode = True
 
 if debug_mode:
-    has_gs_auth = False
+    has_gs_auth = True
     if has_gs_auth:
         main_googlesheet_name = SHEET_EVENTS_DEBUG
         user_googlesheet_name = SHEET_USERBANK_DEBUG

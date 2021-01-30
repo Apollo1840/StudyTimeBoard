@@ -29,12 +29,18 @@ class GSAPI(BaseAPI):
 
     def __init__(self, sheetname, deepest_col_name):
         self.sheetname = sheetname
+        self.deepest_col_name = deepest_col_name
 
+        self.gs = None
+        self.gsheet = None
+        self.refresh()
+        
+    def refresh(self):
         # for input
         self.gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
 
         # for output
-        self.gsheet = self.gs.sheet(sheet_name=self.sheetname, least_col_name=deepest_col_name)
+        self.gsheet = self.gs.sheet(sheet_name=self.sheetname, least_col_name=self.deepest_col_name)
 
     def _gsheet_appendrow(self, row):
         self.gs.append_row(self.sheetname, row)
@@ -45,6 +51,8 @@ class GSAPI(BaseAPI):
         # and it starts from 1, so + 1
 
     def into_go(self, username, date, start_time):
+        self.refresh()
+        
         # delete last "go"
         df = self.gsheet
         study_rows = np.where((df[NAME] == username) & (df[END_TIME] == UNKNOWN))[0]
@@ -57,6 +65,8 @@ class GSAPI(BaseAPI):
         self._gsheet_appendrow(row)
 
     def into_hold(self, username, date, end_time):
+        self.refresh()
+        
         # delete imcomplete study event and and new
         df = self.gsheet
         study_rows = np.where((df[NAME] == username) & (df[END_TIME] == UNKNOWN))[0]
@@ -74,10 +84,14 @@ class GSAPI(BaseAPI):
                                                      username))
 
     def into_duration(self, username, date, start_time, end_time):
+        self.refresh()
+        
         row = [username, datetime2date(date), start_time, end_time]
         self._gsheet_appendrow(row)
 
     def into_user(self, username, password):
+        self.refresh()
+        
         row = [username, password]
         self._gsheet_appendrow(row)
 
@@ -236,6 +250,8 @@ class DataBaseAPI():
             self.into_some_users()
 
     def into_studyevents_from_gs(self):
+        self.gsapi_main.refresh()
+
         study_events = []
         if self.gsapi_main is not None:
             print("load study events from google sheet {}".format(self.gsapi_main.sheetname))
@@ -247,6 +263,8 @@ class DataBaseAPI():
         self.fsqlapi.into_studyevents(study_events)
 
     def into_users_from_gs(self):
+        self.gsapi_user.refresh()
+
         users = []
         if self.gsapi_user is not None:
             existed_users = self.all_users()
