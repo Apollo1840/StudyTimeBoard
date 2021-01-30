@@ -10,7 +10,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, current_user, logout_user, login_required
 
 # internal utils
-from studytimeboard import app, db, dbapi
+from studytimeboard import app, dbapi, logger
 from studytimeboard.app_utils import *
 
 
@@ -183,6 +183,14 @@ def register():
 
 @app.route('/about')
 def about():
+    return render_template('about.html')
+
+
+@app.route('/admin_log')
+def admin_log():
+    with open(logger.filename, "r") as f:
+        info = f.readlines()
+    flash(info, "success")
     return render_template('about.html')
 
 

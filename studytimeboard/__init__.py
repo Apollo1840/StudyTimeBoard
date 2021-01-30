@@ -1,6 +1,15 @@
+import logging
+
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+
+from studytimeboard.tools.logger import APPLogHandler
+
+logger = logging.getLogger(__file__)
+logger.setLevel(logging.DEBUG)
+logger.filename = "stb_app_backend.log"
+logger.addHandler(APPLogHandler(logger.filename))
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'newyear20210103helloworld'
@@ -9,6 +18,9 @@ app.config['SECRET_KEY'] = 'newyear20210103helloworld'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 db.create_all()
+
+logger.info("************** app: heated ***************")
+logger.info("app: db ready")
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'

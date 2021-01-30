@@ -3,7 +3,9 @@ import shutil
 import numpy as np
 from tqdm import tqdm
 import time
+import json
 
+from .. import logger
 from ..models import StudyEventDB, UserDB
 from ..tools.gsheet import GoogleSheet
 
@@ -34,7 +36,7 @@ class GSAPI(BaseAPI):
         self.gs = None
         self.gsheet = None
         self.refresh()
-        
+
     def refresh(self):
         # for input
         self.gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
@@ -52,7 +54,7 @@ class GSAPI(BaseAPI):
 
     def into_go(self, username, date, start_time):
         self.refresh()
-        
+
         # delete last "go"
         df = self.gsheet
         study_rows = np.where((df[NAME] == username) & (df[END_TIME] == UNKNOWN))[0]
@@ -66,7 +68,7 @@ class GSAPI(BaseAPI):
 
     def into_hold(self, username, date, end_time):
         self.refresh()
-        
+
         # delete imcomplete study event and and new
         df = self.gsheet
         study_rows = np.where((df[NAME] == username) & (df[END_TIME] == UNKNOWN))[0]
@@ -85,13 +87,13 @@ class GSAPI(BaseAPI):
 
     def into_duration(self, username, date, start_time, end_time):
         self.refresh()
-        
+
         row = [username, datetime2date(date), start_time, end_time]
         self._gsheet_appendrow(row)
 
     def into_user(self, username, password):
         self.refresh()
-        
+
         row = [username, password]
         self._gsheet_appendrow(row)
 
@@ -120,9 +122,11 @@ class FlaskSQLAPI(BaseAPI):
             # delete imcomplete study event and and new
             start_time = study_event_studying.start_time  # type: str
 
+            logger.info("into_hold: delete go event in db for {}".format(username))
             self.db.session.delete(study_event_studying)
             self.db.session.commit()
 
+            logger.info("into_hold: insert hold event in db for {}".format(username))
             study_event = StudyEventDB(username=username, date=date, start_time=start_time, end_time=end_time)
             self.db.session.add(study_event)
             self.db.session.commit()
@@ -167,6 +171,7 @@ class DataBaseAPI():
 
         if main_googlesheet_name is not None:
             self.gsapi_main = GSAPI(sheetname=main_googlesheet_name, deepest_col_name=START_TIME)
+
         if user_googlesheet_name is not None:
             self.gsapi_user = GSAPI(sheetname=user_googlesheet_name, deepest_col_name=USERNAME)
 
@@ -180,6 +185,7 @@ class DataBaseAPI():
         """
 
         # NOTE! sometimes, username is not in the request
+        logger.info(">>> received request from {}: {}".format(username, json.dumps(request.form)))
 
         # "go" and "hold" input form
         if ACT_START in request.form or ACT_END in request.form:
@@ -205,6 +211,8 @@ class DataBaseAPI():
             end_time = request.form.get(END_TIME)
             self.into_duration(username, date, start_time, end_time)
 
+        logger.info("<<< request processed for {}: {}".format(username, json.dumps(request.form)))
+
     def into_go(self, username, date, start_time):
 
         # first backup, then add into DB, because backup has higher priority in this case
@@ -214,6 +222,7 @@ class DataBaseAPI():
         self.fsqlapi.into_go(username, date, start_time)
 
     def into_hold(self, username, date, end_time):
+        logger.info("into_hold: {} holds at {}".format(username, end_time))
 
         # first backup, then add into DB, because backup has higher priority in this case
         if self.gsapi_main is not None:
@@ -235,8 +244,10 @@ class DataBaseAPI():
         self.fsqlapi.into_user(username, password)
 
     def init_db(self, add_examples=False, add_users=False):
+        logger.info("init db")
 
         self.init_empty()
+        logger.info("init_db: deleted the db entries")
 
         self.into_studyevents_from_gs()
         self.into_users_from_gs()
@@ -248,6 +259,8 @@ class DataBaseAPI():
         # add users
         if add_users:
             self.into_some_users()
+
+        logger.info("init_db: inited")
 
     def into_studyevents_from_gs(self):
         self.gsapi_main.refresh()
