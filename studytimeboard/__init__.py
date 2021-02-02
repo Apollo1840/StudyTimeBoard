@@ -1,4 +1,6 @@
 import logging
+import time
+import random
 
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
@@ -27,14 +29,29 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 from studytimeboard.utils.database import DataBaseAPI
-from studytimeboard.config import (debug_mode, main_googlesheet_name, user_googlesheet_name,
-                                   add_examples, add_users)
+from studytimeboard.config import (debug_mode,
+                                   main_googlesheet_name,
+                                   user_googlesheet_name,
+                                   add_examples,
+                                   add_users)
+from studytimeboard.constant import (PATH_TO_DB_STATUS, INITIED, UNBORN)
 
 dbapi = DataBaseAPI(db,
                     main_googlesheet_name=main_googlesheet_name,
                     user_googlesheet_name=user_googlesheet_name)
-dbapi.init_db(add_examples=add_examples, add_users=add_users)
 
-print("successfully init db")
+with open(PATH_TO_DB_STATUS, "w") as f:
+    f.write(UNBORN)
+
+time.sleep(random.random()*2)
+
+with open(PATH_TO_DB_STATUS, "r") as f:
+    db_status = f.read()
+
+if db_status == UNBORN:
+    with open(PATH_TO_DB_STATUS, "w") as f:
+        f.write(INITIED)
+    dbapi.init_db(add_examples=add_examples, add_users=add_users)
+    print("successfully init db")
 
 from studytimeboard.routes import *

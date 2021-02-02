@@ -189,13 +189,16 @@ def about():
 @app.route('/admin_log')
 def admin_log():
     with open(logger.filename, "r") as f:
-        info = f.readlines()
-    flash(info, "success")
+        infos = f.readlines()
+    for info in infos:
+        if len(info.strip()) > 0:
+            flash(info, "success")
     return render_template('about.html')
 
 
 @app.route('/admin_reload_data')
 def admin_reload_data():
+    logger.info("ADMIN: admin_reload_data")
     dbapi.init_db()
     return render_template('about.html')
 

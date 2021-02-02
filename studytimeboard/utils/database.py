@@ -252,6 +252,11 @@ class DataBaseAPI():
         self.into_studyevents_from_gs()
         self.into_users_from_gs()
 
+        if self.gsapi_main is not None:
+            logger.info("init_db: load study events from gs {}".format(self.gsapi_main.sheetname))
+        if self.gsapi_user is not None:
+            logger.info("init_db: load users from gs {}".format(self.gsapi_user.sheetname))
+
         # add examples
         if add_examples:
             self.into_some_examples()

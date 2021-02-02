@@ -41,6 +41,10 @@ ORDERED_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sat
 WEEKDAY_COLORS = ["tab:pink", "tab:purple", "tab:blue", "tab:cyan", "tab:green", "tab:olive", "tab:orange"]
 
 PATH_TO_BARCHART = "static/charts/barchart.png"
+PATH_TO_DB_STATUS = "db_status.txt"
+INITIED = "initialized"
+UNBORN = "unborn"
+
 
 REGISTED_USERS = [
     "Congyu",
