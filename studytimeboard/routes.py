@@ -29,9 +29,13 @@ def home():
             username = request.form.get("username")
 
         if username in dbapi.all_users():
-            dbapi.into_from_request(request, username)
+            result_signal = dbapi.into_from_request(request, username)
         else:
             flash(FlashMessages.NO_SUCH_USER, "danger")
+            result_signal = True
+
+        if not result_signal:
+            flash(FlashMessages.WRONG_DURATION, "danger")
 
     # if the user type in the form with duration, the next user is unknown, so the username is SOMEONE
     if not current_user.is_authenticated:

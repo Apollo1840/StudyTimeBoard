@@ -19,6 +19,17 @@ def time2datetime(time: str):
         return None
 
 
+def varify_time(time_str):
+    # todo: modify this stupid check
+    items = time_str.split(":")
+    if len(items) != 2:
+        return False
+    hour, min = items
+    if len(hour) != 2 or len(min) != 2:
+        return False
+    return True
+
+
 def datetime2time(time: datetime.time):
     return datetime.strftime(time, "%H:%M")
 

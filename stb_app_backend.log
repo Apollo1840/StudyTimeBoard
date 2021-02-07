@@ -1,0 +1,130 @@
+02/07/2021 05:55:03 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : ************** app: heated *************** 
+
+
+
+02/07/2021 05:55:03 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : app: db ready 
+
+
+
+02/07/2021 05:55:04 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init db 
+
+
+
+02/07/2021 05:55:04 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init_db: deleted the db entries 
+
+
+
+02/07/2021 05:55:06 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init_db: load users from gs userbank_debug 
+
+
+
+02/07/2021 05:55:08 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init_db: load study events from gs data_debug 
+
+
+
+02/07/2021 05:55:08 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init_db: inited 
+
+
+
+02/07/2021 05:55:08 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : start the app!  
+
+
+
+02/07/2021 05:55:13 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : ************** app: heated *************** 
+
+
+
+02/07/2021 05:55:13 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : app: db ready 
+
+
+
+02/07/2021 05:55:13 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init db 
+
+
+
+02/07/2021 05:55:14 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init_db: deleted the db entries 
+
+
+
+02/07/2021 05:55:15 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init_db: load users from gs userbank_debug 
+
+
+
+02/07/2021 05:55:17 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init_db: load study events from gs data_debug 
+
+
+
+02/07/2021 05:55:17 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init_db: inited 
+
+
+
+02/07/2021 05:55:17 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : start the app!  
+
+
+
+02/07/2021 05:55:42 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : >>> received request from Congyu: {"username": "Congyu", "start_time": "12", "end_time": "34"} 
+
+
+
+02/07/2021 05:56:19 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : ************** app: heated *************** 
+
+
+
+02/07/2021 05:56:19 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : app: db ready 
+
+
+
+02/07/2021 05:56:19 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init db 
+
+
+
+02/07/2021 05:56:19 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init_db: deleted the db entries 
+
+
+
+02/07/2021 05:56:22 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init_db: load users from gs userbank_debug 
+
+
+
+02/07/2021 05:56:24 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init_db: load study events from gs data_debug 
+
+
+
+02/07/2021 05:56:24 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : init_db: inited 
+
+
+
+02/07/2021 05:56:24 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : start the app!  
+
+
+
+02/07/2021 05:56:33 PM /home/congyu/congyu_program/pythons/inits/p_study_time_board/studytimeboard/__init__.py  
+	 INFO    : >>> received request from Congyu: {"username": "Congyu", "start_time": "234", "end_time": "efg"} 
+
+
+

@@ -82,6 +82,8 @@ class FlashMessages:
     TOO_MUCH_USERS = "sorry, in beta stage we have reach the limit of max amount of users. " \
                      "You are welcome to contact us to help you sign up regardless of the limit."
 
+    WRONG_DURATION = "there is something with the input of your duration, try something like 09:00 or 22:31"
+
     @staticmethod
     def NO_SUCH_FUNC(function_name):
         return 'Sorry, {} function is not open yet. ' \

@@ -8,6 +8,7 @@ import json
 from .. import logger
 from ..models import StudyEventDB, UserDB
 from ..tools.gsheet import GoogleSheet
+from ..tools.data_tools import varify_time
 
 from .data_analysis import *
 
@@ -239,9 +240,14 @@ class DataBaseAPI():
             date = datetime.now(TZ)
             start_time = request.form.get(START_TIME)
             end_time = request.form.get(END_TIME)
-            self.into_duration(username, date, start_time, end_time)
+
+            if varify_time(start_time) and varify_time(end_time):
+                self.into_duration(username, date, start_time, end_time)
+            else:
+                return False
 
         logger.info("<<< request processed for {}: {}".format(username, json.dumps(request.form)))
+        return True
 
     def into_go(self, username, date, start_time):
 
