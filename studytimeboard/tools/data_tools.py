@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+import numpy as np
 
 
 def date2datetime(time: str):
@@ -44,3 +45,14 @@ def min2duration_str(minutes):
             duration_str += " {} minutes".format(min)
 
     return duration_str
+
+
+def exponential_moving_average(a, theta=0.5):
+    b = [a[i] for i in range(len(a))]
+    for i in range(1, len(a)):
+        b[i] = (1 - theta) * b[i - 1] + theta * a[i]
+    return b
+
+
+def along_average(a):
+    return [np.mean(a[0:i]) if i > 0 else a[0] for i in range(len(a))]

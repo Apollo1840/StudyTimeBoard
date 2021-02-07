@@ -27,9 +27,19 @@ def path_to_chart_user_study_events(username):
     return path_to_chart(username + "_se")
 
 
+def path_to_chart_user_study_events_overlap(username):
+    username = username.replace(" ", "_")
+    return path_to_chart(username + "_se_overlap")
+
+
 def path_to_chart_user_min_by_day(username):
     username = username.replace(" ", "_")
     return path_to_chart(username + "_md")
+
+
+def path_to_chart_user_min_by_day_average(username):
+    username = username.replace(" ", "_")
+    return path_to_chart(username + "_md_avg")
 
 
 def path_to_chart_user_today_king(username):

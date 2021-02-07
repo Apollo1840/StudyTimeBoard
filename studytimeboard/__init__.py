@@ -14,15 +14,11 @@ logger.filename = "stb_app_backend.log"
 logger.addHandler(APPLogHandler(logger.filename))
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'newyear20210103helloworld'
-# this is for data models to hash information in cookies
-
+app.config['SECRET_KEY'] = 'newyear20210103helloworld'  # this is for data models to hash information in cookies
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-db = SQLAlchemy(app)
-db.create_all()
 
-logger.info("************** app: heated ***************")
-logger.info("app: db ready")
+db = SQLAlchemy(app)
+# db.create_all()
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -40,18 +36,28 @@ dbapi = DataBaseAPI(db,
                     main_googlesheet_name=main_googlesheet_name,
                     user_googlesheet_name=user_googlesheet_name)
 
-with open(PATH_TO_DB_STATUS, "w") as f:
-    f.write(UNBORN)
-
-time.sleep(random.random()*2)
-
-with open(PATH_TO_DB_STATUS, "r") as f:
-    db_status = f.read()
-
-if db_status == UNBORN:
-    with open(PATH_TO_DB_STATUS, "w") as f:
-        f.write(INITIED)
-    dbapi.init_db(add_examples=add_examples, add_users=add_users)
-    print("successfully init db")
-
 from studytimeboard.routes import *
+
+
+def create_app():
+    logger.info("************** app: heated ***************")
+
+    db.create_all()
+
+    logger.info("app: db ready")
+
+    with open(PATH_TO_DB_STATUS, "w") as f:
+        f.write(UNBORN)
+
+    time.sleep(random.random() * 2)
+
+    with open(PATH_TO_DB_STATUS, "r") as f:
+        db_status = f.read()
+
+    if db_status == UNBORN:
+        with open(PATH_TO_DB_STATUS, "w") as f:
+            f.write(INITIED)
+        dbapi.init_db(add_examples=add_examples, add_users=add_users)
+        print("successfully init db")
+
+    return app

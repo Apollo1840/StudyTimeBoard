@@ -35,11 +35,13 @@ class GSAPI(BaseAPI):
 
         self.gs = None
         self.gsheet = None
+        self.gsheet_raw = None
         self.refresh()
 
     def refresh(self):
         # for input
         self.gs = GoogleSheet.read_from(STUDY_TIME_TABLE_NAME)
+        self.gsheet_raw = self.gs.table.worksheet(self.sheetname)
 
         # for output
         self.gsheet = self.gs.sheet(sheet_name=self.sheetname, least_col_name=self.deepest_col_name)
@@ -51,6 +53,24 @@ class GSAPI(BaseAPI):
         self.gs.delete_row(self.sheetname, index + 2)
         # google sheet include header as one row, so + 1,
         # and it starts from 1, so + 1
+
+    def _gsheet_update_user(self, username, col_name=N_STARS):
+        if col_name == N_STARS:
+            id_row, id_col = self._gsheet_cell_cor(username, col_name)
+            n_stars = self.gsheet_raw.cell(id_row, id_col).value
+
+            if not n_stars:
+                n_stars = 0
+            else:
+                n_stars = int(n_stars)
+
+            self.gsheet_raw.update_cell(id_row, id_col, n_stars + 1)
+
+    def _gsheet_cell_cor(self, username, col_name):
+        id_col = self.gsheet_raw.row_values(1).index(col_name) + 1
+        user_col = self.gsheet_raw.row_values(1).index("username") + 1
+        id_row = self.gsheet_raw.col_values(user_col).index(username) + 1
+        return id_row, id_col
 
     def into_go(self, username, date, start_time):
         self.refresh()
@@ -94,8 +114,11 @@ class GSAPI(BaseAPI):
     def into_user(self, username, password):
         self.refresh()
 
-        row = [username, password]
+        row = [username, password, 0]
         self._gsheet_appendrow(row)
+
+    def into_user_onestar(self, username):
+        self._gsheet_update_user(username)
 
 
 class FlaskSQLAPI(BaseAPI):
@@ -140,7 +163,9 @@ class FlaskSQLAPI(BaseAPI):
         self.db.session.commit()
 
     def into_user(self, username, password):
-        user = UserDB(username=username, password=password)
+        user = UserDB(username=username,
+                      password=password,
+                      n_stars=0)
         self.db.session.add(user)
         self.db.session.commit()
 
@@ -150,6 +175,11 @@ class FlaskSQLAPI(BaseAPI):
 
     def into_users(self, users):
         self.db.session.add_all(users)
+        self.db.session.commit()
+
+    def into_user_onestar(self, username):
+        user = UserDB.query.filter_by(username=username).first()
+        user.n_stars += 1
         self.db.session.commit()
 
     def delete_studyevents(self):
@@ -243,19 +273,30 @@ class DataBaseAPI():
 
         self.fsqlapi.into_user(username, password)
 
+    def into_user_onestar(self, username):
+        if self.gsapi_user is not None:
+            self.gsapi_user.into_user_onestar(username)
+        self.fsqlapi.into_user_onestar(username)
+
     def init_db(self, add_examples=False, add_users=False):
         logger.info("init db")
 
         self.init_empty()
         logger.info("init_db: deleted the db entries")
 
-        self.into_studyevents_from_gs()
-        self.into_users_from_gs()
+        if len(UserDB.query.all()) == 0:
+            self.into_users_from_gs()
+            if self.gsapi_user is not None:
+                logger.info("init_db: load users from gs {}".format(self.gsapi_user.sheetname))
+        else:
+            logger.info("init_db: users load from other instance")
 
-        if self.gsapi_main is not None:
-            logger.info("init_db: load study events from gs {}".format(self.gsapi_main.sheetname))
-        if self.gsapi_user is not None:
-            logger.info("init_db: load users from gs {}".format(self.gsapi_user.sheetname))
+        if len(StudyEventDB.query.all()) == 0:
+            self.into_studyevents_from_gs()
+            if self.gsapi_main is not None:
+                logger.info("init_db: load study events from gs {}".format(self.gsapi_main.sheetname))
+        else:
+            logger.info("init_db: study events load by other instance")
 
         # add examples
         if add_examples:
@@ -289,7 +330,13 @@ class DataBaseAPI():
             print("load users from google sheet {}".format(self.gsapi_user.sheetname))
             for i, row in self.gsapi_user.gsheet.iterrows():
                 if row[USERNAME] not in existed_users:
-                    users.append(UserDB(username=row[USERNAME], password=row[PASSWORD]))
+                    if not row[N_STARS]:
+                        n_stars = 0
+                    else:
+                        n_stars = int(row[N_STARS])
+                    users.append(UserDB(username=row[USERNAME],
+                                        password=row[PASSWORD],
+                                        n_stars=n_stars))
         self.fsqlapi.into_users(users)
 
     def init_empty(self):
@@ -358,6 +405,11 @@ class DataBaseAPI():
         df_dict[END_TIME] = [se.end_time for se in study_events]
 
         return pd.DataFrame(df_dict)
+
+    @staticmethod
+    def out_user_n_stars(username):
+        user = UserDB.query.filter_by(username=username).first()
+        return int(user.n_stars)
 
     @staticmethod
     def all_users():

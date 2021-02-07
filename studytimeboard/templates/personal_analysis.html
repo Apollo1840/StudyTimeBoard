@@ -3,11 +3,39 @@
 {% block title %} Personal Analysis {% endblock %}
 {% block content %}
 
-    <div style="font-size: 120%;">
-      <p> Hi, {{username}}, Here is your study time analysis: </p>
-      <img src={{path_umd}} width="100%" height="100%">
-      <img src={{path_use}} width="100%" height="100%">
+<div style="font-size: 300%;">
+    <b>{{username}}</b>
+</div>
+
+<div style="font-size: 200%;">
+    {% for i in range(n_stars) %}
+    ⭐
+    {% endfor %}
+</div>
+
+<br>
+<br>
+
+<div>
+    Average Hours per day: {{average_hour_per_day}}
+</div>
+
+
+<br>
+<hr/>
+<br>
+
+<div style="font-size: 120%;">
+    <div class="jumbotron">
+        <img src={{path_umd}} width="100%" height="100%">
+        <img src={{path_umd_avg}} width="100%" height="100%">
     </div>
+
+    <div class="jumbotron">
+        <img src={{path_use}} width="100%" height="100%">
+        <img src={{path_use_overlap}} width="100%" height="100%">
+    </div>
+</div>
 
 {% endblock %}
 
@@ -17,4 +45,7 @@
      $(".active").removeClass("active");
      $("#nav-personal-analysis").addClass("active");
   });
+
+
+
 </script>

@@ -6,6 +6,7 @@
 """
 
 # external utils
+import numpy as np
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -98,6 +99,7 @@ def leaderboard():
 def analysis():
     if current_user.is_authenticated:
         username = current_user.username
+        n_stars = dbapi.out_user_n_stars(username)
 
         # rm the folder to avoid multiple rendering data explode
         clean_chart_folder()
@@ -106,17 +108,28 @@ def analysis():
         if username in df_all[NAME].unique():
             df_user = df_all.loc[df_all[NAME] == username, :]
             df_user_minutes = to_minutes_by_day_table(df_user)
+            average_hour_per_day = min2duration_str(np.mean(df_user_minutes[MINUTES]))
 
             path_umd = path_to_chart_user_min_by_day(username)
             plot_hours_per_day(df_user_minutes, output_path=path_umd)
 
+            path_umd_avg = path_to_chart_user_min_by_day_average(username)
+            plot_hours_per_day_average(df_user_minutes, output_path=path_umd_avg)
+
             path_use = path_to_chart_user_study_events(username)
             plot_study_events(df_user, output_path=path_use)
 
+            path_use_overlap = path_to_chart_user_study_events_overlap(username)
+            plot_study_events_overlap(df_user, output_path=path_use_overlap)
+
             return render_template('personal_analysis.html',
                                    username=username,
+                                   n_stars=n_stars,
+                                   average_hour_per_day=average_hour_per_day,
                                    path_umd=path_umd,
-                                   path_use=path_use)
+                                   path_umd_avg=path_umd_avg,
+                                   path_use=path_use,
+                                   path_use_overlap=path_use_overlap)
         else:
             return redirect(url_for("login"))
     else:
@@ -218,4 +231,12 @@ def admin_create_some_data():
 @app.route('/admin_create_some_users')
 def admin_create_some_user():
     dbapi.into_some_users()
+    return render_template('about.html')
+
+
+@app.route('/admin_star', methods=['GET', 'POST'])
+def admin_star():
+    if USERNAME in request.args:
+        username = request.args[USERNAME]
+        dbapi.into_user_onestar(username)
     return render_template('about.html')

@@ -84,35 +84,6 @@ def info_user_status(df, username):
     return user_status, user_status_time
 
 
-def info_user_status_from_gs1_gs2(data, username):
-    """
-
-    :param username:
-    :return: str, str:
-    """
-
-    _, df_eve = data
-
-    if username in df_eve[NAME].unique():
-
-        user_status = list(df_eve.loc[df_eve[NAME] == username, ACT])[-1]
-
-        date_str = list(df_eve.loc[df_eve[NAME] == username, DATE])[-1]
-        time_str = list(df_eve.loc[df_eve[NAME] == username, TIME])[-1]
-        back_then = datetime.strptime(date_str + "_" + time_str, "%Y.%m.%d_%H:%M")
-        now = datetime.now(TZ).replace(tzinfo=None)
-
-        up_to_now_minutes = (now - back_then).seconds / 60
-        user_status_time = min2duration_str(up_to_now_minutes)
-
-    else:
-
-        user_status = UNKNOWN
-        user_status_time = UNKNOWN
-
-    return user_status, user_status_time
-
-
 def info_today_study_king(df_this_week):
     df_today = df_this_week.loc[df_this_week[TODAY_OR_NOT] == IS_TODAY, :]
 
@@ -156,3 +127,32 @@ def info_minutes_dashboard(df_this_week, chart_prefix, sep=None):
         path_to_chart = "static/sample.png"
 
     return name_winner, duration_str, path_to_chart
+
+
+def info_user_status_from_gs1_gs2(data, username):
+    """
+
+    :param username:
+    :return: str, str:
+    """
+
+    _, df_eve = data
+
+    if username in df_eve[NAME].unique():
+
+        user_status = list(df_eve.loc[df_eve[NAME] == username, ACT])[-1]
+
+        date_str = list(df_eve.loc[df_eve[NAME] == username, DATE])[-1]
+        time_str = list(df_eve.loc[df_eve[NAME] == username, TIME])[-1]
+        back_then = datetime.strptime(date_str + "_" + time_str, "%Y.%m.%d_%H:%M")
+        now = datetime.now(TZ).replace(tzinfo=None)
+
+        up_to_now_minutes = (now - back_then).seconds / 60
+        user_status_time = min2duration_str(up_to_now_minutes)
+
+    else:
+
+        user_status = UNKNOWN
+        user_status_time = UNKNOWN
+
+    return user_status, user_status_time

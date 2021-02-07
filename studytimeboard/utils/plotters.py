@@ -16,18 +16,10 @@ plt.style.use("seaborn")
 
 # from mpld3 import fig_to_html
 from ..constant import *
+from ..tools.data_tools import exponential_moving_average, along_average
 
 
 # visualization
-
-def plot_hours_per_day(df, output_path="sample.png", **plot_kwargs):
-    fig = plt.figure(figsize=(10, 8))
-    sns.barplot(y=DATE, x=MINUTES, data=df, **plot_kwargs)
-    plt.axvline(x=8 * 60, color="r", ls=":")
-    plt.title("The study time of every day")
-
-    fig.savefig(os.path.join(APP_PATH, output_path))
-
 
 def plot_the_bar_chart(df, output_path="sample.png"):
     sns.set_style("darkgrid")
@@ -62,6 +54,7 @@ def plot_the_bar_chart_with_weekday(df, output_path="sample.png"):
     def week_color():
         for c in WEEKDAY_COLORS:
             yield c
+
     fig = plt.figure(figsize=(10, 8))
     starborn_barhplot_stacked(MINUTES, NAME, WEEKDAY, data=df,
                               hues=ORDERED_WEEKDAYS,
@@ -70,6 +63,40 @@ def plot_the_bar_chart_with_weekday(df, output_path="sample.png"):
     plt.title("The study time of the candidates (in minutes)")
 
     fig.savefig(os.path.join(APP_PATH, output_path))
+
+
+# personal visualization
+
+def plot_hours_per_day(df, output_path="sample.png", **plot_kwargs):
+    fig = plt.figure(figsize=(10, 8))
+    sns.barplot(y=DATE, x=MINUTES, data=df, **plot_kwargs)
+    plt.axvline(x=8 * 60, color="r", ls=":", alpha=0.4)
+    plt.title("The study time of every day")
+
+    fig.savefig(os.path.join(APP_PATH, output_path))
+
+
+def plot_hours_per_day_average(df, output_path="sample.png"):
+    HOURS = "hours"
+    HOURS_AVG = "hours_avg"
+    HOURS_AVG_EXP = "hours_expo_avg"
+
+    df[HOURS] = df[MINUTES] / 60
+    df[HOURS_AVG] = along_average(df[HOURS])
+    df[HOURS_AVG_EXP] = exponential_moving_average(df[HOURS], 0.1)
+
+    fig = plt.figure(figsize=(10, 8))
+    plt.plot(df[DATE], df[HOURS], "-.", alpha=0.1, label="exact")
+    plt.plot(df[DATE], df[HOURS_AVG], alpha=0.2, linewidth=10, label="average")
+    plt.plot(df[DATE], df[HOURS_AVG_EXP], label="average_exponential")
+    plt.axhline(y=8, color="r", ls=":", alpha=0.4)
+    plt.xticks(range(0, len(df) + 1, 7))
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.title("The (exponential) average study time of the candidates (in hours)")
+
+    fig.savefig(os.path.join(APP_PATH, output_path))
+    # return fig_to_html(fig)
 
 
 def plot_study_events(df, output_path="sample.png"):
@@ -81,21 +108,63 @@ def plot_study_events(df, output_path="sample.png"):
     ax = plt.subplot()
 
     for i in range(len(df)):
-        if te[i]>ts[i]:
+        if te[i] > ts[i]:
             ax.plot([date[i], date[i]], [ts[i], te[i]], ".-", linewidth=15)
 
     ax.yaxis.set_major_locator(HourLocator())
     ax.yaxis.set_major_formatter(DateFormatter('%H:%M'))
 
-    plt.axhline(y=datetime.strptime("08:00", "%H:%M"), color="r", ls=":")
-    plt.axhline(y=datetime.strptime("12:30", "%H:%M"), color="r", ls=":")
-    plt.axhline(y=datetime.strptime("18:30", "%H:%M"), color="r", ls=":")
+    plt.axhline(y=datetime.strptime("08:00", "%H:%M"), color="r", ls=":", alpha=0.5)
+    plt.axhline(y=datetime.strptime("12:30", "%H:%M"), color="r", ls=":", alpha=0.5)
+    plt.axhline(y=datetime.strptime("18:30", "%H:%M"), color="r", ls=":", alpha=0.5)
 
     plt.xticks(rotation=45)
     plt.ylim((datetime.strptime("00:00", "%H:%M"), datetime.strptime("23:59", "%H:%M")))
     plt.gca().invert_yaxis()
 
     plt.title("The study events of the candidate")
+    fig.savefig(os.path.join(APP_PATH, output_path))
+
+
+def plot_study_events_overlap(df, output_path="sample.png"):
+    ts = df[START_TIME_DT].tolist()
+    te = df[END_TIME_DT].tolist()
+
+    weekdaylist = []
+    week_batch_index = []
+    week_batch = []
+    for i, weekday in enumerate(df[ID_WEEK].tolist()):
+        if weekday not in weekdaylist:
+            week_batch_index.append(week_batch)
+            week_batch = [i]
+            weekdaylist.append(weekday)
+        else:
+            week_batch.append(i)
+    week_batch_index.append(week_batch)
+    week_batch_index = week_batch_index[1:]
+
+    fig = plt.figure(figsize=(10, 8))
+    ax = plt.subplot()
+
+    for j, batch_index in enumerate(week_batch_index[:-1]):
+        for i in batch_index:
+            ax.plot([weekdaylist[j], weekdaylist[j]], [ts[i], te[i]], "-", alpha=0.12, color="b",
+                    solid_capstyle="butt", linewidth=10)
+    for i in week_batch_index[-1]:
+        ax.plot([weekdaylist[-1], weekdaylist[-1]], [ts[i], te[i]], "-", alpha=0.12, color="r",
+                solid_capstyle="butt", linewidth=10)
+    ax.yaxis.set_major_locator(HourLocator())
+    ax.yaxis.set_major_formatter(DateFormatter('%H:%M'))
+
+    plt.axhline(y=datetime.strptime("08:00", "%H:%M"), color="r", ls=":", alpha=0.5)
+    plt.axhline(y=datetime.strptime("12:30", "%H:%M"), color="r", ls=":", alpha=0.5)
+    plt.axhline(y=datetime.strptime("18:30", "%H:%M"), color="r", ls=":", alpha=0.5)
+
+    plt.xticks(rotation=45)
+    plt.ylim((datetime.strptime("00:00", "%H:%M"), datetime.strptime("23:59", "%H:%M")))
+    plt.gca().invert_yaxis()
+
+    plt.title("The study events of the candidate per week (red is this week)")
     fig.savefig(os.path.join(APP_PATH, output_path))
 
 
@@ -113,9 +182,9 @@ def plot_study_events_singleday(df, output_path="sample.png"):
     ax.xaxis.set_major_locator(HourLocator())
     ax.xaxis.set_major_formatter(DateFormatter('%H:%M'))
 
-    plt.axvline(x=datetime.strptime("08:00", "%H:%M"), color="r", ls=":")
-    plt.axvline(x=datetime.strptime("12:30", "%H:%M"), color="r", ls=":")
-    plt.axvline(x=datetime.strptime("18:30", "%H:%M"), color="r", ls=":")
+    plt.axvline(x=datetime.strptime("08:00", "%H:%M"), color="r", ls=":", alpha=0.5)
+    plt.axvline(x=datetime.strptime("12:30", "%H:%M"), color="r", ls=":", alpha=0.5)
+    plt.axvline(x=datetime.strptime("18:30", "%H:%M"), color="r", ls=":", alpha=0.5)
 
     plt.xlim((datetime.strptime("00:00", "%H:%M"), datetime.strptime("23:59", "%H:%M")))
 

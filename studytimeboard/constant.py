@@ -33,10 +33,12 @@ TIME = "time"
 # sheet 3 columns
 USERNAME = "username"
 PASSWORD = "password"
+N_STARS = "n_stars"
 
 # analysis columns
 MINUTES = "minutes"
 WEEKDAY = "weekday"
+ID_WEEK = "id_week"
 ORDERED_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 WEEKDAY_COLORS = ["tab:pink", "tab:purple", "tab:blue", "tab:cyan", "tab:green", "tab:olive", "tab:orange"]
 
