@@ -410,7 +410,10 @@ class DataBaseAPI():
         df_dict[START_TIME] = [se.start_time for se in study_events]
         df_dict[END_TIME] = [se.end_time for se in study_events]
 
-        return pd.DataFrame(df_dict)
+        df = pd.DataFrame(df_dict)
+        df = df.loc[df[END_TIME] != UNKNOWN, :]
+
+        return df
 
     @staticmethod
     def out_user_n_stars(username):

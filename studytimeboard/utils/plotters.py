@@ -148,11 +148,14 @@ def plot_study_events_overlap(df, output_path="sample.png"):
 
     for j, batch_index in enumerate(week_batch_index[:-1]):
         for i in batch_index:
-            ax.plot([weekdaylist[j], weekdaylist[j]], [ts[i], te[i]], "-", alpha=0.12, color="b",
-                    solid_capstyle="butt", linewidth=10)
+            if te[i] > ts[i]:
+                ax.plot([weekdaylist[j], weekdaylist[j]], [ts[i], te[i]], "-", alpha=0.12, color="b",
+                        solid_capstyle="butt", linewidth=10)
     for i in week_batch_index[-1]:
-        ax.plot([weekdaylist[-1], weekdaylist[-1]], [ts[i], te[i]], "-", alpha=0.12, color="r",
-                solid_capstyle="butt", linewidth=10)
+        if te[i] > ts[i]:
+            ax.plot([weekdaylist[-1], weekdaylist[-1]], [ts[i], te[i]], "-", alpha=0.12, color="r",
+                    solid_capstyle="butt", linewidth=10)
+
     ax.yaxis.set_major_locator(HourLocator())
     ax.yaxis.set_major_formatter(DateFormatter('%H:%M'))
 
