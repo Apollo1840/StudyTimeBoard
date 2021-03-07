@@ -206,7 +206,7 @@ class DataBaseAPI():
         if user_googlesheet_name is not None:
             self.gsapi_user = GSAPI(sheetname=user_googlesheet_name, deepest_col_name=USERNAME)
 
-    def into_from_request(self, request, username):
+    def into_from_request(self, request):
         """
         into flask_sql as well as googlesheet
 
@@ -214,6 +214,7 @@ class DataBaseAPI():
         :param username:
         :return:
         """
+        username = request.form.get("username")
 
         # NOTE! sometimes, username is not in the request
         logger.info(">>> received request from {}: {}".format(username, json.dumps(request.form)))

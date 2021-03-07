@@ -177,34 +177,7 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    elif request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get("password")
-
-        all_users = dbapi.all_users()
-        if username not in all_users:
-            if len(all_users) <= user_amount_limit:
-                dbapi.into_user(username, password)
-            else:
-                flash(FlashMessages.TOO_MUCH_USERS, "danger")
-        else:
-            flash(FlashMessages.REGISTERED_USER, "danger")
-
-        flash(FlashMessages.WELCOME_NEW_USER(username), 'success')
-        return redirect(url_for('login'))
-    else:
-        return render_template('login.html')
-
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-
+# admin pages
 @app.route('/admin_log')
 def admin_log():
     with open(logger.filename, "r") as f:
@@ -246,3 +219,114 @@ def admin_star():
         username = request.args[USERNAME]
         dbapi.into_user_onestar(username)
     return render_template('about.html')
+
+
+# Backend APIs
+
+@app.route("/api/handle_record_form", methods=["POST"])
+def api_handle_record_form():
+    # 0. handle the time input
+    if request.method == "POST":
+        username = request.form.get("username")
+        if username in dbapi.all_users():
+            result_signal = dbapi.into_from_request(request, username)
+
+            if not result_signal:
+                return {"is_success": False, "flash_msg": FlashMessages.WRONG_DURATION}
+            else:
+                return {"is_success": True}
+        else:
+            return {"is_success": False, "flash_msg": FlashMessages.NO_SUCH_USER}
+
+
+@app.route("/api/studying_users", methods=["GET"])
+def api_studying_users():
+    df_all = get_df_ana(dbapi)
+    studying_users = info_studying_users(df_all)
+    return {"studying_users": studying_users}
+
+
+@app.route("/api/dashboard_leaderboard_week", methods=["GET"])
+def api_dashboard_leaderboard_week():
+    df_all = get_df_ana(dbapi)
+    df_last_week = to_this_week_table(df_all)
+    name_winner_lw, duration_str_lw, path_to_chart_lw = info_minutes_dashboard(df_last_week,
+                                                                               chart_prefix="lastweek",
+                                                                               sep=TODAY_OR_NOT)
+    return {"path_to_chart_lastweek": path_to_chart_lw,
+            "name_winner": name_winner_lw,
+            "duration_str_lw": duration_str_lw}
+
+
+@app.route("/api/get_leaderboards")
+def api_get_leaderboards():
+    df_all = get_df_ana(dbapi)
+    df_last_week = to_this_week_table(df_all)
+
+    # get display information
+    name_winner_al, duration_str_al, path_to_chart_al = info_minutes_dashboard(df_all, chart_prefix="all")
+    name_winner_lw, duration_str_lw, path_to_chart_lw = info_minutes_dashboard(df_last_week, chart_prefix="lastweek",
+                                                                               sep=WEEKDAY)
+
+    return {
+        "path_to_chart_lastweek": path_to_chart_lw,
+        "path_to_chart_all": path_to_chart_al,
+        "name_winner_lastweek": name_winner_lw,
+        "duration_str_lastweek": duration_str_lw,
+        "name_winner": name_winner_al,
+        "duration_str": duration_str_al
+    }
+
+
+@app.route('/api/register', methods=['POST'])
+def api_register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get("password")
+
+        all_users = dbapi.all_users()
+        if username not in all_users:
+            if len(all_users) <= user_amount_limit:
+                dbapi.into_user(username, password)
+                return {"user": username, "password": password, "is_success": True}
+            else:
+                return {"user": username, "password": password, "is_success": False,
+                        "flash_msg": FlashMessages.TOO_MUCH_USERS}  # todo: change those string to constants
+        else:
+            return {"user": username, "password": password, "is_success": False,
+                    "reason_failure": FlashMessages.REGISTERED_USER}  # todo: change those string to constants
+
+
+@app.route('/api/admin/clean_chart_folder', methods=['GET'])
+def api_admin_clean_chart_folder():
+    clean_chart_folder()
+
+
+# depracated
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+# depracated
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    elif request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get("password")
+
+        all_users = dbapi.all_users()
+        if username not in all_users:
+            if len(all_users) <= user_amount_limit:
+                dbapi.into_user(username, password)
+            else:
+                flash(FlashMessages.TOO_MUCH_USERS, "danger")
+        else:
+            flash(FlashMessages.REGISTERED_USER, "danger")
+
+        flash(FlashMessages.WELCOME_NEW_USER(username), 'success')
+        return redirect(url_for('login'))
+    else:
+        return render_template('login.html')

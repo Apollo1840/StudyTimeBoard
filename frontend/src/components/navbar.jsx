@@ -19,7 +19,7 @@ class NavBar extends Component {
                 <div className="navbar-nav mr-auto">
                     <Link to="/"> <a className="nav-link" id="nav-home">Home</a> </Link>
                     <Link to="/"> <a className="nav-link" id="nav-personal-analysis">Personal Analysis</a> </Link>
-                    <Link to="/"> <a className="nav-link" id="nav-leaderboard">Leaderboard</a> </Link>
+                    <Link to="/leaderboard"> <a className="nav-link" id="nav-leaderboard">Leaderboard</a> </Link>
                     <Link to="/about"> <a className="nav-link" id="nav-about">About</a> </Link>
                 </div>
                 <div className="navbar-nav">

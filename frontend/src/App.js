@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import About from './About'
+import Leaderboard from './Leaderboard'
 import NavBar from './components/navbar'
 import QuoteCard from './components/quotecard'
 import RecordForm from './components/recordform'
@@ -19,6 +20,7 @@ class App extends React.Component {
             <NavBar />
             <Switch>
                 <Route path="/about" component={About} />
+                <Route path="/leaderboard" component={Leaderboard} />
                 <Route path="/" exact component={Home} />
             </Switch>
           </div>
