@@ -13,10 +13,11 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 
 #### Minimal dev setup [ 2 steps ]
 
-1. setup your virtualenv, then run:
+1. setup your virtualenv (virtual environment) with python3, then run:
 
 
     pip install -r requiremnts.txt
+
     python app.py
 
 to start a server locally.

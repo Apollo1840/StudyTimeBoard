@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/home/congyu/.virtualenvs/web/bin/python"
+    "python.pythonPath": "/home/congyu/.virtualenvs/web/bin/python",
+    "editor.formatOnSave": true,
 }

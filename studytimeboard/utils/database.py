@@ -411,8 +411,6 @@ class DataBaseAPI():
         df_dict[END_TIME] = [se.end_time for se in study_events]
 
         df = pd.DataFrame(df_dict)
-        df = df.loc[df[END_TIME] != UNKNOWN, :]
-
         return df
 
     @staticmethod

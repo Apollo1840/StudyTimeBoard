@@ -111,6 +111,8 @@ def analysis():
 
         if username in df_all[NAME].unique():
             df_user = df_all.loc[df_all[NAME] == username, :]
+            df_user = df_user.loc[df_user[END_TIME] != UNKNOWN, :]
+
             df_user_minutes = to_minutes_by_day_table(df_user)
             average_hour_per_day = min2duration_str(np.mean(df_user_minutes[MINUTES]))
 

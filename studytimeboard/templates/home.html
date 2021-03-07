@@ -105,8 +105,9 @@
                 <div class="row" id="the_buttons">
                     <div class="col text-center">
                         <button class="btn btn-outline-primary"
+                                id="go"
                                 style="width: 100px; height:100px; font-size:140%; border-radius: 50%;" name="go"
-                                onclick="submit_show_spinner()">
+                                onClick="submit_show_spinner()">
 
                             {% if user_status == "go" %}
                             Re-Go
@@ -120,8 +121,9 @@
                     {% if user_status != "hold" %}
                     <div class="col text-center">
                         <button class="btn btn-outline-primary"
+                                id="hold"
                                 style="width: 100px; height:100px; font-size:140%; border-radius: 50%;" name="hold"
-                                onclick="submit_show_spinner()">Hold
+                                onClick="submit_show_spinner()">Hold
                         </button>
                     </div>
                     {% endif %}
