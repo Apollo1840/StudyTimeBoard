@@ -303,12 +303,6 @@ def api_admin_clean_chart_folder():
 
 
 # depracated
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-
-# depracated
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
