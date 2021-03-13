@@ -1,4 +1,4 @@
-import store from "../store";
+import store from "../redux-store";
 
 export default class HttpService{
     static baseURL() {return "http://0.0.0.0:5555/";}

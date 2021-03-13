@@ -1,5 +1,5 @@
 import HttpService from "./HttpService";
-import store from "../store";
+import store from "../redux-store";
 import {logout} from "../redux/authActions";
 import {SERVER_URL, REGISTRATION_URL, LOGIN_URL} from "../shared/serverUrls.js";
 
