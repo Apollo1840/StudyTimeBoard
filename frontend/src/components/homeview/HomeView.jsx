@@ -6,6 +6,13 @@ import DashboardStudyKing from './DashboardStudyKing';
 import DashboarLeaderboardWeek from './DashboardLeaderboardWeek';
 
 class HomeView extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            
+        }
+    }
+
     render() {
         return(
             <main className="container">
