@@ -1,7 +1,6 @@
 import store from "../redux-store";
 
 export default class HttpService{
-    static baseURL() {return "http://0.0.0.0:5555/";}
 
     static get(url, onSuccess, onError){
         let token = store.getState().auth.token;
@@ -49,7 +48,7 @@ export default class HttpService{
             headers: header,
             body: JSON.stringify(data)
         }).then((resp) => {
-            if(this.checkIfUnauthorized(resp)){
+            if(!this.checkIfauthorized(resp)){
                 if(window.location.pathname !== '/login')
                     window.location = "/login";
                 return;
@@ -83,7 +82,7 @@ export default class HttpService{
             headers: header,
             body: JSON.stringify(data)
         }).then((resp) => {
-            if(this.checkIfUnauthorized(resp)) {
+            if(!this.checkIfauthorized(resp)) {
                 if(window.location.pathname !== '/login')
                     window.location = "/login";
                 return;
@@ -115,7 +114,7 @@ export default class HttpService{
             method: 'DELETE',
             headers: header
         }).then((resp) => {
-            if(this.checkIfUnauthorized(resp)){
+            if(!this.checkIfauthorized(resp)){
                 if(window.location.pathname !== '/login')
                     window.location = "/login";
                 return;

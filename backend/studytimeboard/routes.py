@@ -277,6 +277,31 @@ def api_get_leaderboards():
         "duration_str": duration_str_al
     }
 
+# Minispec for authentication response:
+#   on success: response should contain token: String
+#   on failure: response should contain error: String
+
+@app.route('/api/login', methods=['POST'])
+def api_login():
+
+    # body contains only username and password, chose http body over authentication to minimize the code for httpservice
+    username = request.json.get('username')
+    password = request.json.get("password")
+    all_users = dbapi.all_users()
+    user = UserDB.query.filter_by(username=username).first()
+
+    # fail case 1: no such user, status 401
+    if user is None:
+        return {"user": username, "password": password, "is_success": False, "message": FlashMessages.NO_SUCH_USER}, 401
+    # fail case 2: invalid/wrong password, status 401
+    elif password is None or user.password != password:  # todo: use bcrypt
+        return {"user": username, "password": password, "is_success": False, "message": FlashMessages.PASSWD_INCORRECT}, 401
+    # success, status 200
+    else:
+        login_user(user, remember=True)
+        return {"user": username, "password": password, "is_success": True, "token": username}, 200  # TODO: use JWT token
+        
+
 
 @app.route('/api/register', methods=['POST'])
 def api_register():
