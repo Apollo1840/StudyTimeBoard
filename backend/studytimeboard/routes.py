@@ -2,6 +2,17 @@
 
     UseCase design & Display information generation through app_utils.py ( info_...() )
 
+    JSON API Style: JSend https://github.com/omniti-labs/jsend
+    example 1:
+    {
+        status : "success",
+        data : { "post" : { "id" : 2, "title" : "Another blog post", "body" : "More content" }}
+    }
+    example 2:
+    {
+        "status" : "error",
+        "message" : "Unable to communicate with database"
+    }
 
 """
 
@@ -292,14 +303,14 @@ def api_login():
 
     # fail case 1: no such user, status 401
     if user is None:
-        return {"user": username, "password": password, "is_success": False, "message": FlashMessages.NO_SUCH_USER}, 401
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
     # fail case 2: invalid/wrong password, status 401
     elif password is None or user.password != password:  # todo: use bcrypt
-        return {"user": username, "password": password, "is_success": False, "message": FlashMessages.PASSWD_INCORRECT}, 401
+        return {"status": "error", "message": FlashMessages.PASSWD_INCORRECT}, 401
     # success, status 200
     else:
         login_user(user, remember=True)
-        return {"user": username, "password": password, "is_success": True, "token": username}, 200  # TODO: use JWT token
+        return {"status": "success", data: {"token": username}}, 200  # TODO: use JWT token
         
 
 
@@ -313,13 +324,11 @@ def api_register():
         if username not in all_users:
             if len(all_users) <= user_amount_limit:
                 dbapi.into_user(username, password)
-                return {"user": username, "password": password, "is_success": True}
+                return {"status": "success", data: {"token": username}}, 200
             else:
-                return {"user": username, "password": password, "is_success": False,
-                        "flash_msg": FlashMessages.TOO_MUCH_USERS}  # todo: change those string to constants
+                return {"status": "error", "message": FlashMessages.TOO_MUCH_USERS}, 400
         else:
-            return {"user": username, "password": password, "is_success": False,
-                    "reason_failure": FlashMessages.REGISTERED_USER}  # todo: change those string to constants
+            return {"status": "error", "message": FlashMessages.REGISTERED_USER}, 409
 
 
 @app.route('/api/admin/clean_chart_folder', methods=['GET'])
