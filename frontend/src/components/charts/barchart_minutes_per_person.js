@@ -46,4 +46,29 @@ class BarchartMinutesPerPersonPerWeekday extends Component {
   }
 }
 
-export default BarchartMinutesPerPersonPerWeekday;
+class BarchartMinutesPerPerson extends Component {
+  render() {
+    return (
+      <div>
+        <Plot
+          data={[
+            {
+              type: "bar",
+              y: this.props.users,
+              x: this.props.data,
+              orientation: "h",
+            },
+          ]}
+          layout={{
+            width: 1000,
+            height: 500,
+            title: this.props.title,
+          }}
+        ></Plot>
+      </div>
+    );
+  }
+}
+
+export default BarchartMinutesPerPerson;
+export { BarchartMinutesPerPerson, BarchartMinutesPerPersonPerWeekday };

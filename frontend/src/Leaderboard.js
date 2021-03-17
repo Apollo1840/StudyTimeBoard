@@ -1,14 +1,28 @@
 import React from "react";
-import BarchartMinutesPerPersonPerWeekday from "./components/charts/barchart_minutes_per_person";
+import {
+  BarchartMinutesPerPerson,
+  BarchartMinutesPerPersonPerWeekday,
+} from "./components/charts/barchart_minutes_per_person";
+
+// users_lastweek: list of usernames, with dim: (id_person(sort_by_total_minutes))
+// minutes_lasweek: list of list of minutes, with dim: (id_weekday(sort_by_num), id_person(sort_by_total_minutes))
+// users: list of usernames, with dim: (id_person(sort_by_total_minutes))
+// minutes: list of minutes, with dim: (id_person(sort_by_total_minutes))
 
 class Leaderboard extends React.Component {
   state = {
-    path_to_chart_lastweek: null,
-    path_to_chart_all: null,
-    name_winner_lastweek: null,
-    duration_str_lastweek: null,
-    name_winner: null,
-    duration_str: null,
+    users_lastweek: ["congyu", "shangsu", "diqing"],
+    minutes_lastweek: [
+      [0, 12, 10],
+      [10, 8, 13],
+      [1, 0, 23],
+    ],
+    users: ["congyu", "shangsu", "diqing"],
+    minutes: [18, 20, 30],
+    name_winner_lastweek: "somebody",
+    duration_str_lastweek: "sometime",
+    name_winner: "somebody",
+    duration_str: "sometime",
   };
 
   componentDidMount() {
@@ -18,17 +32,38 @@ class Leaderboard extends React.Component {
   }
 
   render() {
+    console.log(this.state);
     return (
-      <div>
-        <BarchartMinutesPerPersonPerWeekday
-          title="Leaderboard of the last week"
-          users={["congyu", "shangsu", "diqing"]}
-          data={[
-            [10, 2, 3],
-            [1, 0, 3],
-            [23, 12, 0],
-          ]}
-        />
+      <div className="container">
+        <div className="mt-5">
+          <div>
+            <p>
+              The leader of this board is:
+              <b>{this.state.name_winner_lastweek}</b>
+              (with {this.state.duration_str_lastweek})
+            </p>
+          </div>
+
+          <BarchartMinutesPerPersonPerWeekday
+            title="Leaderboard of the last week"
+            users={this.state.users_lastweek}
+            data={this.state.minutes_lastweek}
+          />
+        </div>
+
+        <div className="mt-5">
+          <div>
+            <p>
+              The leader of this board is:<b>{this.state.name_winner}</b>
+              (with {this.state.duration_str})
+            </p>
+          </div>
+          <BarchartMinutesPerPerson
+            title="Leaderboard of entire time"
+            users={this.state.users}
+            data={this.state.minutes}
+          />
+        </div>
       </div>
     );
   }
