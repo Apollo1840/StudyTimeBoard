@@ -1,6 +1,30 @@
 import React, { Component } from "react";
 import Plot from "react-plotly.js";
 
+class BarchartMinutesPerPerson extends Component {
+  render() {
+    return (
+      <div>
+        <Plot
+          data={[
+            {
+              type: "bar",
+              y: this.props.users,
+              x: this.props.data,
+              orientation: "h",
+            },
+          ]}
+          layout={{
+            width: 1000,
+            height: 2000,
+            title: this.props.title,
+          }}
+        ></Plot>
+      </div>
+    );
+  }
+}
+
 class BarchartMinutesPerPersonPerWeekday extends Component {
   state = {
     weekdays: [
@@ -39,30 +63,6 @@ class BarchartMinutesPerPersonPerWeekday extends Component {
             height: 500,
             title: this.props.title,
             barmode: "stack",
-          }}
-        ></Plot>
-      </div>
-    );
-  }
-}
-
-class BarchartMinutesPerPerson extends Component {
-  render() {
-    return (
-      <div>
-        <Plot
-          data={[
-            {
-              type: "bar",
-              y: this.props.users,
-              x: this.props.data,
-              orientation: "h",
-            },
-          ]}
-          layout={{
-            width: 1000,
-            height: 2000,
-            title: this.props.title,
           }}
         ></Plot>
       </div>
