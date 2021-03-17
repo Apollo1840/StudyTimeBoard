@@ -316,19 +316,22 @@ def api_login():
 
 @app.route('/api/register', methods=['POST'])
 def api_register():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get("password")
+    username = request.json.get('username')
+    password = request.json.get("password")
 
-        all_users = dbapi.all_users()
-        if username not in all_users:
-            if len(all_users) <= user_amount_limit:
-                dbapi.into_user(username, password)
-                return {"status": "success", "data": {"token": username}}, 200
-            else:
-                return {"status": "error", "message": FlashMessages.TOO_MUCH_USERS}, 400
+    all_users = dbapi.all_users()
+    if username not in all_users:
+        if len(all_users) <= user_amount_limit:
+            dbapi.into_user(username, password)
+            return {"status": "success", "data": {"token": username}}, 200
         else:
-            return {"status": "error", "message": FlashMessages.REGISTERED_USER}, 409
+            return {"status": "error", "message": FlashMessages.TOO_MUCH_USERS}, 400
+    else:
+        return {"status": "error", "message": FlashMessages.REGISTERED_USER}, 409
+
+@app.route('/api/logout', methods=['POST'])
+def api_logout():
+    return {"status": "success", "data": {"token": None}}, 200
 
 
 @app.route('/api/admin/clean_chart_folder', methods=['GET'])

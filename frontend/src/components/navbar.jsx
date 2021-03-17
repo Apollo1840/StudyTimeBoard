@@ -1,10 +1,29 @@
 import React, { Component } from 'react';
 import { Nav } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import UserService from "../services/AuthService";
+import { connect } from 'react-redux';
+import {logout} from "../redux/authActions";
+import AuthService from "../services/AuthService";
+import store from "../redux-store";
+
+const mapStateToProps = state => ({
+    auth: state.auth
+})
 
 class NavBar extends Component {
-    state = {  }
+    constructor(props){
+        super(props);
+        this.state = {  }
+
+        this.handleLogout = this.handleLogout.bind(this);
+    }
+    
+
+    handleLogout() {
+        AuthService.logout().then(() =>{
+            store.dispatch(logout()); 
+        });
+    };
 
     // TODO: how to use react-bootstrap NAV without refreshing the web page?
     loginRegisterButtons = () => {
@@ -19,13 +38,13 @@ class NavBar extends Component {
     logoutButton = () => {
         return(
             <div className="navbar-nav">
-                <Nav.Link as={Link} to ="/">Logout</Nav.Link>
+                <Nav.Link as={Link} onClick={this.handleLogout}>Logout</Nav.Link>
             </div>
         )
     }
 
     render() {
-        let isAuthenticated = UserService.isAuthenticated();
+        //let isAuthenticated = AuthService.isAuthenticated();
 
         return (
             <div>
@@ -47,7 +66,7 @@ class NavBar extends Component {
                         <Nav.Link as={Link} to="/about" id="nav-about">About </Nav.Link>
                     </div>
                     
-                    {isAuthenticated ? <this.logoutButton/> : <this.loginRegisterButtons/>}
+                    {this.props.auth.token != null ? <this.logoutButton/> : <this.loginRegisterButtons/>}
                     
                 </div>
             </nav>
@@ -56,4 +75,4 @@ class NavBar extends Component {
     }
 }
  
-export default NavBar;
+export default connect(mapStateToProps)(NavBar);

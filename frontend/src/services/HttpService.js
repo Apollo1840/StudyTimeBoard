@@ -14,7 +14,7 @@ export default class HttpService{
             headers: header
         }).then((resp) => {
             // level 1: check if status=401, return resp.json
-            if(!this.checkIfauthorized(resp)){
+            if(!this.isauthorized(resp)){
                 if(window.location.pathname !== '/login')
                     window.location = "/login";
                 return;
@@ -48,7 +48,7 @@ export default class HttpService{
             body: JSON.stringify(data)
         }).then((resp) => {
             // level 1: check if status=401, return resp.json
-            if(!this.checkIfauthorized(resp)){
+            if(!this.isauthorized(resp)){
                 if(window.location.pathname !== '/login')
                     window.location = "/login";
                 return;
@@ -82,7 +82,7 @@ export default class HttpService{
             body: JSON.stringify(data)
         }).then((resp) => {
             // level 1: check if status=401, return resp.json
-            if(!this.checkIfauthorized(resp)) {
+            if(!this.isauthorized(resp)) {
                 if(window.location.pathname !== '/login')
                     window.location = "/login";
                 return;
@@ -114,7 +114,8 @@ export default class HttpService{
             method: 'DELETE',
             headers: header
         }).then((resp) => {
-            if(!this.checkIfauthorized(resp)){
+            // level 1: check if status=401, return resp.json
+            if(!this.isauthorized(resp)){
                 if(window.location.pathname !== '/login')
                     window.location = "/login";
                 return;
@@ -135,7 +136,7 @@ export default class HttpService{
         });
     }
     
-    static checkIfauthorized(res){
+    static isauthorized(res){
         if(res.status === 401){
             return false;
         }

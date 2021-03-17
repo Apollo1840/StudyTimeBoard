@@ -1,9 +1,9 @@
 import HttpService from "./HttpService";
 import store from "../redux-store";
 import {logout} from "../redux/authActions";
-import {SERVER_BASE_URL, REGISTRATION_URL, LOGIN_URL} from "../shared/serverUrls.js";
+import {SERVER_BASE_URL, REGISTRATION_URL, LOGIN_URL, LOGOUT_URL} from "../shared/serverUrls.js";
 
-export default class UserService {
+export default class AuthService {
 
     static frontEndURL() {
       return "http://localhost:3000/";
@@ -11,13 +11,13 @@ export default class UserService {
 
     static register(user,pass, userData) {
         return new Promise((resolve,reject) => {
-            HttpService.post(UserService.baserURL() + '/register', {
+            HttpService.post(SERVER_BASE_URL + REGISTRATION_URL, {
                 username: user,
                 password: pass,
                 userData: userData
             }, (data) => {
                 resolve(data);
-                window.location.assign(UserService.frontEndURL());
+                window.location.assign(AuthService.frontEndURL());
             }, (errorMsg) => {
                 reject(errorMsg);
             });
@@ -34,7 +34,7 @@ export default class UserService {
           },
           (data) => {
             resolve(data);
-            window.location.assign(UserService.frontEndURL());
+            window.location.assign(AuthService.frontEndURL());
           },
           (errorMsg) => {
             reject(errorMsg);
@@ -44,12 +44,14 @@ export default class UserService {
     }
 
     static logout() {
+      console.log("AuthService logout!")
       store.dispatch(logout());
       return new Promise((resolve, reject) => {
-        HttpService.get(
-          SERVER_BASE_URL + "/logout",
+        HttpService.post(
+          SERVER_BASE_URL + LOGOUT_URL,
           (data) => {
-            window.location.assign(UserService.frontEndURL());
+
+            window.location.assign(AuthService.frontEndURL());
             resolve(data);
           },
           (errorMsg) => {
