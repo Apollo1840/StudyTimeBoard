@@ -4,10 +4,10 @@ import {
   BarchartMinutesPerPersonPerWeekday,
 } from "./components/charts/barchart_minutes_per_person";
 
-// users_lastweek: list of usernames, with dim: (id_person(sort_by_total_minutes))
-// minutes_lasweek: list of list of minutes, with dim: (id_weekday(sort_by_num), id_person(sort_by_total_minutes))
+// users_lastweek: list of usernames, with dim: (id_person(sort_by_total_minutes_lastweek))
+// minutes_lasweek: list of list of minutes, with dim: (id_weekday(sort_by_num), id_person(sort_by_total_minutes_lastweek))
 // users: list of usernames, with dim: (id_person(sort_by_total_minutes))
-// minutes: list of minutes, with dim: (id_person(sort_by_total_minutes))
+// minutes: list of minutes, with dim: (id_person(sort_by_minutes))
 
 class Leaderboard extends React.Component {
   state = {
@@ -45,7 +45,7 @@ class Leaderboard extends React.Component {
           </div>
 
           <BarchartMinutesPerPersonPerWeekday
-            title="Leaderboard of the last week"
+            title="Leaderboard of the last week (minutes)"
             users={this.state.users_lastweek}
             data={this.state.minutes_lastweek}
           />
@@ -59,7 +59,7 @@ class Leaderboard extends React.Component {
             </p>
           </div>
           <BarchartMinutesPerPerson
-            title="Leaderboard of entire time"
+            title="Leaderboard of entire time (minutes)"
             users={this.state.users}
             data={this.state.minutes}
           />

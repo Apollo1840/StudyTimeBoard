@@ -61,7 +61,7 @@ class BarchartMinutesPerPerson extends Component {
           ]}
           layout={{
             width: 1000,
-            height: 500,
+            height: 2000,
             title: this.props.title,
           }}
         ></Plot>
