@@ -310,7 +310,7 @@ def api_login():
     # success, status 200
     else:
         login_user(user, remember=True)
-        return {"status": "success", data: {"token": username}}, 200  # TODO: use JWT token
+        return {"status": "success", "data": {"token": username}}, 200  # TODO: use JWT token
         
 
 
@@ -324,7 +324,7 @@ def api_register():
         if username not in all_users:
             if len(all_users) <= user_amount_limit:
                 dbapi.into_user(username, password)
-                return {"status": "success", data: {"token": username}}, 200
+                return {"status": "success", "data": {"token": username}}, 200
             else:
                 return {"status": "error", "message": FlashMessages.TOO_MUCH_USERS}, 400
         else:

@@ -5,6 +5,7 @@ import About from './About'
 import Leaderboard from './Leaderboard'
 import HomeView from './components/homeview/HomeView'
 import LoginView from './components/loginview/LoginView'
+import RegisterView from './components/registerview/RegisterView'
 
 import React, { useEffect, useState } from 'react';
 import {BrowserRouter as Router, Switch, Route } from 'react-router-dom'
@@ -20,6 +21,7 @@ class App extends React.Component {
                 <Route path="/about" component={About} />
                 <Route path="/leaderboard" component={Leaderboard} />
                 <Route path="/login" exact component={LoginView} />
+                <Route path="/register" exact component={RegisterView} />
             </Switch>
           </div>
       </Router>

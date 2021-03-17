@@ -18,16 +18,14 @@ export default class UserService {
             }, (data) => {
                 resolve(data);
                 window.location.assign(UserService.frontEndURL());
-            }, (textStatus) => {
-                reject(textStatus);
+            }, (errorMsg) => {
+                reject(errorMsg);
             });
         });
     }
 
     static login(user, pass) {
-      console.log("AuthService.login!!")
       return new Promise((resolve, reject) => {
-        console.log("inside promise!")
         HttpService.post(
           SERVER_BASE_URL + LOGIN_URL,
           {
@@ -35,15 +33,11 @@ export default class UserService {
             password: pass,
           },
           (data) => {
-            console.log("resolve data")
-            console.log(data)
             resolve(data);
-            window.history.pushState({ foo: 'bar' }, '', UserService.frontEndURL());
+            window.location.assign(UserService.frontEndURL());
           },
-          (textStatus) => {
-            console.log("reject textStatus")
-            console.log(textStatus)
-            reject(textStatus);
+          (errorMsg) => {
+            reject(errorMsg);
           }
         );
       });
@@ -58,8 +52,8 @@ export default class UserService {
             window.location.assign(UserService.frontEndURL());
             resolve(data);
           },
-          (statusText) => {
-            reject(statusText);
+          (errorMsg) => {
+            reject(errorMsg);
           }
         );
       });
