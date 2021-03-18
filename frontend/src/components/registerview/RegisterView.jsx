@@ -25,7 +25,7 @@ class RegisterView extends Component {
             store.dispatch(login(username,data.token));
         })
         .catch((e) => {
-            alert("Incorrect username or password");
+            alert(e);
             this.setState({
                 error: e
             });

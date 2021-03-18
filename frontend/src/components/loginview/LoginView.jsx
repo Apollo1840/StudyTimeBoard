@@ -25,8 +25,7 @@ class LoginView extends Component {
             store.dispatch(login(username,data.token));
         })
         .catch((e) => {
-            console.log(e)
-            alert("Incorrect username or password");
+            alert(e);
             this.setState({
                 error: e
             });

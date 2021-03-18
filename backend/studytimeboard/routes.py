@@ -314,7 +314,7 @@ def api_login():
         
 
 
-@app.route('/api/register', methods=['POST'])
+@app.route('/api/registration', methods=['POST'])
 def api_register():
     username = request.json.get('username')
     password = request.json.get("password")
@@ -323,6 +323,7 @@ def api_register():
     if username not in all_users:
         if len(all_users) <= user_amount_limit:
             dbapi.into_user(username, password)
+            login_user(user, remember=True)
             return {"status": "success", "data": {"token": username}}, 200
         else:
             return {"status": "error", "message": FlashMessages.TOO_MUCH_USERS}, 400
@@ -331,6 +332,7 @@ def api_register():
 
 @app.route('/api/logout', methods=['POST'])
 def api_logout():
+    logout_user();
     return {"status": "success", "data": {"token": None}}, 200
 
 

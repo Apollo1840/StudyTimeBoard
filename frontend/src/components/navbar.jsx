@@ -35,9 +35,10 @@ class NavBar extends Component {
         )
     }
 
-    logoutButton = () => {
+    avatar = () => {
         return(
             <div className="navbar-nav">
+                <Nav.Link as={Link}>Hello {this.props.auth.username}</Nav.Link>
                 <Nav.Link as={Link} onClick={this.handleLogout}>Logout</Nav.Link>
             </div>
         )
@@ -66,7 +67,7 @@ class NavBar extends Component {
                         <Nav.Link as={Link} to="/about" id="nav-about">About </Nav.Link>
                     </div>
                     
-                    {this.props.auth.token != null ? <this.logoutButton/> : <this.loginRegisterButtons/>}
+                    {this.props.auth.token != null ? <this.avatar/>  : <this.loginRegisterButtons/>}
                     
                 </div>
             </nav>
