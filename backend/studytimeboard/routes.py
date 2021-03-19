@@ -2,6 +2,17 @@
 
     UseCase design & Display information generation through app_utils.py ( info_...() )
 
+    JSON API Style: JSend https://github.com/omniti-labs/jsend
+    example 1:
+    {
+        status : "success",
+        data : { "post" : { "id" : 2, "title" : "Another blog post", "body" : "More content" }}
+    }
+    example 2:
+    {
+        "status" : "error",
+        "message" : "Unable to communicate with database"
+    }
 
 """
 
@@ -277,24 +288,52 @@ def api_get_leaderboards():
         "duration_str": duration_str_al
     }
 
+# Minispec for authentication response:
+#   on success: response should contain token: String
+#   on failure: response should contain error: String
 
-@app.route('/api/register', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
+def api_login():
+
+    # body contains only username and password, chose http body over authentication to minimize the code for httpservice
+    username = request.json.get('username')
+    password = request.json.get("password")
+    all_users = dbapi.all_users()
+    user = UserDB.query.filter_by(username=username).first()
+
+    # fail case 1: no such user, status 401
+    if user is None:
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
+    # fail case 2: invalid/wrong password, status 401
+    elif password is None or user.password != password:  # todo: use bcrypt
+        return {"status": "error", "message": FlashMessages.PASSWD_INCORRECT}, 401
+    # success, status 200
+    else:
+        login_user(user, remember=True)
+        return {"status": "success", "data": {"token": username}}, 200  # TODO: use JWT token
+        
+
+
+@app.route('/api/registration', methods=['POST'])
 def api_register():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get("password")
+    username = request.json.get('username')
+    password = request.json.get("password")
 
-        all_users = dbapi.all_users()
-        if username not in all_users:
-            if len(all_users) <= user_amount_limit:
-                dbapi.into_user(username, password)
-                return {"user": username, "password": password, "is_success": True}
-            else:
-                return {"user": username, "password": password, "is_success": False,
-                        "flash_msg": FlashMessages.TOO_MUCH_USERS}  # todo: change those string to constants
+    all_users = dbapi.all_users()
+    if username not in all_users:
+        if len(all_users) <= user_amount_limit:
+            dbapi.into_user(username, password)
+            login_user(user, remember=True)
+            return {"status": "success", "data": {"token": username}}, 200
         else:
-            return {"user": username, "password": password, "is_success": False,
-                    "reason_failure": FlashMessages.REGISTERED_USER}  # todo: change those string to constants
+            return {"status": "error", "message": FlashMessages.TOO_MUCH_USERS}, 400
+    else:
+        return {"status": "error", "message": FlashMessages.REGISTERED_USER}, 409
+
+@app.route('/api/logout', methods=['POST'])
+def api_logout():
+    logout_user();
+    return {"status": "success", "data": {"token": None}}, 200
 
 
 @app.route('/api/admin/clean_chart_folder', methods=['GET'])
