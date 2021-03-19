@@ -12,6 +12,8 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 
     cd backend
     python app.py
+
+    # open a new terminal tab
     cd ..
     cd frontend
     npm start
