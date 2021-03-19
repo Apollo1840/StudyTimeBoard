@@ -45,7 +45,7 @@ class NavBar extends Component {
     }
 
     render() {
-        //let isAuthenticated = AuthService.isAuthenticated();
+        let isAuthenticated = AuthService.isAuthenticated();
 
         return (
             <div>
@@ -67,7 +67,7 @@ class NavBar extends Component {
                         <Nav.Link as={Link} to="/about" id="nav-about">About </Nav.Link>
                     </div>
                     
-                    {this.props.auth.token != null ? <this.avatar/>  : <this.loginRegisterButtons/>}
+                    {isAuthenticated ? <this.avatar/>  : <this.loginRegisterButtons/>}
                     
                 </div>
             </nav>
