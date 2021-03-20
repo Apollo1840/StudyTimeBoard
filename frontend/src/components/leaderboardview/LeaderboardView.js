@@ -9,7 +9,7 @@ import {
 // users: list of usernames, with dim: (id_person(sort_by_total_minutes))
 // minutes: list of minutes, with dim: (id_person(sort_by_minutes))
 
-class Leaderboard extends React.Component {
+class LeaderboardView extends React.Component {
   state = {
     users_lastweek: ["congyu", "shangsu", "diqing"],
     minutes_lastweek: [
@@ -69,4 +69,4 @@ class Leaderboard extends React.Component {
   }
 }
 
-export default Leaderboard;
+export default LeaderboardView;
