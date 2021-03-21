@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import NavBar from './components/navbar'
 import About from './About'
-import Leaderboard from './Leaderboard'
+import Leaderboard from './components/leaderboardview/LeaderboardView'
 import HomeView from './components/homeview/HomeView'
 import LoginView from './components/loginview/LoginView'
 import RegisterView from './components/registerview/RegisterView'
