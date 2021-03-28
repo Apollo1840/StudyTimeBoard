@@ -2,7 +2,7 @@ import React from "react";
 import {
   BarchartMinutesPerPerson,
   BarchartMinutesPerPersonPerWeekday,
-} from "./components/charts/barchart_minutes_per_person";
+} from "../charts/barchart_minutes_per_person";
 
 // users_lastweek: list of usernames, with dim: (id_person(sort_by_total_minutes_lastweek))
 // minutes_lasweek: list of list of minutes, with dim: (id_weekday(sort_by_num), id_person(sort_by_total_minutes_lastweek))
