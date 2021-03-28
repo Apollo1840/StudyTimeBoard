@@ -78,7 +78,11 @@ class NavBar extends Component {
                 Home
               </Nav.Link>
 
-              <Nav.Link as={Link} to="/" id="nav-personal-analysis">
+              <Nav.Link
+                as={Link}
+                to="/personal_analysis"
+                id="nav-personal-analysis"
+              >
                 Personal Analysis
               </Nav.Link>
 
