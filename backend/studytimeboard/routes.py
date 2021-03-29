@@ -269,7 +269,7 @@ def api_dashboard_leaderboard_week():
             "duration_str_lw": duration_str_lw}
 
 
-@app.route("/api/get_leaderboards")
+@app.route("/api/get_leaderboards", methods=["GET"])
 def api_get_leaderboards():
     df_all = get_df_ana(dbapi)
     df_last_week = to_this_week_table(df_all)
@@ -278,15 +278,17 @@ def api_get_leaderboards():
     name_winner_al, duration_str_al, path_to_chart_al = info_minutes_dashboard(df_all, chart_prefix="all")
     name_winner_lw, duration_str_lw, path_to_chart_lw = info_minutes_dashboard(df_last_week, chart_prefix="lastweek",
                                                                                sep=WEEKDAY)
-
+    
     return {
+        "status" : "success",
+        "data" : {
         "path_to_chart_lastweek": path_to_chart_lw,
         "path_to_chart_all": path_to_chart_al,
         "name_winner_lastweek": name_winner_lw,
         "duration_str_lastweek": duration_str_lw,
         "name_winner": name_winner_al,
         "duration_str": duration_str_al
-    }
+    }}
 
 # Minispec for authentication response:
 #   on success: response should contain token: String

@@ -2,8 +2,8 @@ import React from "react";
 import {
   BarchartMinutesPerPerson,
   BarchartMinutesPerPersonPerWeekday,
-} from "./components/charts/barchart_minutes_per_person";
-import HttpService from "./HttpService";
+} from "../../components/charts/barchart_minutes_per_person";
+import HttpService from "../../services/HttpService";
 import {
   SERVER_BASE_URL,
   LEADERBOARDSDATA_URL,
