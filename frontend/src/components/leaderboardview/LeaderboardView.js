@@ -3,6 +3,11 @@ import {
   BarchartMinutesPerPerson,
   BarchartMinutesPerPersonPerWeekday,
 } from "./components/charts/barchart_minutes_per_person";
+import HttpService from "./HttpService";
+import {
+  SERVER_BASE_URL,
+  LEADERBOARDSDATA_URL,
+} from "../../shared/serverUrls.js";
 
 // users_lastweek: list of usernames, with dim: (id_person(sort_by_total_minutes_lastweek))
 // minutes_lasweek: list of list of minutes, with dim: (id_weekday(sort_by_num), id_person(sort_by_total_minutes_lastweek))
@@ -26,8 +31,14 @@ class LeaderboardView extends React.Component {
   };
 
   componentDidMount() {
-    fetch("/api/get_leaderboards").then((response) =>
-      response.json().then((jsondata) => this.setState(jsondata))
+    HttpService.get(
+      SERVER_BASE_URL + LEADERBOARDSDATA_URL,
+      (data) => {
+        this.setState(data);
+      },
+      (errorMsg) => {
+        console.log(errorMsg);
+      }
     );
   }
 

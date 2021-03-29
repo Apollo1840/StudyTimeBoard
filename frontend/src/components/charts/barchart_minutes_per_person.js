@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import Plot from "react-plotly.js";
 
+//TODO: layouts can be put in props
+//TODO: constants out of state, since it is not a state
+
 class BarchartMinutesPerPersonPerWeekday extends Component {
   state = {
     weekdays: [
