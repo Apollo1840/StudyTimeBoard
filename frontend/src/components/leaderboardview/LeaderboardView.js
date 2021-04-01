@@ -12,6 +12,7 @@ import TimeboardService from "../../services/TimeboardService";
 
 class LeaderboardView extends React.Component {
   state = {
+    // TODO: test with empty data responded from server
     weeklyData:{},
     totalData:{},
     name_winner_lastweek: "somebody",
