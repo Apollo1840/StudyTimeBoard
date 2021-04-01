@@ -3,12 +3,12 @@ import LineChartTimeStream from "./charts/linechart_time_stream.js";
 class DashboardStudyKing extends Component {
   state = {
     data: [
-      [8, 12],
-      [12.5, 12.6],
-      [13, 14],
-      [15.5, 15.8],
-      [16, 18],
-      [20, 23],
+      ["08:00", "12:00"],
+      ["12:30", "12:40"],
+      //[13, 14],
+      //[15.5, 15.8],
+      //[16, 18],
+      //[20, 23],
     ],
   };
   render() {
