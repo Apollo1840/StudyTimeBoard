@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+
 class RecordForm extends Component {
     state = {  }
     render() { 
-        return ( 
-            <div classNameName="mt-5 mb-5">
+        return (
+            <div className="mt-5 mb-5">
                 <form id="record_time">
+                    
                     <h3 style={{fontSize: "150%"}}> Record form: </h3>
                 
                     <div className="jumbotron">
@@ -79,9 +81,9 @@ class RecordForm extends Component {
                         <div id="record_form_spinner" className="text-center"></div>
                 
                     </div>
+                    
                 </form>
-            </div>
-             );
+            </div>);
     }
 }
  

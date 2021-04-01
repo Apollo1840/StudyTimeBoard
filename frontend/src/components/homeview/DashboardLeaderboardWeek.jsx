@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-class DashboarLeaderboardWeek extends Component {
+class DashboardLeaderboardWeek extends Component {
     state = {  }
     render() { 
         return (
@@ -20,4 +20,4 @@ class DashboarLeaderboardWeek extends Component {
     }
 }
  
-export default DashboarLeaderboardWeek;
+export default DashboardLeaderboardWeek;
