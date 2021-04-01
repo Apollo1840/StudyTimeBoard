@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import Plot from "react-plotly.js";
 
+const testData = 
+  {
+    "Monday": {"Congyu":207.0,"Diqing":207.0},
+    "Tuesday":{"Congyu":203.0,"Diqing":203.0}
+  }
+
 class BarchartMinutesPerPersonPerWeekday extends Component {
   state = {
     weekdays: [
@@ -26,12 +32,12 @@ class BarchartMinutesPerPersonPerWeekday extends Component {
     return (
       <div>
         <Plot
-          data={this.props.data.map((item, index) => ({
+          data={Object.keys(this.props.data).map((key, index) => ({
             type: "bar",
-            y: this.props.users,
-            x: item,
+            y: Object.keys(this.props.data[key]),
+            x: Object.values(this.props.data[key]),
             orientation: "h",
-            name: this.state.weekdays[index],
+            name: key,
             marker: { color: this.state.weekday_colors[index] },
           }))}
           layout={{
@@ -54,8 +60,8 @@ class BarchartMinutesPerPerson extends Component {
           data={[
             {
               type: "bar",
-              y: this.props.users,
-              x: this.props.data,
+              y: Object.keys(this.props.data),
+              x: Object.values(this.props.data),
               orientation: "h",
             },
           ]}
