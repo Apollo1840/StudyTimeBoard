@@ -259,7 +259,6 @@ def api_studying_users():
 
 @app.route("/api/minutes_lastweek", methods=["GET"])
 def api_dashboard_leaderboard_week():
-    print("****** start dashboard leaderboard week")
     df_all = get_df_ana(dbapi)
     df_last_week = to_this_week_table(df_all)  # filter only the data for last week
     result = info_duration_by_weekday(df_last_week)  # list of entries -> data grouped by weekdays
