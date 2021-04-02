@@ -156,3 +156,24 @@ def info_user_status_from_gs1_gs2(data, username):
         user_status_time = UNKNOWN
 
     return user_status, user_status_time
+
+
+def info_duration_by_weekday(df):
+    """ format panda dataframe into following format:
+        MONDAY  Diqing  204.0
+                Congyu  300.0
+        TUESDAY Diqing  200.0
+                Congyu  199.0
+    """
+    duration_by_weekday = df.groupby([WEEKDAY, NAME]).agg({MINUTES:'sum'})[MINUTES]
+    return duration_by_weekday
+
+def info_duration_by_name(df):
+    """ format data into following format:
+        name
+        Amber         3.0
+        Congyu     3420.0
+        Diqing      828.0 
+    """
+    duration_by_name = df.groupby([NAME]).agg({MINUTES: 'sum'})[MINUTES]
+    return duration_by_name

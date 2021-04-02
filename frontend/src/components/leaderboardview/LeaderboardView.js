@@ -2,7 +2,8 @@ import React from "react";
 import {
   BarchartMinutesPerPerson,
   BarchartMinutesPerPersonPerWeekday,
-} from "../charts/barchart_minutes_per_person";
+} from "./barchart_minutes_per_person";
+import TimeboardService from "../../services/TimeboardService";
 
 // users_lastweek: list of usernames, with dim: (id_person(sort_by_total_minutes_lastweek))
 // minutes_lasweek: list of list of minutes, with dim: (id_weekday(sort_by_num), id_person(sort_by_total_minutes_lastweek))
@@ -11,14 +12,9 @@ import {
 
 class LeaderboardView extends React.Component {
   state = {
-    users_lastweek: ["congyu", "shangsu", "diqing"],
-    minutes_lastweek: [
-      [0, 12, 10],
-      [10, 8, 13],
-      [1, 0, 23],
-    ],
-    users: ["congyu", "shangsu", "diqing"],
-    minutes: [18, 20, 30],
+    // TODO: test with empty data responded from server
+    weeklyData: {},
+    totalData: {},
     name_winner_lastweek: "somebody",
     duration_str_lastweek: "sometime",
     name_winner: "somebody",
@@ -26,13 +22,32 @@ class LeaderboardView extends React.Component {
   };
 
   componentDidMount() {
-    fetch("/api/get_leaderboards").then((response) =>
-      response.json().then((jsondata) => this.setState(jsondata))
-    );
+    this.fetchData();
   }
 
+  fetchData = () => {
+    TimeboardService.getLastweekMinutes()
+      .then((data) => {
+        this.setState({
+          weeklyData: data,
+        });
+      })
+      .catch((e) => {
+        alert(e);
+      });
+
+    TimeboardService.getUserMinutes()
+      .then((data) => {
+        this.setState({
+          totalData: data,
+        });
+      })
+      .catch((e) => {
+        alert(e);
+      });
+  };
+
   render() {
-    console.log(this.state);
     return (
       <div className="container">
         <div className="mt-5">
@@ -46,8 +61,7 @@ class LeaderboardView extends React.Component {
 
           <BarchartMinutesPerPersonPerWeekday
             title="Leaderboard of the last week (minutes)"
-            users={this.state.users_lastweek}
-            data={this.state.minutes_lastweek}
+            data={this.state.weeklyData}
           />
         </div>
 
@@ -60,8 +74,7 @@ class LeaderboardView extends React.Component {
           </div>
           <BarchartMinutesPerPerson
             title="Leaderboard of entire time (minutes)"
-            users={this.state.users}
-            data={this.state.minutes}
+            data={this.state.totalData}
           />
         </div>
       </div>
