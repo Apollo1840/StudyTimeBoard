@@ -13,8 +13,8 @@ import TimeboardService from "../../services/TimeboardService";
 class LeaderboardView extends React.Component {
   state = {
     // TODO: test with empty data responded from server
-    weeklyData:{},
-    totalData:{},
+    weeklyData: {},
+    totalData: {},
     name_winner_lastweek: "somebody",
     duration_str_lastweek: "sometime",
     name_winner: "somebody",
@@ -22,30 +22,30 @@ class LeaderboardView extends React.Component {
   };
 
   componentDidMount() {
-    this.fetchData()
+    this.fetchData();
   }
 
   fetchData = () => {
     TimeboardService.getLastweekMinutes()
-        .then((data) => {
-            this.setState({
-              weeklyData: data
-            })
-        })
-        .catch((e) => {
-            alert(e);
+      .then((data) => {
+        this.setState({
+          weeklyData: data,
         });
-    
+      })
+      .catch((e) => {
+        alert(e);
+      });
+
     TimeboardService.getUserMinutes()
-        .then((data) => {
-          this.setState({
-            totalData: data
-          })
-        })
-        .catch((e) => {
-          alert(e)
-        })
-  }
+      .then((data) => {
+        this.setState({
+          totalData: data,
+        });
+      })
+      .catch((e) => {
+        alert(e);
+      });
+  };
 
   render() {
     return (

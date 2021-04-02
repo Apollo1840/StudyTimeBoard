@@ -81,5 +81,4 @@ class BarchartMinutesPerPerson extends Component {
   }
 }
 
-export default BarchartMinutesPerPerson;
 export { BarchartMinutesPerPerson, BarchartMinutesPerPersonPerWeekday };
