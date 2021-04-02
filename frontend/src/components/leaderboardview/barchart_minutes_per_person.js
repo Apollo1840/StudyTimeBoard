@@ -27,22 +27,26 @@ class BarchartMinutesPerPersonPerWeekday extends Component {
       "rgb(56, 125, 89)",
       "rgb(11, 55, 125)",
       "rgb(81, 81, 81)",
-      "rgb(21, 45, 145)",
+      "rgb(100, 45, 145)",
       "rgb(31, 125, 25)",
       "rgb(41, 55, 85)",
       "rgb(111, 45, 125)",
     ],
   };
+
   render() {
+    const appear_weekdays_in_order = this.state.weekdays.filter((dayKey) =>
+      Object.keys(this.props.data).includes(dayKey)
+    );
     return (
       <div>
         <Plot
-          data={Object.keys(this.props.data).map((dayKey, index) => ({
+          data={appear_weekdays_in_order.map((dayKey, index) => ({
             type: "bar",
             y: Object.keys(this.props.data[dayKey]), // users
             x: Object.values(this.props.data[dayKey]), // minutes of users
             orientation: "h",
-            name: key,
+            name: dayKey,
             marker: { color: this.state.weekday_colors[index] },
           }))}
           layout={{
