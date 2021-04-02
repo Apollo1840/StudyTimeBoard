@@ -8,7 +8,6 @@ const testData = {
   Tuesday: { Congyu: 203.0, Diqing: 203.0 },
 };
 
-//TODO: the order of the weekdays seems to be wrong
 //TODO: layouts can be put in props
 
 class BarchartMinutesPerPersonPerWeekday extends Component {
