@@ -36,7 +36,7 @@ class BarchartMinutesPerPersonPerWeekday extends Component {
           }))}
           layout={{
             width: 1000,
-            height: 500,
+            height: 800,
             title: this.props.title,
             barmode: "stack",
           }}
@@ -61,7 +61,7 @@ class BarchartMinutesPerPerson extends Component {
           ]}
           layout={{
             width: 1000,
-            height: 2000,
+            height: 1200,
             title: this.props.title,
           }}
         ></Plot>
