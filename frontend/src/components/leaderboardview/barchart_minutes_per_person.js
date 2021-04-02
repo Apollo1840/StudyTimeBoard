@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Plot from "react-plotly.js";
+import { WeekdayColorWay } from "../../shared/colorThemes";
 
 // test data for this.props.data
 const testData = {
@@ -7,32 +8,14 @@ const testData = {
   Tuesday: { Congyu: 203.0, Diqing: 203.0 },
 };
 
+//TODO: the order of the weekdays seems to be wrong
 //TODO: layouts can be put in props
-//TODO: constants out of state, since it is not a state
 
 class BarchartMinutesPerPersonPerWeekday extends Component {
   // this.props.data:  dayKey: userKey: minutesValue
 
-  state = {
-    weekdays: [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ],
-    weekday_colors: [
-      "rgb(56, 125, 89)",
-      "rgb(11, 55, 125)",
-      "rgb(81, 81, 81)",
-      "rgb(21, 45, 145)",
-      "rgb(31, 125, 25)",
-      "rgb(41, 55, 85)",
-      "rgb(111, 45, 125)",
-    ],
-  };
+  state = {};
+
   render() {
     return (
       <div>
@@ -42,8 +25,8 @@ class BarchartMinutesPerPersonPerWeekday extends Component {
             y: Object.keys(this.props.data[dayKey]), // users
             x: Object.values(this.props.data[dayKey]), // minutes of users
             orientation: "h",
-            name: key,
-            marker: { color: this.state.weekday_colors[index] },
+            name: dayKey,
+            marker: { color: WeekdayColorWay[index] },
           }))}
           layout={{
             width: 1000,
@@ -58,6 +41,7 @@ class BarchartMinutesPerPersonPerWeekday extends Component {
 }
 
 class BarchartMinutesPerPerson extends Component {
+  // this.props.data: userKey: minutesValue
   render() {
     return (
       <div>
