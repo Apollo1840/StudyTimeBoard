@@ -6,7 +6,7 @@
     example 1:
     {
         status : "success",
-        data : { "post" : { "id" : 2, "title" : "Another blog post", "body" : "More content" }}
+        data : { "post" : { "id" : 2, "title" : "Another blog post", "body" : "More content" }， “tail”： “1234”}
     }
     example 2:
     {
@@ -257,36 +257,21 @@ def api_studying_users():
     return {"studying_users": studying_users}
 
 
-@app.route("/api/dashboard_leaderboard_week", methods=["GET"])
+@app.route("/api/minutes_lastweek", methods=["GET"])
 def api_dashboard_leaderboard_week():
     df_all = get_df_ana(dbapi)
-    df_last_week = to_this_week_table(df_all)
-    name_winner_lw, duration_str_lw, path_to_chart_lw = info_minutes_dashboard(df_last_week,
-                                                                               chart_prefix="lastweek",
-                                                                               sep=TODAY_OR_NOT)
-    return {"path_to_chart_lastweek": path_to_chart_lw,
-            "name_winner": name_winner_lw,
-            "duration_str_lw": duration_str_lw}
+    df_last_week = to_this_week_table(df_all)  # filter only the data for last week
+    result = info_duration_by_weekday(df_last_week)  # list of entries -> data grouped by weekdays
+    result_json = result.unstack(level=0).to_json()  # to proper json format
+    return {"status":"success", "data": result_json}, 200
 
 
-@app.route("/api/get_leaderboards")
+@app.route("/api/minutes_total", methods=["GET"])
 def api_get_leaderboards():
     df_all = get_df_ana(dbapi)
-    df_last_week = to_this_week_table(df_all)
-
-    # get display information
-    name_winner_al, duration_str_al, path_to_chart_al = info_minutes_dashboard(df_all, chart_prefix="all")
-    name_winner_lw, duration_str_lw, path_to_chart_lw = info_minutes_dashboard(df_last_week, chart_prefix="lastweek",
-                                                                               sep=WEEKDAY)
-
-    return {
-        "path_to_chart_lastweek": path_to_chart_lw,
-        "path_to_chart_all": path_to_chart_al,
-        "name_winner_lastweek": name_winner_lw,
-        "duration_str_lastweek": duration_str_lw,
-        "name_winner": name_winner_al,
-        "duration_str": duration_str_al
-    }
+    result = info_duration_by_name(df_all)
+    result_json = result.to_json()
+    return {"status":"success", "data": result_json}, 200
 
 # Minispec for authentication response:
 #   on success: response should contain token: String

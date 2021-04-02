@@ -44,13 +44,11 @@ export default class AuthService {
     }
 
     static logout() {
-      console.log("AuthService logout!")
       store.dispatch(logout());
       return new Promise((resolve, reject) => {
         HttpService.post(
           SERVER_BASE_URL + LOGOUT_URL,
           (data) => {
-
             window.location.assign(AuthService.frontEndURL());
             resolve(data);
           },
