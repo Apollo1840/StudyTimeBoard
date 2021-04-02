@@ -7,6 +7,9 @@ const testData = {
   Tuesday: { Congyu: 203.0, Diqing: 203.0 },
 };
 
+//TODO: layouts can be put in props
+//TODO: constants out of state, since it is not a state
+
 class BarchartMinutesPerPersonPerWeekday extends Component {
   // this.props.data:  dayKey: userKey: minutesValue
 
