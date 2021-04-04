@@ -6,24 +6,24 @@ import DashboardStudyKing from './DashboardStudyKing';
 import DashboarLeaderboardWeek from './DashboardLeaderboardWeek';
 
 class HomeView extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            
-        }
+  constructor(props){
+    super(props);
+    this.state = {
+      
     }
+  }
 
-    render() {
-        return(
-            <main className="container">
-                <QuoteCard />
-                <RecordForm />
-                <DashboardActiveUser />
-                <DashboardStudyKing />
-                <DashboarLeaderboardWeek />
-            </main>
-        );
-    }
+  render() {
+    return(
+      <main className="container">
+        <QuoteCard />
+        <RecordForm />
+        <DashboardActiveUser />
+        <DashboardStudyKing />
+        <DashboarLeaderboardWeek />
+      </main>
+    );
+  }
 }
 
 export default HomeView;

@@ -10,18 +10,18 @@ export default class AuthService {
     }
 
     static register(user,pass, userData) {
-        return new Promise((resolve,reject) => {
-            HttpService.post(SERVER_BASE_URL + REGISTRATION_URL, {
-                username: user,
-                password: pass,
-                userData: userData
-            }, (data) => {
-                resolve(data);
-                window.location.assign(AuthService.frontEndURL());
-            }, (errorMsg) => {
-                reject(errorMsg);
-            });
-        });
+      return new Promise((resolve,reject) => {
+          HttpService.post(SERVER_BASE_URL + REGISTRATION_URL, {
+              username: user,
+              password: pass,
+              userData: userData
+          }, (data) => {
+              resolve(data);
+              window.location.assign(AuthService.frontEndURL());
+          }, (errorMsg) => {
+              reject(errorMsg);
+          });
+      });
     }
 
     static login(user, pass) {
