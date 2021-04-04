@@ -11,41 +11,69 @@ import TimeboardService from "../../services/TimeboardService";
 // minutes: list of minutes, with dim: (id_person(sort_by_minutes))
 
 class LeaderboardView extends React.Component {
-  state = {
-    // TODO: test with empty data responded from server
-    weeklyData:{},
-    totalData:{},
-    name_winner_lastweek: "somebody",
-    duration_str_lastweek: "sometime",
-    name_winner: "somebody",
-    duration_str: "sometime",
-  };
+    state = {
+        // TODO: test with empty data responded from server
+        weeklyData:{},
+        totalData:{},
+        weeklyWinner: "Unknown",
+        weeklyWinnerMinutes: 0,
+        totalWinner: "Unknown",
+        totalMinutes: 0,
+    };
 
-  componentDidMount() {
-    this.fetchData()
-  }
+    componentDidMount() {
+        this.updateWeeklyData();
+        this.updateTotalData();
+    }
 
-  fetchData = () => {
-    TimeboardService.getLastweekMinutes()
-        .then((data) => {
-            this.setState({
-              weeklyData: data
+    // fetch logged study time of current week, data is grouped by week day, example:
+    // {"monday": {"tom": 12, "jerry": 20}, "tuesday": {"tom": 20, "jerry": 12}}
+    updateWeeklyData = () => {
+        TimeboardService.getLastweekMinutes()
+            .then((data) => {
+                // TODO: check js object data structure
+                let leaderboard = {};
+                Object.keys(data).forEach((weekday) => {
+                    Object.keys(data[weekday]).forEach((name) => {
+                    if (!leaderboard[name]) leaderboard[name] = 0;
+                        leaderboard[name] += data[weekday][name];
+                    });
+                });
+                let weeklyWinner = this.getKeyWithMaxValue(leaderboard); 
+                this.setState({
+                    weeklyData: data,
+                    weeklyWinner: weeklyWinner,
+                    weeklyWinnerMinutes: leaderboard[weeklyWinner] 
+                });
             })
-        })
-        .catch((e) => {
-            alert(e);
-        });
+            .catch((e) => {
+                alert(e);
+            });
+    }
+   
+    // fetch logged study time of all time, example:
+    // {"tom": 1001, "jerry": 999} 
+    updateTotalData = () => {
+        TimeboardService.getUserMinutes()
+            .then((data) => {
+                let totalWinner = this.getKeyWithMaxValue(data);
+                this.setState({
+                    totalData: data,
+                    totalWinner: totalWinner,
+                    totalWinnerMinutes: data[totalWinner]
+                });
+            })
+            .catch((e) => {
+                alert(e);
+            });
+    }
+
+    #privateField
     
-    TimeboardService.getUserMinutes()
-        .then((data) => {
-          this.setState({
-            totalData: data
-          })
-        })
-        .catch((e) => {
-          alert(e)
-        })
-  }
+    // get the key with max value, json object must contain multiple key value pairs
+    getKeyWithMaxValue = (jsonObject) => {
+        return Object.keys(jsonObject).reduce((a, b) => jsonObject[a] > jsonObject[b] ? a : b);
+    }
 
   render() {
     return (
@@ -54,8 +82,8 @@ class LeaderboardView extends React.Component {
           <div>
             <p>
               The leader of this board is:
-              <b>{this.state.name_winner_lastweek}</b>
-              (with {this.state.duration_str_lastweek})
+              <b>{this.state.weeklyWinner}</b>
+              (with {this.state.weeklyWinnerMinutes})
             </p>
           </div>
 
@@ -68,8 +96,8 @@ class LeaderboardView extends React.Component {
         <div className="mt-5">
           <div>
             <p>
-              The leader of this board is:<b>{this.state.name_winner}</b>
-              (with {this.state.duration_str})
+              The leader of this board is:<b>{this.state.totalWinner}</b>
+              (with {this.state.totalWinnerMinutes})
             </p>
           </div>
           <BarchartMinutesPerPerson
