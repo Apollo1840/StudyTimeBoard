@@ -5,12 +5,8 @@ import {
 } from "./barchart_minutes_per_person";
 import TimeboardService from "../../services/TimeboardService";
 
-// users_lastweek: list of usernames, with dim: (id_person(sort_by_total_minutes_lastweek))
-// minutes_lasweek: list of list of minutes, with dim: (id_weekday(sort_by_num), id_person(sort_by_total_minutes_lastweek))
-// users: list of usernames, with dim: (id_person(sort_by_total_minutes))
-// minutes: list of minutes, with dim: (id_person(sort_by_minutes))
-
 class LeaderboardView extends React.Component {
+
     state = {
         // TODO: test with empty data responded from server
         weeklyData:{},
@@ -20,6 +16,27 @@ class LeaderboardView extends React.Component {
         totalWinner: "Unknown",
         totalMinutes: 0,
     };
+
+    /* state description:
+
+        weeklyData: Map: dayKey:userKey:minutesValue, 
+            -dayKey: str, weekdays, eg. "Monday"
+            -userKey: str, name of the user
+            -minutesValue: float, the amount of minutes that user have for that day.
+
+        totalData: Map: userKey: minutesValue: 
+            -userKey: str, name of the user
+            -minutesValue: float, the amount of minutes that user have from beginning.
+
+        name_winner_lastweek: str: username of the winner of the last week.
+
+        duration_str_lastweek: str: the pharse describing how much the winner of the last week studied.
+
+        name_winner: str: username of the winner from beginning
+
+        duration_str: str: the pharse describing how much the winner from beginning
+
+    */
 
     componentDidMount() {
         this.updateWeeklyData();
@@ -75,39 +92,39 @@ class LeaderboardView extends React.Component {
         return Object.keys(jsonObject).reduce((a, b) => jsonObject[a] > jsonObject[b] ? a : b);
     }
 
-  render() {
-    return (
-      <div className="container">
-        <div className="mt-5">
-          <div>
-            <p>
-              The leader of this board is:
-              <b>{this.state.weeklyWinner}</b>
-              (with {this.state.weeklyWinnerMinutes})
-            </p>
-          </div>
+    render() {
+        return (
+        <div className="container">
+            <div className="mt-5">
+            <div>
+                <p>
+                The leader of this board is:
+                <b>{this.state.weeklyWinner}</b>
+                (with {this.state.weeklyWinnerMinutes})
+                </p>
+            </div>
 
-          <BarchartMinutesPerPersonPerWeekday
-            title="Leaderboard of the last week (minutes)"
-            data={this.state.weeklyData}
-          />
-        </div>
+            <BarchartMinutesPerPersonPerWeekday
+                title="Leaderboard of the last week (minutes)"
+                data={this.state.weeklyData}
+            />
+            </div>
 
-        <div className="mt-5">
-          <div>
-            <p>
-              The leader of this board is:<b>{this.state.totalWinner}</b>
-              (with {this.state.totalWinnerMinutes})
-            </p>
-          </div>
-          <BarchartMinutesPerPerson
-            title="Leaderboard of entire time (minutes)"
-            data={this.state.totalData}
-          />
+            <div className="mt-5">
+            <div>
+                <p>
+                The leader of this board is:<b>{this.state.totalWinner}</b>
+                (with {this.state.totalWinnerMinutes})
+                </p>
+            </div>
+            <BarchartMinutesPerPerson
+                title="Leaderboard of entire time (minutes)"
+                data={this.state.totalData}
+            />
+            </div>
         </div>
-      </div>
-    );
-  }
+        );
+    }
 }
 
 export default LeaderboardView;
