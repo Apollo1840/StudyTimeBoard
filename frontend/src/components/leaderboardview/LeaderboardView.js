@@ -44,7 +44,7 @@ class LeaderboardView extends React.Component {
     }
 
     // fetch logged study time of current week, data is grouped by week day, example:
-    // {"monday": {"tom": 12, "jerry": 20}, "tuesday": {"tom": 20, "jerry": 12}}
+    // {"Monday": {"tom": 12, "jerry": 20}, "Tuesday": {"tom": 20, "jerry": 12}}
     updateWeeklyData = () => {
         TimeboardService.getLastweekMinutes()
             .then((data) => {
