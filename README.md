@@ -62,6 +62,8 @@ to start a server locally.
 
 ### 3. Code structure explanation
 
+see https://drive.google.com/file/d/1aKUYA_8heqd9J4BFsBoivuQ1iEqZ1aJE/view?usp=sharing.
+
 editing ...
 
 ### 4. Contributions:
