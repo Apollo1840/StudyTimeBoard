@@ -67,12 +67,11 @@ see https://drive.google.com/file/d/1aKUYA_8heqd9J4BFsBoivuQ1iEqZ1aJE/view?usp=s
 editing ...
 
 ### 4. Contributions:
-项目将保持开源。非常欢迎加入我们的开发。
-你的名字将会出现在本文档和部署版网站的About界面。
 
+项目将保持开源。非常欢迎加入我们的开发。
+你的名字将会出现在本文档和部署版网站的 About 界面。
 
 - 主要联系人：(github)Apollo1840[https://github.com/Apollo1840]
-
 
 #### 基本方法
 
@@ -80,16 +79,15 @@ editing ...
 
 **游侠** | 对于不想要加入团队的没有开源项目经验的贡献者，可参考按照这个方式提交修改：https://jarv.is/notes/how-to-pull-request-fork-github/
 
-**骨干** | 对于想要加入团队（有不经常，不定期的组会，会讨论功能发展，工作分配，根据熟练度赋予完全权限，或是给予教学辅导）的,有较好软件开发经验的开发者。请在issue中留言，标题中注明想加入。
+**骨干** | 对于想要加入团队（有不经常，不定期的组会，会讨论功能发展，工作分配，根据熟练度赋予完全权限，或是给予教学辅导）的,有较好软件开发经验的开发者。请在 issue 中留言，标题中注明想加入。
 并按照以下方法提交代码：
 
 1. 在 issue 里按照 'devissue.template' 写下开发内容。
 2. 创建与之对应的 branch。
 3. 完成修改后，进行本地测试。
-4. 如果有contributors身份，可以 push 这个 branch，并提交 pull request。
-5. assign 一个 Repo Manager（见 Contributors） 作为 reviewer。 
-6. 只有Repo Manager有 merge 的权限。
-
+4. 如果有 contributors 身份，可以 push 这个 branch，并提交 pull request。
+5. assign 一个 Repo Manager（见 Contributors） 作为 reviewer。
+6. 只有 Repo Manager 有 merge 的权限。
 
 ---
 
@@ -102,7 +100,7 @@ editing ...
 
 ---
 
-**干员** | 对于想要加入团队的,没有合作开发经验的程序员。请在issue中留言，标题中注明想加入。
+**干员** | 对于想要加入团队的,没有合作开发经验的程序员。请在 issue 中留言，标题中注明想加入。
 你需要学习 git 和 github 的正确使用方法。我们会安排教员，并按照 https://jarv.is/notes/how-to-pull-request-fork-github/ 手把手教你提交代码。
 通过时间的积累可以成为 **骨干**。
 
@@ -123,13 +121,15 @@ editing ...
 - Feature design
 - Regular user feedback
 
+#### recommendations
 
-
+- you are highly recommended to use 2 spaces as incident for the frontend dev, and 4 spaces as incident for the backedn dev
+- you are highly recommended to use Prettier(https://prettier.io/) add-on to format your code. and use formatOnSave(following https://www.robinwieruch.de/how-to-use-prettier-vscode)
 
 ## Contributors
+
 - (Repo Manager) Apollo1840 [https://github.com/Apollo1840]
 - (Repo Manager) changdiqing [https://github.com/changdiqing])
-
 
 ## Reference: How to build web app
 
