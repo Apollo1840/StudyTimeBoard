@@ -18,22 +18,22 @@ class LeaderboardView extends React.Component {
 
   /* state description:
 
-      weeklyData: Map: dayKey:userKey:minutesValue, 
-          -dayKey: str, weekdays, eg. "Monday"
-          -userKey: str, name of the user
-          -minutesValue: float, the amount of minutes that user have for that day.
+		weeklyData: Map: dayKey:userKey:minutesValue, 
+			-dayKey: str, weekdays, eg. "Monday"
+			-userKey: str, name of the user
+			-minutesValue: float, the amount of minutes that user have for that day.
 
-      totalData: Map: userKey: minutesValue: 
-          -userKey: str, name of the user
-          -minutesValue: float, the amount of minutes that user have from beginning.
+		totalData: Map: userKey: minutesValue: 
+			-userKey: str, name of the user
+			-minutesValue: float, the amount of minutes that user have from beginning.
 
-      name_winner_lastweek: str: username of the winner of the last week.
+		name_winner_lastweek: str: username of the winner of the last week.
 
-      duration_str_lastweek: str: the pharse describing how much the winner of the last week studied.
+		duration_str_lastweek: str: the pharse describing how much the winner of the last week studied.
 
-      name_winner: str: username of the winner from beginning
+		name_winner: str: username of the winner from beginning
 
-      duration_str: str: the pharse describing how much the winner from beginning
+		duration_str: str: the pharse describing how much the winner from beginning
 
   */
 
