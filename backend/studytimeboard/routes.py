@@ -153,41 +153,6 @@ def analysis():
         return redirect(url_for("login"))
 
 
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    # if current_user.is_authenticated:
-    #    return redirect(url_for('home'))
-
-    # form = LoginForm()
-    # if form.validate_on_submit():
-
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    elif request.method == 'POST':
-        username = request.form.get('username')
-        user = UserDB.query.filter_by(username=username).first()
-        if user is None:
-            flash(FlashMessages.NO_SUCH_USER, "danger")
-            return render_template('login.html')  # no such user
-        elif user.password == request.form.get("password"):  # todo: use bcrypt
-            login_user(user, remember=True)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
-
-        else:
-            flash(FlashMessages.PASSWD_INCORRECT, "danger")
-            return render_template('login.html')  # no such user
-
-    else:
-        return render_template('login.html')
-
-
-@app.route("/logout")
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
-
-
 # admin pages
 @app.route('/admin_log')
 def admin_log():
@@ -263,7 +228,7 @@ def api_dashboard_leaderboard_week():
     df_last_week = to_this_week_table(df_all)  # filter only the data for last week
     result = info_duration_by_weekday(df_last_week)  # list of entries -> data grouped by weekdays
     result_json = result.unstack(level=0).to_json()  # to proper json format
-    return {"status":"success", "data": result_json}, 200
+    return {"status": "success", "data": result_json}, 200
 
 
 @app.route("/api/minutes_total", methods=["GET"])
@@ -271,7 +236,8 @@ def api_get_leaderboards():
     df_all = get_df_ana(dbapi)
     result = info_duration_by_name(df_all)
     result_json = result.to_json()
-    return {"status":"success", "data": result_json}, 200
+    return {"status": "success", "data": result_json}, 200
+
 
 # Minispec for authentication response:
 #   on success: response should contain token: String
@@ -279,11 +245,9 @@ def api_get_leaderboards():
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
-
     # body contains only username and password, chose http body over authentication to minimize the code for httpservice
     username = request.json.get('username')
     password = request.json.get("password")
-    all_users = dbapi.all_users()
     user = UserDB.query.filter_by(username=username).first()
 
     # fail case 1: no such user, status 401
@@ -296,7 +260,6 @@ def api_login():
     else:
         login_user(user, remember=True)
         return {"status": "success", "data": {"token": username}}, 200  # TODO: use JWT token
-        
 
 
 @app.route('/api/registration', methods=['POST'])
@@ -308,6 +271,7 @@ def api_register():
     if username not in all_users:
         if len(all_users) <= user_amount_limit:
             dbapi.into_user(username, password)
+            user = UserDB.query.filter_by(username=username).first()
             login_user(user, remember=True)
             return {"status": "success", "data": {"token": username}}, 200
         else:
@@ -315,36 +279,13 @@ def api_register():
     else:
         return {"status": "error", "message": FlashMessages.REGISTERED_USER}, 409
 
+
 @app.route('/api/logout', methods=['POST'])
 def api_logout():
-    logout_user();
+    logout_user()
     return {"status": "success", "data": {"token": None}}, 200
 
 
 @app.route('/api/admin/clean_chart_folder', methods=['GET'])
 def api_admin_clean_chart_folder():
     clean_chart_folder()
-
-
-# depracated
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    elif request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get("password")
-
-        all_users = dbapi.all_users()
-        if username not in all_users:
-            if len(all_users) <= user_amount_limit:
-                dbapi.into_user(username, password)
-            else:
-                flash(FlashMessages.TOO_MUCH_USERS, "danger")
-        else:
-            flash(FlashMessages.REGISTERED_USER, "danger")
-
-        flash(FlashMessages.WELCOME_NEW_USER(username), 'success')
-        return redirect(url_for('login'))
-    else:
-        return render_template('login.html')

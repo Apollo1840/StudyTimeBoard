@@ -82,12 +82,41 @@ editing ...
 **骨干** | 对于想要加入团队（有不经常，不定期的组会，会讨论功能发展，工作分配，根据熟练度赋予完全权限，或是给予教学辅导）的,有较好软件开发经验的开发者。请在 issue 中留言，标题中注明想加入。
 并按照以下方法提交代码：
 
+normal modification: 
 1. 在 issue 里按照 'devissue.template' 写下开发内容。
-2. 创建与之对应的 branch。
+2. 创建与之对应的 branch following 'branch name convention'。
 3. 完成修改后，进行本地测试。
 4. 如果有 contributors 身份，可以 push 这个 branch，并提交 pull request。
 5. assign 一个 Repo Manager（见 Contributors） 作为 reviewer。
 6. 只有 Repo Manager 有 merge 的权限。
+
+big module modification:
+1. add a issue named start with "VERSION."
+2. add multiple barnches and connect those branches to this issue.
+3. local test branch
+5. assign to all Repo Managers
+6. leave a communicate method and keep in touch with RMs.
+
+---
+
+##### branch name convention
+
+`/owner/work_category/purpose_category/purpose`
+
+(P.S work category means `dev` or `debug`).
+
+| | Meaning
+--- | --- 
+`dev` | feature development
+`debug` | debug & refactor
+`fr` | frontend
+`bc` | backend
+
+eg:
+- `congyu/debug/fr/leaderboard_weekdays_order`.
+- `Diqing/dev/bc/leaderboad_data`.
+- `tom/dev/fr/homeview/go_hold_buttons`.
+
 
 ---
 
