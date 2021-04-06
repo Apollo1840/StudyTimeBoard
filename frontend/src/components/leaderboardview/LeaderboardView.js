@@ -47,7 +47,7 @@ class LeaderboardView extends React.Component {
     TimeboardService.getLastweekMinutes()
       .then((data) => {
         // TODO: check js object data structure
-        let leaderboard = {};
+        let leaderboard = {}; // weekly leaderboard
         Object.keys(data).forEach((weekday) => {
           Object.keys(data[weekday]).forEach((name) => {
             if (!leaderboard[name]) leaderboard[name] = 0;
