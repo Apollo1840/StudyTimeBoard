@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import LineChartTimeStream from "../charts/linechart_time_stream.js";
+import LineChartTimeStream from "./linechart_time_stream.js";
 class DashboardStudyKing extends Component {
   state = {
     data: [
