@@ -1,16 +1,15 @@
 import React from "react";
 import {
- BarchartMinutesPerPerson,
- BarchartMinutesPerPersonPerWeekday,
+  BarchartMinutesPerPerson,
+  BarchartMinutesPerPersonPerWeekday,
 } from "./barchart_minutes_per_person";
 import TimeboardService from "../../services/TimeboardService";
 
 class LeaderboardView extends React.Component {
-
   state = {
     // TODO: test with empty data responded from server
-    weeklyData:{},
-    totalData:{},
+    weeklyData: {},
+    totalData: {},
     weeklyWinner: "Unknown",
     weeklyWinnerMinutes: 0,
     totalWinner: "Unknown",
@@ -28,14 +27,13 @@ class LeaderboardView extends React.Component {
       -userKey: str, name of the user
       -minutesValue: float, the amount of minutes that user have from beginning.
 
-    name_winner_lastweek: str: username of the winner of the last week.
+    weeklyWinner: str: username of the winner of the last week.
 
-    duration_str_lastweek: str: the pharse describing how much the winner of the last week studied.
+    weeklyWinnerMinutes: int
 
-    name_winner: str: username of the winner from beginning
+    totalWinner: str: username of the winner from beginning
 
-    duration_str: str: the pharse describing how much the winner from beginning
-
+    totalMinutes: str: int
   */
 
   componentDidMount() {
@@ -52,24 +50,24 @@ class LeaderboardView extends React.Component {
         let leaderboard = {};
         Object.keys(data).forEach((weekday) => {
           Object.keys(data[weekday]).forEach((name) => {
-          if (!leaderboard[name]) leaderboard[name] = 0;
+            if (!leaderboard[name]) leaderboard[name] = 0;
             leaderboard[name] += data[weekday][name];
           });
         });
-        let weeklyWinner = this.getKeyWithMaxValue(leaderboard); 
+        let weeklyWinner = this.getKeyWithMaxValue(leaderboard);
         this.setState({
           weeklyData: data,
           weeklyWinner: weeklyWinner,
-          weeklyWinnerMinutes: leaderboard[weeklyWinner] 
+          weeklyWinnerMinutes: leaderboard[weeklyWinner],
         });
       })
       .catch((e) => {
         alert(e);
       });
-  }
-  
+  };
+
   // fetch logged study time of all time, example:
-  // {"tom": 1001, "jerry": 999} 
+  // {"tom": 1001, "jerry": 999}
   updateTotalData = () => {
     TimeboardService.getUserMinutes()
       .then((data) => {
@@ -77,52 +75,54 @@ class LeaderboardView extends React.Component {
         this.setState({
           totalData: data,
           totalWinner: totalWinner,
-          totalWinnerMinutes: data[totalWinner]
+          totalWinnerMinutes: data[totalWinner],
         });
       })
       .catch((e) => {
         alert(e);
       });
-  }
+  };
 
-  #privateField
-  
+  #privateField;
+
   // get the key with max value, json object must contain multiple key value pairs
   getKeyWithMaxValue = (jsonObject) => {
-    return Object.keys(jsonObject).reduce((a, b) => jsonObject[a] > jsonObject[b] ? a : b);
-  }
+    return Object.keys(jsonObject).reduce((a, b) =>
+      jsonObject[a] > jsonObject[b] ? a : b
+    );
+  };
 
   render() {
     return (
-    <div className="container">
-      <div className="mt-5">
-      <div>
-        <p>
-        The leader of this board is:
-        <b>{this.state.weeklyWinner}</b>
-        (with {this.state.weeklyWinnerMinutes})
-        </p>
-      </div>
+      <div className="container">
+        <div className="mt-5">
+          <div>
+            <p>
+              The leader of this board is:
+              <b>{this.state.weeklyWinner}</b>
+              (with {this.state.weeklyWinnerMinutes} minutes)
+            </p>
+          </div>
 
-      <BarchartMinutesPerPersonPerWeekday
-        title="Leaderboard of the last week (minutes)"
-        data={this.state.weeklyData}
-      />
-      </div>
+          <BarchartMinutesPerPersonPerWeekday
+            title="Leaderboard of the last week (minutes)"
+            data={this.state.weeklyData}
+          />
+        </div>
 
-      <div className="mt-5">
-      <div>
-        <p>
-        The leader of this board is:<b>{this.state.totalWinner}</b>
-        (with {this.state.totalWinnerMinutes})
-        </p>
+        <div className="mt-5">
+          <div>
+            <p>
+              The leader of this board is:<b>{this.state.totalWinner}</b>
+              (with {this.state.totalWinnerMinutes} minutes)
+            </p>
+          </div>
+          <BarchartMinutesPerPerson
+            title="Leaderboard of entire time (minutes)"
+            data={this.state.totalData}
+          />
+        </div>
       </div>
-      <BarchartMinutesPerPerson
-        title="Leaderboard of entire time (minutes)"
-        data={this.state.totalData}
-      />
-      </div>
-    </div>
     );
   }
 }
