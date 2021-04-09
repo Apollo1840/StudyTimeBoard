@@ -20,6 +20,12 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 
 ---
 
+You may found out that this dev web is different from demo web app.
+That is because we deployed "main" branch, whereas we are developing on "master" branch.
+The biggest difference of these two are "main" branch use Flask as full-stack,
+but "master" branch use React as frontend and Flask only as backend.
+We are still working on rebuild the web app piece by piece.
+
 #### Full dev setup (with Google Sheet as Manager(backup) database) [ 4 steps ]
 
 1. follow the steps from：
