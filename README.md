@@ -82,7 +82,8 @@ editing ...
 **骨干** | 对于想要加入团队（有不经常，不定期的组会，会讨论功能发展，工作分配，根据熟练度赋予完全权限，或是给予教学辅导）的,有较好软件开发经验的开发者。请在 issue 中留言，标题中注明想加入。
 并按照以下方法提交代码：
 
-normal modification: 
+normal modification:
+
 1. 在 issue 里按照 'devissue.template'(at the end of section) 写下开发内容。
 2. 创建与之对应的 branch following 'branch name convention'(at the end of section)。
 3. 完成修改后，进行本地测试。
@@ -91,11 +92,12 @@ normal modification:
 6. 只有 Repo Manager 有 merge 的权限。
 
 big module modification:
-1. add a issue named start with "VERSION."
+
+1. add a issue named start with "VERSION." or mark it as "BigChunk" with github labels.
 2. add multiple barnches and connect those branches to this issue.
 3. local test branch
-5. assign to all Repo Managers
-6. leave a communicate method and keep in touch with RMs.
+4. assign to all Repo Managers
+5. leave a communicate method and keep in touch with RMs.
 
 **干员** | 对于想要加入团队的,没有合作开发经验的程序员。请在 issue 中留言，标题中注明想加入。
 你需要学习 git 和 github 的正确使用方法。我们会安排教员，并按照 https://jarv.is/notes/how-to-pull-request-fork-github/ 手把手教你提交代码。
@@ -118,7 +120,6 @@ big module modification:
 - Feature design
 - Regular user feedback
 
-
 ---
 
 ##### branch name convention
@@ -127,30 +128,29 @@ big module modification:
 
 (P.S work category means `dev` or `debug`).
 
-| | Meaning
---- | --- 
-`dev` | feature development
-`debug` | debug & refactor
-`fr` | frontend
-`bc` | backend
+|         | Meaning             |
+| ------- | ------------------- |
+| `dev`   | feature development |
+| `debug` | debug & refactor    |
+| `fr`    | frontend            |
+| `bc`    | backend             |
 
 eg:
+
 - `congyu/debug/fr/leaderboard_weekdays_order`.
 - `Diqing/dev/bc/leaderboad_data`.
 - `tom/dev/fr/homeview/go_hold_buttons`.
-
 
 ---
 
 ##### devissue.template
 
-- is it a feature developing， or is it a code refactoring? (Note: if it is a feature, it should be one single feature, so it is easier for reviewers to review.)
+- is it a feature developing， or is it a code refactoring? (Note: if it is a feature, it should be one single feature, so it is easier for reviewers to review.). You do not need to answer this, if you could mark the issue as "refactor" for github label, when it is a refactoring work.
 - what is this feature about?
 - potential affected files?
 - are there some depending RP which are not appoved yet?
 
 ---
-
 
 #### recommendations
 
