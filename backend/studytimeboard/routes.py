@@ -140,7 +140,6 @@ def api_handle_go_event():
         date = datetime.now(TZ)
         start_time = datetime2time(datetime.now(TZ))
         dbapi.into_go(username, date, start_time)
-        print("Into go", username)
         return {"status": "success"}, 200
     else:
         return {"status": "fail", "message": FlashMessages.NO_SUCH_USER}, 400
@@ -154,7 +153,6 @@ def api_handle_hold_event():
         date = datetime.now(TZ)
         end_time = datetime2time(datetime.now(TZ))
         dbapi.into_hold(username, date, end_time)
-        print("into_hold", username)
         return {"status": "success"}, 200
     else:
         return {"status": "fail", "message": FlashMessages.NO_SUCH_USER}, 400
