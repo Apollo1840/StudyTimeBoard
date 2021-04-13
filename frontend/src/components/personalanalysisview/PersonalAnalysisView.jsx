@@ -87,19 +87,19 @@ class PersonalAnalysisView extends Component {
           loader={<div>Loading Chart</div>}
           data={[
             [
-            'day', 'a', 'b', 'c', 'd', {type: "string", role: "tooltip"/*, p: { html: true }*/}
+            'day', 'a', 'b', 'c', 'd'//, {type: "string", role: "tooltip"/*, p: { html: true }*/}
               //{ type: 'date', label: 'x' },
               //{ type: 'number', label: 'values' },
               //{ id: 'i0', type: 'number', role: 'interval', label: 'values'},
               //{ id: 'i0', type: 'number', role: 'interval', label: 'values'}
             ],
-           [new Date(2021,3,1), 90, 90, 110, 110, " "],
-           [new Date(2021,3,2), 80, 80, 110, 110, " "],
-           [new Date(2021,3,3), 70, 70, 110, 110, " "],
-           [new Date(2021,3,2), 120, 120, 130, 130, " "],
-           [new Date(2021,3,3), 130, 130, 140, 140, " "],
-           [new Date(2021,3,6), 90, 90, 110, 110, " "],
-           [new Date(2021,3,7), 90, 90, 110, 110, " "],
+           [new Date(2021,3,1), 90, 90, 110, 110],
+           [new Date(2021,3,2), 80, 80, 110, 110],
+           [new Date(2021,3,3), 70, 70, 110, 110],
+           [new Date(2021,3,2), 120, 120, 130, 130],
+           [new Date(2021,3,3), 130, 130, 140, 140],
+           [new Date(2021,3,6), 90, 90, 110, 110],
+           [new Date(2021,3,7), 90, 90, 110, 110],
           ]}
           options={{
             //series: [{ color: '#1A8763' }],
