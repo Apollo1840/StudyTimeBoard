@@ -11,7 +11,7 @@ const round_button_style = {
   borderRadius: "50%",
 };
 
-function GreeUser() {
+function GreetUser() {
   return (
     <div class="ml-3">
       <p>
@@ -115,7 +115,7 @@ class RecordForm extends Component {
   render() {
     let isAuthenticated = AuthService.isAuthenticated();
     let greeting = isAuthenticated ? (
-      <GreeUser />
+      <GreetUser />
     ) : (
       <AskForUser handleUsername={this.handleUsername} />
     );
