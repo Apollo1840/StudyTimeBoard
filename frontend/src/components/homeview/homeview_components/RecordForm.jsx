@@ -125,9 +125,12 @@ class RecordForm extends Component {
     );
 
     let buttons;
-    if (isAuthenticated() && this.state.user_status === "holding") {
+    if (AuthService.isAuthenticated() && this.state.user_status === "holding") {
       buttons = <GoButton handleSubmitGo={this.handleSubmitGo}> Go </GoButton>;
-    } else if (isAuthenticated() && this.state.user_status === "studying") {
+    } else if (
+      AuthService.isAuthenticated() &&
+      this.state.user_status === "studying"
+    ) {
       buttons = (
         <>
           <GoButton handleSubmitGo={this.handleSubmitGo}> Re-Go </GoButton>
@@ -135,6 +138,7 @@ class RecordForm extends Component {
         </>
       );
     } else {
+      // it means !AuthService.isAuthenticated()
       buttons = (
         <>
           <GoButton handleSubmitGo={this.handleSubmitGo}> Go </GoButton>
