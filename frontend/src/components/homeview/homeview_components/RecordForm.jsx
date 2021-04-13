@@ -82,6 +82,7 @@ class RecordForm extends Component {
 
   handleSubmitGo = () => {
     this.setState({ user_status: "studying" });
+    // todo: another response for no authorized user
 
     let username = AuthService.isAuthenticated()
       ? store.getState().auth.username
@@ -99,6 +100,7 @@ class RecordForm extends Component {
 
   handleSubmitHold = () => {
     this.setState({ user_status: "holding" });
+    // todo: another response for no authorized user
 
     let username = AuthService.isAuthenticated()
       ? store.getState().auth.username
