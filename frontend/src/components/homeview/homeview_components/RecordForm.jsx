@@ -123,12 +123,19 @@ class RecordForm extends Component {
     );
 
     let buttons;
-    if (this.state.user_status === "holding") {
+    if (isAuthenticated() && this.state.user_status === "holding") {
       buttons = <GoButton handleSubmitGo={this.handleSubmitGo}> Go </GoButton>;
-    } else {
+    } else if (isAuthenticated() && this.state.user_status === "studying") {
       buttons = (
         <>
           <GoButton handleSubmitGo={this.handleSubmitGo}> Re-Go </GoButton>
+          <HoldButton handleSubmitHold={this.handleSubmitHold}>Hold</HoldButton>
+        </>
+      );
+    } else {
+      buttons = (
+        <>
+          <GoButton handleSubmitGo={this.handleSubmitGo}> Go </GoButton>
           <HoldButton handleSubmitHold={this.handleSubmitHold}>Hold</HoldButton>
         </>
       );
