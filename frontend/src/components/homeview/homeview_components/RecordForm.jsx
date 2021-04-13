@@ -87,10 +87,11 @@ class RecordForm extends Component {
       ? store.getState().auth.username
       : this.state.user_name;
 
-    // todo: catch error and alert user
+    // todo: catch error and alert user, for example: username not exists
     SubmitRecordService.submit_go(username)
       .then(() => {})
       .catch((msg) => {
+        this.setState({ user_status: "holding" });
         console.log("error");
         console.log(msg);
       });
@@ -103,10 +104,11 @@ class RecordForm extends Component {
       ? store.getState().auth.username
       : this.state.user_name;
 
-    // todo: catch error and alert user
+    // todo: catch error and alert user, for example: username not exists
     SubmitRecordService.submit_hold(username)
       .then(() => {})
       .catch((msg) => {
+        this.setState({ user_status: "studying" });
         console.log("error");
         console.log(msg);
       });
