@@ -24,7 +24,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
-from studytimeboard.utils.database import DataBaseAPI
+from .utils.database import DataBaseAPI
 from studytimeboard.config import (debug_mode,
                                    main_googlesheet_name,
                                    user_googlesheet_name,

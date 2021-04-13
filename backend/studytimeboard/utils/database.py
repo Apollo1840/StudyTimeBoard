@@ -95,7 +95,7 @@ class GSAPI(BaseAPI):
         study_rows = np.where((df[NAME] == username) & (df[END_TIME] == UNKNOWN))[0]
         if len(study_rows) >= 1:
             study_index = int(study_rows[0])
-            _, _, start_time, _ = df.iloc[study_index, :]  # type: str
+            _, _, start_time, _ = df.iloc[study_index, :]  
 
             self._gsheet_deleterow(study_index)
 
