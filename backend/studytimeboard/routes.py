@@ -142,7 +142,7 @@ def api_handle_go_event():
         dbapi.into_go(username, date, start_time)
         return {"status": "success"}, 200
     else:
-        return {"status": "fail", "message": FlashMessages.NO_SUCH_USER}, 400
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 400
     
 
 @app.route("/api/hold", methods=["POST"])
@@ -155,7 +155,7 @@ def api_handle_hold_event():
         dbapi.into_hold(username, date, end_time)
         return {"status": "success"}, 200
     else:
-        return {"status": "fail", "message": FlashMessages.NO_SUCH_USER}, 400
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 400
     
 @app.route("/api/duration", methods=["POST"])
 def api_handle_duration_event():
@@ -170,10 +170,10 @@ def api_handle_duration_event():
             dbapi.into_duration(username, date, start_time, end_time)
             print(username, start_time, end_time)
         else:
-            return {"status": "fail", "message": FlashMessages.WRONG_DURATION}, 400
+            return {"status": "error", "message": FlashMessages.WRONG_DURATION}, 400
         return {"status": "success"}, 200
     else:
-        return {"status": "fail", "message": FlashMessages.NO_SUCH_USER}, 400
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 400
 
 
 @app.route("/api/studying_users", methods=["GET"])
