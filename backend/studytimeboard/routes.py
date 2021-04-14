@@ -18,12 +18,13 @@
 
 # external utils
 import numpy as np
+import json
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, current_user, logout_user, login_required
 
 # internal utils
-from studytimeboard import app, dbapi, logger
-from studytimeboard.app_utils import *
+from . import app, dbapi, logger
+from .app_utils import *
 
 
 @app.route('/', methods=["GET", "POST"])
