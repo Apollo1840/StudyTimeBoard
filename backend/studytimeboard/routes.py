@@ -23,7 +23,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 
 # internal utils
 from studytimeboard import app, dbapi, logger
-from studytimeboard.app_utils import *
+from .app_utils import *
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -219,7 +219,7 @@ def api_handle_record_form():
 def api_studying_users():
     df_all = get_df_ana(dbapi)
     studying_users = info_studying_users(df_all)
-    return {"studying_users": studying_users}
+    return {"status": "success", "data": studying_users}, 200
 
 
 @app.route("/api/minutes_lastweek", methods=["GET"])
