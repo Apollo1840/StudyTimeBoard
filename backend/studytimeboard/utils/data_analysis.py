@@ -28,7 +28,7 @@ def add_analysis_columns(df):
 
 def add_istoday_column(df):
     today_str = datetime2date(datetime.now(TZ))
-    df[TODAY_OR_NOT] = [IS_TODAY if i else NOT_TODAY for i in df[DATE] == today_str]
+    df.loc[:, TODAY_OR_NOT] = [IS_TODAY if i else NOT_TODAY for i in df[DATE] == today_str]
     return df
 
 
@@ -99,10 +99,11 @@ def to_this_week_table(df):
     :return:
     """
 
+    # get this weeks dataframe
     d = datetime.today()
-    sun_offset = (d.weekday() - 6) % 7
-    sun_offset = sun_offset if sun_offset != 0 else 7
-    last_sunday = d - timedelta(days=sun_offset)
+    sunday_offset = (d.weekday() - 6) % 7
+    sunday_offset = sunday_offset if sunday_offset != 0 else 7
+    last_sunday = d - timedelta(days=sunday_offset)
 
     last_sunday = pd.Timestamp(last_sunday)
     filter_mask = df[DATE_DT] > last_sunday
