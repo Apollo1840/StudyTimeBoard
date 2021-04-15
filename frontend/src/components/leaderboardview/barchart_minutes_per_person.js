@@ -50,6 +50,39 @@ class BarchartMinutesPerPersonPerWeekday extends Component {
     );
   }
 }
+class BarchartMinutesPerPersonToday extends Component {
+  // this.props.data:  dayKey: userKey: minutesValue
+  // todo: reuse the code from BarchartMinutesPerPersonPerWeekday (use function-based component)
+
+  state = {};
+
+  render() {
+    const todayOrNot = ["Previous", "Today"];
+    const weekdays_appeared_in_order = weekdays.filter((dayKey) =>
+      Object.keys(this.props.data).includes(dayKey)
+    );
+    return (
+      <div>
+        <Plot
+          data={weekdays_appeared_in_order.map((dayKey, index) => ({
+            type: "bar",
+            y: Object.keys(this.props.data[dayKey]), // users
+            x: Object.values(this.props.data[dayKey]), // minutes of users
+            orientation: "h",
+            name: dayKey,
+            marker: { color: WeekdayColorWay[index] },
+          }))}
+          layout={{
+            width: 1000,
+            height: 800,
+            title: this.props.title,
+            barmode: "stack",
+          }}
+        ></Plot>
+      </div>
+    );
+  }
+}
 
 class BarchartMinutesPerPerson extends Component {
   // this.props.data: userKey: minutesValue
@@ -76,4 +109,8 @@ class BarchartMinutesPerPerson extends Component {
   }
 }
 
-export { BarchartMinutesPerPerson, BarchartMinutesPerPersonPerWeekday };
+export {
+  BarchartMinutesPerPerson,
+  BarchartMinutesPerPersonToday,
+  BarchartMinutesPerPersonPerWeekday,
+};
