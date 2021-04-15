@@ -1,20 +1,18 @@
-import React, { Component } from 'react';
-import QuoteCard from './QuoteCard';
-import RecordForm from './RecordForm';
-import DashboardActiveUser from './DashboardActiveUser';
-import DashboardStudyKing from './DashboardStudyKing';
-import DashboarLeaderboardWeek from './DashboardLeaderboardWeek';
+import React, { Component } from "react";
+import QuoteCard from "./QuoteCard";
+import RecordForm from "./RecordForm";
+import DashboardActiveUser from "./DashboardActiveUser";
+import DashboardStudyKing from "./DashboardStudyKing";
+import DashboarLeaderboardWeek from "./DashboardLeaderboardWeek";
 
 class HomeView extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state = {
-      
-    }
+    this.state = {};
   }
 
   render() {
-    return(
+    return (
       <main className="container">
         <QuoteCard />
         <RecordForm />
