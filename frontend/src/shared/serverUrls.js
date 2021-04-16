@@ -4,4 +4,4 @@ export const LOGIN_URL = "/api/login";
 export const LOGOUT_URL = "/api/logout";
 export const MINUTES_LASTWEEK_URL = "/api/minutes_lastweek";
 export const MINUTES_TOTAL = "/api/minutes_total";
-export const STUDYKING_URL = "/api/studyingking";
+export const STUDYKING_URL = "/api/studying_king";
