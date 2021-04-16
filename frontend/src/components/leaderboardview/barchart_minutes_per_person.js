@@ -17,15 +17,15 @@ function BarchartMinutesPerPerson(props) {
         data={[
           {
             type: "bar",
-            y: Object.keys(this.props.data),
-            x: Object.values(this.props.data),
+            y: Object.keys(props.data),
+            x: Object.values(props.data),
             orientation: "h",
           },
         ]}
         layout={{
           width: 1000,
           height: 1200,
-          title: this.props.title,
+          title: props.title,
         }}
       ></Plot>
     </div>
