@@ -17,6 +17,7 @@ class DashboardStudyKing extends Component {
   };
 
   componentDidMount() {
+    //todo: handle error properly
     StudyKingService.getStudyKing()
       .then((data) =>
         this.setState({
