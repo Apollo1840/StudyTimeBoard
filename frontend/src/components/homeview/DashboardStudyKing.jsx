@@ -4,8 +4,8 @@ import StudyKingService from "../../services/StudyKingService";
 class DashboardStudyKing extends Component {
   // todo: unify the key from backend and frontend
   state = {
-    winner: "unknown",
-    winnerMinutes: "unknown",
+    winner: "some user",
+    winnerMinutes: "some time",
     timeline: [
       ["08:00", "12:00"],
       ["12:30", "12:40"],
@@ -19,13 +19,7 @@ class DashboardStudyKing extends Component {
   componentDidMount() {
     //todo: handle error properly
     StudyKingService.getStudyKing()
-      .then((data) =>
-        this.setState({
-          timeline: data.timeline,
-          winner: data.name_winner,
-          winnerMinutes: data.duration_str,
-        })
-      )
+      .then((data) => this.setState(data))
       .catch((msg) => console.log(msg));
   }
 
