@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import LineChartTimeStream from "./linechart_time_stream.js";
 import StudyKingService from "../../services/StudyKingService";
 class DashboardStudyKing extends Component {
-  // todo: unify the key from backend and frontend
   state = {
     winner: "some user",
     winnerMinutes: "some time",
