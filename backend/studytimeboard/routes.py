@@ -245,8 +245,8 @@ def api_studying_king():
         
         timeline = []
     return {"status": "success", "data": {
-        "name_winner": name_winner,
-        "duration_str": duration_str,
+        "winner": name_winner,
+        "winnerMinutes": duration_str,
         "timeline": timeline}
     }, 200
 
