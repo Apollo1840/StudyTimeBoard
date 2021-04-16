@@ -8,7 +8,7 @@ class RecordForm extends Component {
 
   greet_user = () => {
     return (
-      <div class="ml-3">
+      <div className="ml-3">
         <p>
           Hi <b>{store.getState().auth.username}</b>, record your study time,
           then you can
@@ -71,9 +71,9 @@ class RecordForm extends Component {
                   </button>
                 </div>
 
-                <div class="col text-center">
+                <div className="col text-center">
                   <button
-                    class="btn btn-outline-primary"
+                    className="btn btn-outline-primary"
                     id="hold"
                     style={{
                       width: "100px",

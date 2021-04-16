@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BarchartMinutesPerPersonToday } from "../leaderboardview/barchart_minutes_per_person";
+import { BarchartMinutesPerPersonPerToday } from "../leaderboardview/barchart_minutes_per_person";
 import TimeboardService from "../../services/TimeboardService";
 class DashboardLeaderboardWeek extends Component {
   state = {
@@ -25,8 +25,8 @@ class DashboardLeaderboardWeek extends Component {
           </p>
         </div>
 
-        <div class="text-center">
-          <BarchartMinutesPerPersonToday data={this.state.data} />
+        <div className="text-center">
+          <BarchartMinutesPerPersonPerToday data={this.state.data} />
         </div>
       </div>
     );
