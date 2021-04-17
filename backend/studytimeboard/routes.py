@@ -239,27 +239,26 @@ def api_get_leaderboards():
     return {"status": "success", "data": result_json}, 200
 
 
-@app.route("/api/analysis", methods=["GET"])
-def api_personal_analysis():
-    if current_user.is_authenticated:
-        username = current_user.username
-        df_all = get_df_ana(dbapi)
+@app.route("/api/personal_timestamps", methods=["GET"])
+def api_personal_timestamps():
+    # TODO: Authentication with JWT
+    df_all = get_df_ana(dbapi)
+    authHeader = request.headers.get('jwt')
+    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
+    # and JWT, there is still a long way to go...
+    username = authHeader
 
-        # Check if name is found
-        if username in df_all[NAME].unique():
-            # TODO: move this to app_utils
-            df_user = df_all.loc[df_all[NAME] == username, :]
-            df_user = df_user.loc[df_user[END_TIME] != UNKNOWN, :]
-            timestamps_by_date = df_user[[DATE, START_TIME, END_TIME]]
-            result_json = timestamps_by_date.to_json(orient="records")
-            return {"status": "success", "data": result_json}, 200  # TODO: use JWT token
-        else:
-            # error user not found?
-            return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
+    # Check if name is found
+    if username in df_all[NAME].unique():
+        # TODO: move this to app_utils
+        df_user = df_all.loc[df_all[NAME] == username, :]
+        df_user = df_user.loc[df_user[END_TIME] != UNKNOWN, :]
+        timestamps_by_date = df_user[[DATE, START_TIME, END_TIME]]
+        result_json = timestamps_by_date.to_json(orient="records")
+        return {"status": "success", "data": result_json}, 200  # TODO: use JWT token
     else:
-        # error unauthenticated?
-        return {"status": "error", "message": FlashMessages.UNAUTHENTICATED}, 401
-
+        # error user not found?
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
 
 
 # Minispec for authentication response:
