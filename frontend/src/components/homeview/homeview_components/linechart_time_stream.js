@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Plot from "react-plotly.js";
-import { LineChartTimeStreamColorWay } from "../../shared/colorThemes";
+import { LineChartTimeStreamColorWay } from "../../../shared/colorThemes";
 
 class LineChartTimeStream extends Component {
   // props are:
