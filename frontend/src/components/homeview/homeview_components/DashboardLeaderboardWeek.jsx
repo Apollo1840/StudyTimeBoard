@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BarchartMinutesPerPersonPerToday } from "../leaderboardview/barchart_minutes_per_person";
+import { BarchartMinutesPerPersonPerToday } from "../../leaderboardview/barchart_minutes_per_person";
 import TimeboardService from "../../../services/TimeboardService";
 class DashboardLeaderboardWeek extends Component {
   state = {
