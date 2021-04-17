@@ -74,17 +74,12 @@ editing ...
 
 ### 4. Contributions:
 
-项目将保持开源。非常欢迎加入我们的开发。
+项目将保持开源。
+非常欢迎加入我们的开发。
 你的名字将会出现在本文档和部署版网站的 About 界面。
+寻求合作具体见 'Opensource Manual.md'
 
 - 主要联系人：(github)Apollo1840[https://github.com/Apollo1840]
-
-寻求合作具体见 开源手册.md
-
-#### recommendations
-
-- you are highly recommended to use 2 spaces as incident for the frontend dev, and 4 spaces as incident for the backedn dev
-- you are highly recommended to use Prettier(https://prettier.io/) add-on to format your code. and use formatOnSave(following https://www.robinwieruch.de/how-to-use-prettier-vscode)
 
 ## Contributors
 

@@ -1,4 +1,4 @@
-# 开源手册
+# Opensource Manual 开源手册
 
 ## 基本方法
 
@@ -55,6 +55,11 @@ big module modification:
 - UI/UX design
 - Feature design
 - Regular user feedback
+
+## recommendations
+
+- you are highly recommended to use 2 spaces as incident for the frontend dev, and 4 spaces as incident for the backedn dev
+- you are highly recommended to use Prettier(https://prettier.io/) add-on to format your code. and use formatOnSave(following https://www.robinwieruch.de/how-to-use-prettier-vscode)
 
 ## Appendix
 
