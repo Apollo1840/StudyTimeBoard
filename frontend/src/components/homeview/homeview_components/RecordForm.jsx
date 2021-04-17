@@ -13,7 +13,7 @@ const round_button_style = {
 
 function GreetUser() {
   return (
-    <div class="ml-3">
+    <div className="ml-3">
       <p>
         Hi <b>{store.getState().auth.username}</b>, record your study time, then
         you can

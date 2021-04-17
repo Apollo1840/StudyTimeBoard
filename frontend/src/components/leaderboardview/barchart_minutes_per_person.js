@@ -10,70 +10,75 @@ const testData = {
 
 //TODO: layouts can be put in props
 
-class BarchartMinutesPerPersonPerWeekday extends Component {
-  // this.props.data:  dayKey: userKey: minutesValue
-
-  state = {};
-
-  render() {
-    const weekdays = [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ];
-    const weekdays_appeared_in_order = weekdays.filter((dayKey) =>
-      Object.keys(this.props.data).includes(dayKey)
-    );
-    return (
-      <div>
-        <Plot
-          data={weekdays_appeared_in_order.map((dayKey, index) => ({
+function BarchartMinutesPerPerson(props) {
+  return (
+    <div>
+      <Plot
+        data={[
+          {
             type: "bar",
-            y: Object.keys(this.props.data[dayKey]), // users
-            x: Object.values(this.props.data[dayKey]), // minutes of users
+            y: Object.keys(props.data),
+            x: Object.values(props.data),
             orientation: "h",
-            name: dayKey,
-            marker: { color: WeekdayColorWay[index] },
-          }))}
-          layout={{
-            width: 1000,
-            height: 800,
-            title: this.props.title,
-            barmode: "stack",
-          }}
-        ></Plot>
-      </div>
-    );
-  }
+          },
+        ]}
+        layout={{
+          width: 1000,
+          height: 1200,
+          title: props.title,
+        }}
+      ></Plot>
+    </div>
+  );
 }
 
-class BarchartMinutesPerPerson extends Component {
-  // this.props.data: userKey: minutesValue
-  render() {
-    return (
-      <div>
-        <Plot
-          data={[
-            {
-              type: "bar",
-              y: Object.keys(this.props.data),
-              x: Object.values(this.props.data),
-              orientation: "h",
-            },
-          ]}
-          layout={{
-            width: 1000,
-            height: 1200,
-            title: this.props.title,
-          }}
-        ></Plot>
-      </div>
-    );
-  }
+function BarChartMinutesPerPersonByCategory(props) {
+  const sortedDayCategroy = props.dayCategory.filter((dayKey) =>
+    Object.keys(props.data).includes(dayKey)
+  );
+  return (
+    <div>
+      <Plot
+        data={sortedDayCategroy.map((dayKey, index) => ({
+          type: "bar",
+          y: Object.keys(props.data[dayKey]), // users
+          x: Object.values(props.data[dayKey]), // minutes of users
+          orientation: "h",
+          name: dayKey,
+          marker: { color: WeekdayColorWay[index] },
+        }))}
+        layout={{
+          width: 1000,
+          height: 800,
+          title: props.title,
+          barmode: "stack",
+        }}
+      ></Plot>
+    </div>
+  );
 }
 
-export { BarchartMinutesPerPerson, BarchartMinutesPerPersonPerWeekday };
+function BarchartMinutesPerPersonPerWeekday(props) {
+  const dayCategory = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  return BarChartMinutesPerPersonByCategory({ ...props, dayCategory });
+}
+
+function BarchartMinutesPerPersonPerToday(props) {
+  const dayCategory = ["Previous", "Today"];
+  return BarChartMinutesPerPersonByCategory({ ...props, dayCategory });
+}
+
+export {
+  BarchartMinutesPerPerson,
+  BarchartMinutesPerPersonPerToday,
+  BarchartMinutesPerPersonPerWeekday,
+};
