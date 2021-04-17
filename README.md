@@ -68,8 +68,8 @@ to start a server locally.
 
 ### 3. Code structure explanation
 
-Structure UML-like: see https://drive.google.com/file/d/1aKUYA_8heqd9J4BFsBoivuQ1iEqZ1aJE/view?usp=sharing.
-Video description: see https://www.bilibili.com/video/BV1nU4y1Y7yn (in Chinese)
+- Structure UML-like: see https://drive.google.com/file/d/1aKUYA_8heqd9J4BFsBoivuQ1iEqZ1aJE/view?usp=sharing.
+- Video description: see https://www.bilibili.com/video/BV1nU4y1Y7yn (in Chinese)
 
 editing ...
 
