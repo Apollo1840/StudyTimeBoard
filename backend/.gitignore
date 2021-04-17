@@ -14,3 +14,4 @@ utils/creds/**
 **.pyc
 
 stb_app_backend.log
+studytimeboard/site.db
