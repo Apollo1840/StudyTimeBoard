@@ -24,6 +24,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 
 # internal utils
 from . import app, dbapi, logger
+from .constant import FlashMessages
 from .app_utils import *
 
 
@@ -88,29 +89,6 @@ def home():
                            name_winner=name_winner_lw,
                            duration_str_winner=duration_str_lw)
 
-
-@app.route("/leaderboard")
-def leaderboard():
-    # rm the folder to avoid multiple rendering data explode
-    clean_chart_folder()
-
-    df_all = get_df_ana(dbapi)
-    df_last_week = to_this_week_table(df_all)
-
-    # get display information
-    name_winner_al, duration_str_al, path_to_chart_al = info_minutes_dashboard(df_all, chart_prefix="all")
-    name_winner_lw, duration_str_lw, path_to_chart_lw = info_minutes_dashboard(df_last_week, chart_prefix="lastweek",
-                                                                               sep=WEEKDAY)
-
-    return render_template('leaderboard.html',
-                           path_to_chart_lastweek=path_to_chart_lw,
-                           path_to_chart_all=path_to_chart_al,
-                           name_winner_lastweek=name_winner_lw,
-                           duration_str_lastweek=duration_str_lw,
-                           name_winner=name_winner_al,
-                           duration_str=duration_str_al)
-
-
 @app.route('/analysis')
 def analysis():
     if current_user.is_authenticated:
@@ -153,67 +131,31 @@ def analysis():
     else:
         return redirect(url_for("login"))
 
-
-# admin pages
-@app.route('/admin_log')
-def admin_log():
-    with open(logger.filename, "r") as f:
-        infos = f.readlines()
-    for info in infos:
-        if len(info.strip()) > 0:
-            flash(info, "success")
-    return render_template('about.html')
-
-
-@app.route('/admin_reload_data')
-def admin_reload_data():
-    logger.info("ADMIN: admin_reload_data")
-    dbapi.init_db()
-    return render_template('about.html')
-
-
-@app.route('/admin_clean_data')
-def admin_clean_data():
-    dbapi.init_empty()
-    return render_template('about.html')
-
-
-@app.route('/admin_create_some_data')
-def admin_create_some_data():
-    dbapi.into_some_examples()
-    return render_template('about.html')
-
-
-@app.route('/admin_create_some_users')
-def admin_create_some_user():
-    dbapi.into_some_users()
-    return render_template('about.html')
-
-
-@app.route('/admin_star', methods=['GET', 'POST'])
-def admin_star():
-    if USERNAME in request.args:
-        username = request.args[USERNAME]
-        dbapi.into_user_onestar(username)
-    return render_template('about.html')
-
-
 # Backend APIs
+@app.route("/api/go", methods=["POST"])
+def api_handle_go_event():
+    data = json.loads(request.data)
+    username = data["username"]
+    if username in dbapi.all_users():
+        date = datetime.now(TZ)
+        start_time = datetime2time(datetime.now(TZ))
+        dbapi.into_go(username, date, start_time)
+        return {"status": "success"}, 200
+    else:
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 400
+    
 
-@app.route("/api/handle_record_form", methods=["POST"])
-def api_handle_record_form():
-    # 0. handle the time input
-    if request.method == "POST":
-        username = request.form.get("username")
-        if username in dbapi.all_users():
-            result_signal = dbapi.into_from_request(request, username)
-
-            if not result_signal:
-                return {"is_success": False, "flash_msg": FlashMessages.WRONG_DURATION}
-            else:
-                return {"is_success": True}
-        else:
-            return {"is_success": False, "flash_msg": FlashMessages.NO_SUCH_USER}
+@app.route("/api/hold", methods=["POST"])
+def api_handle_hold_event():
+    data = json.loads(request.data)
+    username = data["username"]
+    if username in dbapi.all_users():
+        date = datetime.now(TZ)
+        end_time = datetime2time(datetime.now(TZ))
+        dbapi.into_hold(username, date, end_time)
+        return {"status": "success"}, 200
+    else:
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 400
 
 
 @app.route("/api/studying_users", methods=["GET"])
@@ -290,3 +232,62 @@ def api_logout():
 @app.route('/api/admin/clean_chart_folder', methods=['GET'])
 def api_admin_clean_chart_folder():
     clean_chart_folder()
+
+# admin pages
+@app.route('/admin_log')
+def admin_log():
+    with open(logger.filename, "r") as f:
+        infos = f.readlines()
+    for info in infos:
+        if len(info.strip()) > 0:
+            flash(info, "success")
+    return render_template('about.html')
+
+
+@app.route('/admin_reload_data')
+def admin_reload_data():
+    logger.info("ADMIN: admin_reload_data")
+    dbapi.init_db()
+    return render_template('about.html')
+
+
+@app.route('/admin_clean_data')
+def admin_clean_data():
+    dbapi.init_empty()
+    return render_template('about.html')
+
+
+@app.route('/admin_create_some_data')
+def admin_create_some_data():
+    dbapi.into_some_examples()
+    return render_template('about.html')
+
+
+@app.route('/admin_create_some_users')
+def admin_create_some_user():
+    dbapi.into_some_users()
+    return render_template('about.html')
+
+
+@app.route('/admin_star', methods=['GET', 'POST'])
+def admin_star():
+    if USERNAME in request.args:
+        username = request.args[USERNAME]
+        dbapi.into_user_onestar(username)
+    return render_template('about.html')
+
+# depracated
+@app.route("/api/handle_record_form", methods=["POST"])
+def api_handle_record_form():
+    # 0. handle the time input
+    if request.method == "POST":
+        username = request.form.get("username")
+        if username in dbapi.all_users():
+            result_signal = dbapi.into_from_request(request, username)
+
+            if not result_signal:
+                return {"is_success": False, "flash_msg": FlashMessages.WRONG_DURATION}
+            else:
+                return {"is_success": True}
+        else:
+            return {"is_success": False, "flash_msg": FlashMessages.NO_SUCH_USER}
