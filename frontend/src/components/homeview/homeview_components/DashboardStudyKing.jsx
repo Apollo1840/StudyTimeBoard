@@ -30,7 +30,7 @@ class DashboardStudyKing extends Component {
         <p style={{ fontSize: "120%" }}>
           <b> 🔥 {this.state.winner} </b> (with {this.state.winnerMinutes})
         </p>
-        <div class="text-center">
+        <div className="text-center">
           <LineChartTimeStream data={this.state.timeline} />
         </div>
       </div>

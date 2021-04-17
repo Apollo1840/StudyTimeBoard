@@ -25,11 +25,11 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 from .utils.database import DataBaseAPI
-from .config import (debug_mode,
-                                   main_googlesheet_name,
-                                   user_googlesheet_name,
-                                   add_examples,
-                                   add_users)
+from .config import (debug_mode, 
+                     main_googlesheet_name, 
+                     user_googlesheet_name,
+                     add_examples,
+                     add_users)
 from .constant import (PATH_TO_DB_STATUS, INITIED, UNBORN)
 
 dbapi = DataBaseAPI(db,
