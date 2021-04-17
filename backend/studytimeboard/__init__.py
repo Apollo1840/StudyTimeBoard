@@ -6,7 +6,7 @@ from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
-from studytimeboard.tools.logger import APPLogHandler
+from .tools.logger import APPLogHandler
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.DEBUG)
@@ -25,18 +25,18 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
 from .utils.database import DataBaseAPI
-from studytimeboard.config import (debug_mode,
-                                   main_googlesheet_name,
-                                   user_googlesheet_name,
-                                   add_examples,
-                                   add_users)
-from studytimeboard.constant import (PATH_TO_DB_STATUS, INITIED, UNBORN)
+from .config import (debug_mode, 
+                     main_googlesheet_name, 
+                     user_googlesheet_name,
+                     add_examples,
+                     add_users)
+from .constant import (PATH_TO_DB_STATUS, INITIED, UNBORN)
 
 dbapi = DataBaseAPI(db,
                     main_googlesheet_name=main_googlesheet_name,
                     user_googlesheet_name=user_googlesheet_name)
 
-from studytimeboard.routes import *
+from .routes import *
 
 
 def create_app():

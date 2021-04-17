@@ -13,7 +13,7 @@ const round_button_style = {
 
 function GreetUser() {
   return (
-    <div class="ml-3">
+    <div className="ml-3">
       <p>
         Hi <b>{store.getState().auth.username}</b>, record your study time, then
         you can
@@ -132,6 +132,7 @@ class RecordForm extends Component {
   };
 
   handleSubmitGo = () => {
+    // todo: show spinner here, reset state after submission sucessed
     this.setState({ user_status: "studying" });
     // todo: another response for no authorized user
 
@@ -144,12 +145,13 @@ class RecordForm extends Component {
       .then(() => {})
       .catch((msg) => {
         this.setState({ user_status: "holding" });
-        console.log("error");
-        console.log(msg);
+        alert(msg);
+        console.error(msg);
       });
   };
 
   handleSubmitHold = () => {
+    // todo: show spinner here, reset state after submission sucessed
     this.setState({ user_status: "holding" });
     // todo: another response for no authorized user
 
@@ -162,8 +164,8 @@ class RecordForm extends Component {
       .then(() => {})
       .catch((msg) => {
         this.setState({ user_status: "studying" });
-        console.log("error");
-        console.log(msg);
+        alert(msg);
+        console.error(msg);
       });
   };
 

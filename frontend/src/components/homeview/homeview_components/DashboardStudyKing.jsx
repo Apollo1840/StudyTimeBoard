@@ -19,7 +19,7 @@ class DashboardStudyKing extends Component {
         <p style={{ fontSize: "120%" }}>
           <b> 🔥 some_user</b> (with some_time)
         </p>
-        <div class="text-center">
+        <div className="text-center">
           <LineChartTimeStream data={this.state.data} />
         </div>
       </div>

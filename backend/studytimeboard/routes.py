@@ -18,9 +18,9 @@
 
 # external utils
 import numpy as np
+import json
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import login_user, current_user, logout_user, login_required
-import json
 
 # internal utils
 from . import app, dbapi, logger
@@ -174,7 +174,6 @@ def api_handle_duration_event():
         return {"status": "success"}, 200
     else:
         return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 400
-
 
 @app.route("/api/studying_users", methods=["GET"])
 def api_studying_users():
