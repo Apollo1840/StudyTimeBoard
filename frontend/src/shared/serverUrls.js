@@ -5,3 +5,5 @@ export const LOGIN_URL = "/api/login";
 export const LOGOUT_URL = "/api/logout";
 export const MINUTES_LASTWEEK_URL = "/api/minutes_lastweek";
 export const MINUTES_TOTAL = "/api/minutes_total";
+export const GO_URL = "/api/go";
+export const HOLD_URL = "/api/hold";

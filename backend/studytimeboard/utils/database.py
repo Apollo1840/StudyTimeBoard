@@ -96,7 +96,6 @@ class GSAPI(BaseAPI):
         if len(study_rows) >= 1:
             study_index = int(study_rows[0])
             _, _, start_time, _ = df.iloc[study_index, :]
-
             self._gsheet_deleterow(study_index)
 
             row = [username, datetime2date(date), start_time, end_time]
