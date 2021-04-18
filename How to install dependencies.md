@@ -36,9 +36,9 @@ This manuscript is for Ubuntu 18 with Linux 5.4.0-70-generic kernel. Hopefully s
         cd frontend/
         npm install
 
-# Error Handling:
+## Error Handling:
 
-## For windows:
+### For windows:
 
 - RAM shortage when use 'npm start':
   in package.json modify:
