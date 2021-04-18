@@ -41,9 +41,12 @@ This manuscript is for Ubuntu 18 with Linux 5.4.0-70-generic kernel. Hopefully s
 ### For windows:
 
 - RAM shortage when use 'npm start':
-  in package.json modify:
+  in `package.json` modify:
 
-        ...
-        "start": "react-scripts --max_old_space_size=4096 start"
-        "build": "react-scripts --max_old_space_size=4096 build"
-        ...
+  ```json
+
+      ...
+      "start": "react-scripts --max_old_space_size=4096 start"
+      "build": "react-scripts --max_old_space_size=4096 build"
+      ...
+  ```
