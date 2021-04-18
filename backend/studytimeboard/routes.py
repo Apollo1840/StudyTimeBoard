@@ -127,9 +127,9 @@ def analysis():
                                    path_use=path_use,
                                    path_use_overlap=path_use_overlap)
         else:
-            return redirect(url_for("login"))
+            return redirect(url_for("api_login"))
     else:
-        return redirect(url_for("login"))
+        return redirect(url_for("api_login"))
 
 # Backend APIs
 @app.route("/api/go", methods=["POST"])
