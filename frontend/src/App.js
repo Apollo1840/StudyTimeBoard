@@ -3,7 +3,7 @@ import "./App.css";
 import NavBar from "./components/navbar";
 import AboutView from "./components/aboutview/AboutView";
 import LeaderboardView from "./components/leaderboardview/LeaderboardView";
-import PersonalAnalysisView from "./components/personal_analysis_view/PersonalAnalysisView";
+import PersonalAnalysisView from "./components/personalanalysisview/PersonalAnalysisView";
 import HomeView from "./components/homeview/HomeView";
 import LoginView from "./components/loginview/LoginView";
 import RegisterView from "./components/registerview/RegisterView";
