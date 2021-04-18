@@ -13,11 +13,13 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 (if you have not worked with python or node, please read ['How to install dependencies.md'](https://github.com/Apollo1840/StudyTimeBoard/blob/master/How%20to%20install%20dependencies.md)')
 
     cd backend
+    pip install -r requiremnts.txt
     python app.py
 
     # open a new terminal tab
     cd ..
     cd frontend
+    npm install
     npm start
 
 ---
@@ -40,17 +42,6 @@ We are still working on rebuild the web app piece by piece.
    https://docs.google.com/spreadsheets/d/1FGoY2IrXavkyiRGZQkvTIgHwHmIrlohR-IDoQ5K4hw4/edit?usp=sharing
 
 3. Add the "client_email" in `./studytimeboard/utils/creds/client_secret.json` to the share list of that google sheet.
-
-Now you are ready to go.
-
-run:
-
-    pip install -r requiremnts.txt
-    python app.py
-
-to start a server locally.
-
-4. Go to `http://0.0.0.0:5555/` to view the main page of this web app.
 
 ### 2. Todos:
 
