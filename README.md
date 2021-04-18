@@ -10,6 +10,8 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 
 ### 1. Dev setup:
 
+(if you have not worked with python or node, please read 'How to install dependencies.md')
+
     cd backend
     python app.py
 
