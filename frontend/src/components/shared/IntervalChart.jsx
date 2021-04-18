@@ -12,9 +12,9 @@ const dummyData =
     [new Date(2021,3,21), new Date("2000.1.1 17:25"), new Date("2000.1.1  19:30")]
   ];
 
-// Display a waterfall chart using a modified react-plotly lines chart, data should be an array of array of size 3
-// specifying x-axis, y-axis start and y-axis end, e.g. see dummyData.
-class WaterfallChart extends Component {
+// Display intervals in a waterfall chart, the waterfall chart is a modified react-plotly lines chart, data should be an
+// array of array of size 3 specifying x-axis, y-axis start and y-axis end, e.g. see dummyData.
+class IntervalChart extends Component {
   constructor(props) {
     super(props);
   }
@@ -55,4 +55,4 @@ class WaterfallChart extends Component {
   }
 }
 
-export default WaterfallChart;
+export default IntervalChart;

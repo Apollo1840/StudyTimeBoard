@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import AuthService from "../../services/AuthService";
 import TimeboardService from "../../services/TimeboardService";
-import WaterfallChart from "../shared/WaterfallChart";
+import IntervalChart from "../shared/IntervalChart";
 import BarChart from "../shared/BarChart";
 
 class PersonalAnalysisView extends Component {
@@ -10,8 +10,8 @@ class PersonalAnalysisView extends Component {
   ERROR_INVALID_DATE = "Returned data has invalid date, database might be corrupted!";
 
   state = {
-    waterfallData: null,  // logged intervals of current user, displayed by waterfall chart
-    barchartData: null    // logged durations of current user, displayed by bar chart
+    intervalChartData: null,  // logged intervals of current user, displayed by waterfall chart
+    barChartData: null    // logged durations of current user, displayed by bar chart
   };
 
   componentDidMount(){
@@ -23,7 +23,7 @@ class PersonalAnalysisView extends Component {
     TimeboardService.getPersonalDurations()
       .then((data) => {
         this.setState({
-          barchartData: this.buildBarchartData(data)
+          barChartData: this.buildBarChartData(data)
         });
       })
       .catch((e) => {
@@ -35,7 +35,7 @@ class PersonalAnalysisView extends Component {
     TimeboardService.getPersonalIntervals()
       .then((data) => {
         this.setState({
-          waterfallData: this.buildWaterfallData(data)
+          intervalChartData: this.buildIntervalChartData(data)
         });
       })
       .catch((e) => {
@@ -43,7 +43,7 @@ class PersonalAnalysisView extends Component {
       });
   }
 
-  buildWaterfallData = (data) => {
+  buildIntervalChartData = (data) => {
     let result =  data.map((entry) =>
       Object.values(entry).map((timeStr, index) => 
         index == 0 ? new Date(timeStr) : new Date("2000.1.1 " + timeStr)
@@ -59,7 +59,7 @@ class PersonalAnalysisView extends Component {
     return result;
   }
 
-  buildBarchartData = (data) => {
+  buildBarChartData = (data) => {
     let result = data.map((entry) => {
       return [new Date(entry["date"]), entry["minutes"]];
     });
@@ -82,8 +82,8 @@ class PersonalAnalysisView extends Component {
      
     return (
       <div>
-        {this.state.waterfallData ? <WaterfallChart data = {this.state.waterfallData}/> : <div>loading</div>}
-        {this.state.barchartData ? <BarChart data = {this.state.barchartData}/> : <div>loading</div>}
+        {this.state.intervalChartData? <IntervalChart data = {this.state.intervalChartData}/> : <div>loading</div>}
+        {this.state.barChartData ? <BarChart data = {this.state.barChartData}/> : <div>loading</div>}
       </div>
     );
   }
