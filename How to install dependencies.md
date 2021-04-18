@@ -29,3 +29,21 @@ This manuscript is for Ubuntu 18 with Linux 5.4.0-70-generic kernel. Hopefully s
         sudo apt install npm
         sudo npm install -g n
         sudo n stable
+
+5.  install npm packgages
+
+        cd /path/to/this/project
+        cd frontend/
+        npm install
+
+# Error Handling:
+
+## For windows:
+
+- RAM shortage when use 'npm start':
+  in package.json modify:
+
+        ...
+        "start": "react-scripts --max_old_space_size=4096 start"
+        "build": "react-sreipcs_--max_old_space_size=4096 build"
+        ...
