@@ -73,7 +73,7 @@ editing ...
 项目将保持开源。
 非常欢迎加入我们的开发。
 你的名字将会出现在本文档和部署版网站的 About 界面。
-寻求合作具体见 ['Opensource Manual.md'](https://github.com/Apollo1840/StudyTimeBoard/blob/master/Opensource%20Manual.md)
+寻求合作具体见 ['CONTRIBUTING.md'](https://github.com/Apollo1840/StudyTimeBoard/blob/master/Opensource%20Manual.md)
 
 - 主要联系人：(github)Apollo1840[https://github.com/Apollo1840]
 
