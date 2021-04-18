@@ -13,8 +13,8 @@ class BarChart extends Component {
   render() {
     // Convert input data to the format compatible with react-plotly
     let data = [{
-        x: /*this.props.data*/dummyData.map((entry) => entry[0]),
-        y: /*this.props.data*/dummyData.map((entry) => entry[1]),
+        x: this.props.data.map((entry) => entry[1]),
+        y: this.props.data.map((entry) => entry[0]),
         type: "bar",
         orientation: "h"
       }];
