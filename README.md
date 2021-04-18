@@ -12,15 +12,17 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 
 (if you have not worked with python or node, please read ['How to install dependencies.md'](https://github.com/Apollo1840/StudyTimeBoard/blob/master/How%20to%20install%20dependencies.md)')
 
+```shell
     cd backend
-    pip install -r requiremnts.txt
+    # pip install -r requiremnts.txt  # run this in the first time
     python app.py
 
     # open a new terminal tab
     cd ..
     cd frontend
-    npm install
+    # npm install  # run this in the first time
     npm start
+```
 
 ---
 
