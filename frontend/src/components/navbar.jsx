@@ -24,7 +24,6 @@ class NavBar extends Component {
     });
   }
 
-  // TODO: how to use react-bootstrap NAV without refreshing the web page?
   loginRegisterButtons = () => {
     return (
       <div className="navbar-nav">
