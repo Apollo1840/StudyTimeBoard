@@ -162,7 +162,7 @@ def api_handle_hold_event():
 def api_studying_users():
     df_all = get_df_ana(dbapi)
     studying_users = info_studying_users(df_all)
-    return {"studying_users": studying_users}
+    return {"status": "success", "data": studying_users}, 200
 
 
 @app.route("/api/minutes_lastweek", methods=["GET"])
