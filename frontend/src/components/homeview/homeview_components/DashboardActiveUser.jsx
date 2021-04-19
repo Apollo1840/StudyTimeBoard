@@ -36,7 +36,7 @@ class DashboardActiveUser extends Component {
     this._interval = setInterval(
       ActiveUsersService.getActiveUsers()
         .then((users) => this.setState({ studying_users: users }))
-        .catch((error) => console.log(error)),
+        .catch((msg) => console.error(msg)),
       10000
     );
   }
