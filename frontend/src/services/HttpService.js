@@ -8,7 +8,7 @@ export default class HttpService {
     let token = store.getState().auth.token;
     let header = new Headers();
     if (token) {
-      header.append("Authorization", "JWT " + token);
+      header.append("jwt", token);
     }
 
     fetch(url, {
@@ -42,7 +42,7 @@ export default class HttpService {
     let token = window.localStorage["jwtToken"];
     let header = new Headers();
     if (token) {
-      header.append("Authorization", "JWT " + token);
+      header.append("jwt", token);
     }
     header.append("Content-Type", "application/json");
 
@@ -78,7 +78,7 @@ export default class HttpService {
     let token = window.localStorage["jwtToken"];
     let header = new Headers();
     if (token) {
-      header.append("Authorization", "JWT " + token);
+      header.append("jwt", token);
     }
     header.append("Content-Type", "application/json");
 
@@ -114,7 +114,7 @@ export default class HttpService {
     let token = window.localStorage["jwtToken"];
     let header = new Headers();
     if (token) {
-      header.append("Authorization", "JWT " + token);
+      header.append("jwt", "JWT " + token);
     }
 
     fetch(url, {
