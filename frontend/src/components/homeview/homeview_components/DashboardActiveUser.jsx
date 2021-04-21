@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ActiveUsersService from "../../services/ActiveUsersService";
+import ActiveUsersService from "../../../services/ActiveUsersService";
 
 function EncourageUserSlogan() {
   return (

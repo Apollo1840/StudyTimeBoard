@@ -46,6 +46,9 @@ def create_app():
 
     logger.info("app: db ready")
 
+    # this db status handling is for herokus multi-server (normally 2 servers)
+    # it is not fully tested and not a the validated proper solution,
+    # developers with good experience could modify/remove this mechanism
     with open(PATH_TO_DB_STATUS, "w") as f:
         f.write(UNBORN)
 
@@ -58,6 +61,11 @@ def create_app():
         with open(PATH_TO_DB_STATUS, "w") as f:
             f.write(INITIED)
         dbapi.init_db(add_examples=add_examples, add_users=add_users)
+        
+        # wait dpapi to load all data from gs
+        time.sleep(3)
+
         print("successfully init db")
+    
 
     return app
