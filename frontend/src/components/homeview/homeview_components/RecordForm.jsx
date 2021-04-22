@@ -175,11 +175,11 @@ class RecordForm extends Component {
       : this.state.user_name;
 
     // todo: catch error and alert user, for example: username not exists
-    SubmitRecordService.submit_duration(username, start_time, end_time)
+    SubmitRecordService.submit_interval(username, start_time, end_time)
       .then(() => {})
       .catch((msg) => {
-        console.log("error");
-        console.log(msg);
+        console.error(msg);
+        alert(msg);
       });
   };
 

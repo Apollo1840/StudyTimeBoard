@@ -127,9 +127,9 @@ def analysis():
                                    path_use=path_use,
                                    path_use_overlap=path_use_overlap)
         else:
-            return redirect(url_for("login"))
+            return redirect(url_for("api_login"))
     else:
-        return redirect(url_for("login"))
+        return redirect(url_for("api_login"))
 
 # Backend APIs
 @app.route("/api/go", methods=["POST"])
@@ -157,8 +157,8 @@ def api_handle_hold_event():
     else:
         return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 400
     
-@app.route("/api/duration", methods=["POST"])
-def api_handle_duration_event():
+@app.route("/api/interval", methods=["POST"])
+def api_handle_interval_event():
     data = json.loads(request.data)
     username = data[USERNAME]
     if username in dbapi.all_users():
@@ -167,8 +167,7 @@ def api_handle_duration_event():
         end_time = data[END_TIME]
 
         if varify_time(start_time) and varify_time(end_time):
-            dbapi.into_duration(username, date, start_time, end_time)
-            print(username, start_time, end_time)
+            dbapi.into_interval(username, date, start_time, end_time)
         else:
             return {"status": "error", "message": FlashMessages.WRONG_DURATION}, 400
         return {"status": "success"}, 200
@@ -179,7 +178,35 @@ def api_handle_duration_event():
 def api_studying_users():
     df_all = get_df_ana(dbapi)
     studying_users = info_studying_users(df_all)
-    return {"studying_users": studying_users}
+    return {"status": "success", "data": studying_users}, 200
+
+
+
+@app.route("/api/studying_king", methods=["GET"])
+def api_studying_king():
+    
+    df_all = get_df_ana(dbapi)
+    df_last_week = to_this_week_table(df_all)
+    df_today = df_last_week.loc[df_last_week[TODAY_OR_NOT] == IS_TODAY, :]
+    # todo: query todays data directly from dbapi
+    
+    if len(df_today) > 0:
+        df_minutes = to_minutes_leaderboard(df_today)
+        name_winner = list(df_minutes[NAME])[0]
+        duration_str = min2duration_str(df_minutes.loc[df_minutes[NAME]==name_winner, MINUTES])
+        
+        df_user_today = df_today.loc[df_today[NAME] == name_winner, :]
+        timeline = [(row[START_TIME], row[END_TIME]) for _,row in df_user_today.iterrows() if row[END_TIME]!=UNKNOWN]
+    else:
+        name_winner = "nobody"
+        duration_str = "0 seconds"
+        
+        timeline = []
+    return {"status": "success", "data": {
+        "winner": name_winner,
+        "winnerMinutes": duration_str,
+        "timeline": timeline}
+    }, 200
 
 
 @app.route("/api/minutes_lastweek", methods=["GET"])
@@ -197,6 +224,52 @@ def api_get_leaderboards():
     result = info_duration_by_name(df_all)
     result_json = result.to_json()
     return {"status": "success", "data": result_json}, 200
+
+@app.route("/api/personal_intervals", methods=["GET"])
+def api_personal_intervals():
+    # TODO: Authentication with JWT
+    df_all = get_df_ana(dbapi)
+    authHeader = request.headers.get('jwt')
+    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
+    # and JWT, there is still a long way to go...
+    username = authHeader
+
+    # Check if name is found
+    if username in df_all[NAME].unique():
+        # TODO: move this to app_utils
+        df_user = df_all.loc[df_all[NAME] == username]
+        df_user = df_user.loc[df_user[END_TIME] != UNKNOWN]
+        durations_by_date = df_user[[DATE, START_TIME, END_TIME]]
+        result_json = durations_by_date.to_json(orient="records")
+        return {"status": "success", "data": result_json}, 200  # TODO: use JWT token
+    else:
+        # error user not found?
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
+
+# replace minutes with durations
+
+
+@app.route("/api/personal_durations", methods=["GET"])
+def api_personal_durations():
+    # TODO: Authentication with JWT
+    df_all = get_df_ana(dbapi)
+    authHeader = request.headers.get('jwt')
+    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
+    # and JWT, there is still a long way to go...
+    username = authHeader
+
+    # Check if name is found
+    if username in df_all[NAME].unique():
+        # TODO: move this to app_utils
+        df_user = df_all.loc[df_all[NAME] == username]
+        df_user = df_user.loc[df_user[MINUTES].notnull()]
+        durations_by_date = df_user[[DATE, MINUTES]]
+        result_json = durations_by_date.to_json(orient="records")
+        # TODO: use JWT token
+        return {"status": "success", "data": result_json}, 200
+    else:
+        # error user not found?
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
 
 
 # Minispec for authentication response:
