@@ -19,7 +19,10 @@ class DashboardStudyKing extends Component {
     //todo: handle error properly
     StudyKingService.getStudyKing()
       .then((data) => this.setState(data))
-      .catch((msg) => console.log(msg));
+      .catch((msg) => {
+        console.error(msg);
+        alert(msg);
+      });
   }
 
   render() {
