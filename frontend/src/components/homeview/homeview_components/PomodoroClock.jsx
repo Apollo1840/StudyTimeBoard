@@ -1,9 +1,12 @@
 import React, { Component, useState, useContext, createContext } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import store from "../../../redux-store";
+import AuthService from "../../../services/AuthService";
 
 const remainingTimeContext = createContext();
 
 function RemainingTimeContextProvider(props) {
+  const [startTime, setStartTime] = useState("");
   const [isBreaking, setIsBreaking] = useState(false);
   const [key, setKey] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -14,6 +17,8 @@ function RemainingTimeContextProvider(props) {
   return (
     <remainingTimeContext.Provider
       value={{
+        startTime,
+        setStartTime,
         isBreaking,
         setIsBreaking,
         key,
@@ -31,6 +36,27 @@ function RemainingTimeContextProvider(props) {
       {props.children}
     </remainingTimeContext.Provider>
   );
+}
+
+function getCurrentTime() {
+  let today = new Date();
+  return today.getHours() + ":" + today.getMinutes();
+}
+
+function submitRecord(startTime, doAlert = false) {
+  let username = store.getState().auth.username;
+
+  let recordData = {
+    username: username,
+    startTime: startTime,
+    endTime: getCurrentTime(),
+  };
+  console.log(recordData);
+  if (doAlert) {
+    alert(
+      `${recordData.username}: ${recordData.startTime} to ${recordData.endTime}`
+    );
+  }
 }
 
 function RenderTimeWork({ remainingTime }) {
@@ -60,22 +86,30 @@ function RenderTimeBreak({ remainingTime }) {
   );
 }
 function Controller() {
-  const { remainingTime, setKey, setIsPlaying, setIsBreaking } = useContext(
-    remainingTimeContext
-  );
+  const {
+    startTime,
+    setStartTime,
+    setKey,
+    setIsPlaying,
+    isBreaking,
+    setIsBreaking,
+  } = useContext(remainingTimeContext);
+  const goHandler = () => {
+    setIsPlaying(true);
+    setStartTime(getCurrentTime());
+  };
+  const holdHandler = () => {
+    if (!isBreaking) {
+      submitRecord(startTime, true);
+    }
+    setKey((prevKey) => prevKey + 1);
+    setIsPlaying(false);
+    setIsBreaking(false);
+  };
   return (
     <div className="row">
-      <button onClick={() => setIsPlaying(true)}>GO</button>
-      <button
-        onClick={() => {
-          alert(remainingTime);
-          setKey((prevKey) => prevKey + 1);
-          setIsPlaying(false);
-          setIsBreaking(false);
-        }}
-      >
-        Hold
-      </button>
+      <button onClick={goHandler}>GO</button>
+      <button onClick={holdHandler}>Hold</button>
     </div>
   );
 }
@@ -133,11 +167,7 @@ const timerWrapper = {
 };
 
 const workTimerProps = {
-  colors: [
-    ["#49DD78", 0.33],
-    ["#FE6F6B", 0.33],
-    ["#E71A1A", 0.33],
-  ],
+  colors: [["#49DD78", 0.33], ["#6C6CE0", 0.66], ["#E71A1A"]],
   strokeWidth: 8,
   size: 240,
   trailColor: "#151932",
@@ -150,12 +180,14 @@ const breakTimerProps = {
     ["#49DD78", 0.33],
   ],
   strokeWidth: 6,
-  size: 220,
+  size: 240,
   trailColor: "#151932",
 };
 
 function PomodoroClock() {
   const {
+    startTime,
+    setStartTime,
     isBreaking,
     setIsBreaking,
     key,
@@ -172,6 +204,20 @@ function PomodoroClock() {
     "https://www.fesliyanstudios.com/musicfiles/2016-08-23_-_News_Opening_5_-_David_Fesliyan.mp3"
   );
 
+  const workCompleteHandler = () => {
+    audio_endwork.play();
+    setIsBreaking(true);
+    setIsPlaying(true);
+    submitRecord(startTime);
+  };
+
+  const breakCompleteHandler = () => {
+    audio_endbreak.play();
+    setIsBreaking(false);
+    setIsPlaying(true);
+    setStartTime(getCurrentTime());
+  };
+
   return (
     <>
       <div className="mt-5 mb-5" style={timerWrapper}>
@@ -181,12 +227,7 @@ function PomodoroClock() {
             key={100 + key}
             isPlaying={isPlaying}
             duration={breakDurationMinutes * 60}
-            onComplete={() => {
-              audio_endbreak.play();
-              setIsBreaking(false);
-              setIsPlaying(true); // playing breakingTimer
-              //return [true, 0];
-            }}
+            onComplete={breakCompleteHandler}
           >
             {RenderTimeBreak}
           </CountdownCircleTimer>
@@ -196,11 +237,7 @@ function PomodoroClock() {
             key={key}
             isPlaying={isPlaying}
             duration={workDurationMinutes * 60}
-            onComplete={() => {
-              audio_endwork.play();
-              setIsBreaking(true);
-              setIsPlaying(true);
-            }}
+            onComplete={workCompleteHandler}
           >
             {RenderTimeWork}
           </CountdownCircleTimer>
