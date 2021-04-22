@@ -165,6 +165,34 @@ def api_studying_users():
     return {"status": "success", "data": studying_users}, 200
 
 
+
+@app.route("/api/studying_king", methods=["GET"])
+def api_studying_king():
+    
+    df_all = get_df_ana(dbapi)
+    df_last_week = to_this_week_table(df_all)
+    df_today = df_last_week.loc[df_last_week[TODAY_OR_NOT] == IS_TODAY, :]
+    # todo: query todays data directly from dbapi
+    
+    if len(df_today) > 0:
+        df_minutes = to_minutes_leaderboard(df_today)
+        name_winner = list(df_minutes[NAME])[0]
+        duration_str = min2duration_str(df_minutes.loc[df_minutes[NAME]==name_winner, MINUTES])
+        
+        df_user_today = df_today.loc[df_today[NAME] == name_winner, :]
+        timeline = [(row[START_TIME], row[END_TIME]) for _,row in df_user_today.iterrows() if row[END_TIME]!=UNKNOWN]
+    else:
+        name_winner = "nobody"
+        duration_str = "0 seconds"
+        
+        timeline = []
+    return {"status": "success", "data": {
+        "winner": name_winner,
+        "winnerMinutes": duration_str,
+        "timeline": timeline}
+    }, 200
+
+
 @app.route("/api/minutes_lastweek", methods=["GET"])
 def api_dashboard_leaderboard_week():
     df_all = get_df_ana(dbapi)
