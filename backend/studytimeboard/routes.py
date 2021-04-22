@@ -165,7 +165,6 @@ def api_handle_interval_event():
         date = datetime.now(TZ)
         start_time = data[START_TIME]
         end_time = data[END_TIME]
-
         if varify_time(start_time) and varify_time(end_time):
             dbapi.into_interval(username, date, start_time, end_time)
         else:

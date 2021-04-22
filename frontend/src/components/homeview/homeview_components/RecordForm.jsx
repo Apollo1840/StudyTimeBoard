@@ -75,7 +75,7 @@ function DurationForm(props) {
   const [EndTime, SetEndTime] = useState("");
 
   const handleSubmit = () => {
-    props.handleSubmitDuration(StartTime, EndTime);
+    props.handleSubmitInterval(StartTime, EndTime);
   };
 
   return (
@@ -173,7 +173,7 @@ class RecordForm extends Component {
       });
   };
 
-  handleSubmitDuration = (start_time, end_time) => {
+  handleSubmitInterval = (start_time, end_time) => {
     let username = AuthService.isAuthenticated()
       ? store.getState().auth.username
       : this.state.user_name;
@@ -240,7 +240,7 @@ class RecordForm extends Component {
             <div className="row ml-3" style={{ color: "#AAA" }}>
               Or input concrete time interval:
             </div>
-            <DurationForm handleSubmitDuration={this.handleSubmitDuration} />
+            <DurationForm handleSubmitInterval={this.handleSubmitInterval} />
           </div>
         </div>
       </div>
