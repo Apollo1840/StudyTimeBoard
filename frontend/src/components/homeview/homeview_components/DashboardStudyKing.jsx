@@ -4,7 +4,7 @@ import StudyKingService from "../../services/StudyKingService";
 class DashboardStudyKing extends Component {
   state = {
     winner: "some user",
-    winnerMinutes: "some time",
+    winnerMinutes: "some time", // todo: considering receiving it as Double and change it to str via js code
     timeline: [
       ["08:00", "12:00"],
       ["12:30", "12:40"],
