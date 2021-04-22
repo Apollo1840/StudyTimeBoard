@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import LineChartTimeStream from "./linechart_time_stream.js";
+import StudyKingService from "../../services/StudyKingService";
 class DashboardStudyKing extends Component {
   state = {
-    data: [
+    winner: "some user",
+    winnerMinutes: "some time", // todo: considering receiving it as Double and change it to str via js code
+    timeline: [
       ["08:00", "12:00"],
       ["12:30", "12:40"],
       //[13, 14],
@@ -11,16 +14,27 @@ class DashboardStudyKing extends Component {
       //[20, 23],
     ],
   };
+
+  componentDidMount() {
+    //todo: handle error properly
+    StudyKingService.getStudyKing()
+      .then((data) => this.setState(data))
+      .catch((msg) => {
+        console.error(msg);
+        alert(msg);
+      });
+  }
+
   render() {
     return (
       <div id="today_study_king_display" className="mt-5 mb-5">
         <h3 style={{ fontSize: "150%" }}>Today's study king:</h3>
         <br />
         <p style={{ fontSize: "120%" }}>
-          <b> 🔥 some_user</b> (with some_time)
+          <b> 🔥 {this.state.winner} </b> (with {this.state.winnerMinutes})
         </p>
         <div className="text-center">
-          <LineChartTimeStream data={this.state.data} />
+          <LineChartTimeStream data={this.state.timeline} />
         </div>
       </div>
     );

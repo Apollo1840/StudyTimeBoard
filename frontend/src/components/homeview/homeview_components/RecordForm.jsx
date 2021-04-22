@@ -127,6 +127,10 @@ class RecordForm extends Component {
     user_status: "holding",
   };
 
+  componentDidMount() {
+    // todo: acquire initial user_status
+  }
+
   handleUsername = (event) => {
     this.setState({ user_name: event.target.value });
   };
