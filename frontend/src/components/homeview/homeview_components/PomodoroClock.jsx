@@ -1,42 +1,34 @@
-import React, { Component, useState, useContext, createContext } from "react";
+import React, { useState, useContext, createContext } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import store from "../../../redux-store";
 import AuthService from "../../../services/AuthService";
 
-const remainingTimeContext = createContext();
+// css modules
 
-function RemainingTimeContextProvider(props) {
-  const [startTime, setStartTime] = useState("");
-  const [isBreaking, setIsBreaking] = useState(false);
-  const [key, setKey] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [workDurationMinutes, setWorkDurationMinutes] = useState(0.2);
-  const [breakDurationMinutes, setBreakDurationMinutes] = useState(0.1);
-  const [remainingTime, setRemainingTime] = useState(0);
+const timerWrapper = {
+  display: "flex",
+  justifyContent: "center",
+};
 
-  return (
-    <remainingTimeContext.Provider
-      value={{
-        startTime,
-        setStartTime,
-        isBreaking,
-        setIsBreaking,
-        key,
-        setKey,
-        isPlaying,
-        setIsPlaying,
-        workDurationMinutes,
-        setWorkDurationMinutes,
-        breakDurationMinutes,
-        setBreakDurationMinutes,
-        remainingTime,
-        setRemainingTime,
-      }}
-    >
-      {props.children}
-    </remainingTimeContext.Provider>
-  );
-}
+const workTimerProps = {
+  colors: [["#49DD78", 0.33], ["#6C6CE0", 0.66], ["#E71A1A"]],
+  strokeWidth: 8,
+  size: 240,
+  trailColor: "#151932",
+};
+
+const breakTimerProps = {
+  colors: [
+    ["#49DD78", 0.33],
+    ["#49DD78", 0.33],
+    ["#49DD78", 0.33],
+  ],
+  strokeWidth: 6,
+  size: 240,
+  trailColor: "#151932",
+};
+
+// js helper functions
 
 function getCurrentTime() {
   let today = new Date();
@@ -44,6 +36,7 @@ function getCurrentTime() {
 }
 
 function submitRecord(startTime, doAlert = false) {
+  //todo: submit the record via some http service to the backend
   let username = store.getState().auth.username;
 
   let recordData = {
@@ -59,52 +52,63 @@ function submitRecord(startTime, doAlert = false) {
   }
 }
 
-function RenderTimeWork({ remainingTime }) {
-  const minutes = Math.floor(remainingTime / 60);
-  const seconds = remainingTime % 60;
+// constext variables through all components
 
-  const { setRemainingTime } = useContext(remainingTimeContext);
-  setRemainingTime(parseInt(remainingTime));
+const remainingTimeContext = createContext();
+
+function RemainingTimeContextProvider(props) {
+  const [startTime, setStartTime] = useState("");
+  const [isUserBreaking, setIsUserBreaking] = useState(false); // define which clock to run
+  const [ClockKey, setClockKey] = useState(0);
+  const [isClockPlaying, setIsClockPlaying] = useState(false);
+  const [workDurationMinutes, setWorkDurationMinutes] = useState(0.2);
+  const [breakDurationMinutes, setBreakDurationMinutes] = useState(0.1);
+  const [remainingTime, setRemainingTime] = useState(0);
+
   return (
-    <div>
-      <div className="text-center"> work </div>
-      <div style={{ fontSize: 81 }}>{`${minutes}:${seconds}`}</div>
-    </div>
+    <remainingTimeContext.Provider
+      value={{
+        startTime,
+        setStartTime,
+        isUserBreaking,
+        setIsUserBreaking,
+        ClockKey,
+        setClockKey,
+        isClockPlaying,
+        setIsClockPlaying,
+        workDurationMinutes,
+        setWorkDurationMinutes,
+        breakDurationMinutes,
+        setBreakDurationMinutes,
+        remainingTime,
+        setRemainingTime,
+      }}
+    >
+      {props.children}
+    </remainingTimeContext.Provider>
   );
 }
-function RenderTimeBreak({ remainingTime }) {
-  const minutes = Math.floor(remainingTime / 60);
-  const seconds = remainingTime % 60;
 
-  const { setRemainingTime } = useContext(remainingTimeContext);
-  setRemainingTime(parseInt(remainingTime));
-  return (
-    <div>
-      <div className="text-center"> break </div>
-      <div style={{ fontSize: 81 }}>{`${minutes}:${seconds}`}</div>
-    </div>
-  );
-}
-function Controller() {
+function ClockController() {
   const {
     startTime,
     setStartTime,
-    setKey,
-    setIsPlaying,
-    isBreaking,
-    setIsBreaking,
+    setClockKey,
+    setIsClockPlaying,
+    isUserBreaking,
+    setIsUserBreaking,
   } = useContext(remainingTimeContext);
   const goHandler = () => {
-    setIsPlaying(true);
+    setIsClockPlaying(true);
     setStartTime(getCurrentTime());
   };
   const holdHandler = () => {
-    if (!isBreaking) {
+    if (!isUserBreaking) {
       submitRecord(startTime, true);
     }
-    setKey((prevKey) => prevKey + 1);
-    setIsPlaying(false);
-    setIsBreaking(false);
+    setClockKey((prevKey) => prevKey + 1);
+    setIsClockPlaying(false);
+    setIsUserBreaking(false);
   };
   return (
     <div className="row">
@@ -114,12 +118,13 @@ function Controller() {
   );
 }
 
-function Settings() {
+function ClockSettings() {
   const [workMinutes, setWorkMinutes] = useState(20);
   const [breakMinutes, setBreakMinutes] = useState(2);
   const {
-    setKey,
-    setIsPlaying,
+    setClockKey,
+    setIsClockPlaying,
+    setIsUserBreaking,
     setWorkDurationMinutes,
     setBreakDurationMinutes,
   } = useContext(remainingTimeContext);
@@ -151,8 +156,9 @@ function Settings() {
         onClick={() => {
           setWorkDurationMinutes(workMinutes);
           setBreakDurationMinutes(breakMinutes);
-          setKey((prevKey) => prevKey + 1);
-          setIsPlaying(false);
+          setIsUserBreaking(false);
+          setIsClockPlaying(false);
+          setClockKey((prevKey) => prevKey + 1);
         }}
       >
         Set Timer
@@ -161,42 +167,48 @@ function Settings() {
   );
 }
 
-const timerWrapper = {
-  display: "flex",
-  justifyContent: "center",
-};
+function RenderTimeWork({ remainingTime }) {
+  const minutes = Math.floor(remainingTime / 60);
+  const seconds = remainingTime % 60;
 
-const workTimerProps = {
-  colors: [["#49DD78", 0.33], ["#6C6CE0", 0.66], ["#E71A1A"]],
-  strokeWidth: 8,
-  size: 240,
-  trailColor: "#151932",
-};
+  const { setRemainingTime } = useContext(remainingTimeContext);
+  setRemainingTime(parseInt(remainingTime));
+  return (
+    <div>
+      <div className="text-center"> work </div>
+      <div style={{ fontSize: 81 }}>{`${minutes}:${seconds}`}</div>
+    </div>
+  );
+}
 
-const breakTimerProps = {
-  colors: [
-    ["#49DD78", 0.33],
-    ["#49DD78", 0.33],
-    ["#49DD78", 0.33],
-  ],
-  strokeWidth: 6,
-  size: 240,
-  trailColor: "#151932",
-};
+function RenderTimeBreak({ remainingTime }) {
+  const minutes = Math.floor(remainingTime / 60);
+  const seconds = remainingTime % 60;
+
+  const { setRemainingTime } = useContext(remainingTimeContext);
+  setRemainingTime(parseInt(remainingTime));
+  return (
+    <div>
+      <div className="text-center"> break </div>
+      <div style={{ fontSize: 81 }}>{`${minutes}:${seconds}`}</div>
+    </div>
+  );
+}
 
 function PomodoroClock() {
   const {
     startTime,
     setStartTime,
-    isBreaking,
-    setIsBreaking,
-    key,
+    isUserBreaking,
+    setIsUserBreaking,
+    ClockKey,
     workDurationMinutes,
     breakDurationMinutes,
-    isPlaying,
-    setIsPlaying,
+    isClockPlaying,
+    setIsClockPlaying,
   } = useContext(remainingTimeContext);
 
+  // todo: make a soundService
   const audio_endbreak = new Audio(
     "https://www.fesliyanstudios.com/musicfiles/2016-08-23_-_News_Opening_4_-_David_Fesliyan.mp3"
   );
@@ -206,26 +218,26 @@ function PomodoroClock() {
 
   const workCompleteHandler = () => {
     audio_endwork.play();
-    setIsBreaking(true);
-    setIsPlaying(true);
+    setIsUserBreaking(true);
+    setIsClockPlaying(true);
     submitRecord(startTime);
   };
 
   const breakCompleteHandler = () => {
     audio_endbreak.play();
-    setIsBreaking(false);
-    setIsPlaying(true);
+    setIsUserBreaking(false);
+    setIsClockPlaying(true); // todo: seems to be redundant
     setStartTime(getCurrentTime());
   };
 
   return (
     <>
       <div className="mt-5 mb-5" style={timerWrapper}>
-        {isBreaking ? (
+        {isUserBreaking ? (
           <CountdownCircleTimer
             {...breakTimerProps}
-            key={100 + key}
-            isPlaying={isPlaying}
+            key={100 + ClockKey}
+            isPlaying={isClockPlaying}
             duration={breakDurationMinutes * 60}
             onComplete={breakCompleteHandler}
           >
@@ -234,8 +246,8 @@ function PomodoroClock() {
         ) : (
           <CountdownCircleTimer
             {...workTimerProps}
-            key={key}
-            isPlaying={isPlaying}
+            key={ClockKey}
+            isPlaying={isClockPlaying}
             duration={workDurationMinutes * 60}
             onComplete={workCompleteHandler}
           >
@@ -243,8 +255,8 @@ function PomodoroClock() {
           </CountdownCircleTimer>
         )}
       </div>
-      <Controller />
-      <Settings />
+      <ClockController />
+      <ClockSettings />
     </>
   );
 }
