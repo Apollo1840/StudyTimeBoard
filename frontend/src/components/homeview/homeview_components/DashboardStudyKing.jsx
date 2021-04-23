@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import LineChartTimeStream from "./linechart_time_stream.js";
-import StudyKingService from "../../services/StudyKingService";
+import StudyKingService from "../../../services/StudyKingService";
 class DashboardStudyKing extends Component {
   state = {
     winner: "some user",

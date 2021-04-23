@@ -4,6 +4,7 @@ export const SERVER_BASE_URL = "http://0.0.0.0:5555";
 // homeview API
 export const GO_URL = "/api/go";
 export const HOLD_URL = "/api/hold";
+export const INTERVAL_URL = "/api/interval";
 
 export const STUDYKING_URL = "/api/studying_king";
 export const ACTIVE_USERS_URL = "/api/studying_users";

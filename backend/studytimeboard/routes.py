@@ -135,7 +135,7 @@ def analysis():
 @app.route("/api/go", methods=["POST"])
 def api_handle_go_event():
     data = json.loads(request.data)
-    username = data["username"]
+    username = data[USERNAME]
     if username in dbapi.all_users():
         date = datetime.now(TZ)
         start_time = datetime2time(datetime.now(TZ))
@@ -148,7 +148,7 @@ def api_handle_go_event():
 @app.route("/api/hold", methods=["POST"])
 def api_handle_hold_event():
     data = json.loads(request.data)
-    username = data["username"]
+    username = data[USERNAME]
     if username in dbapi.all_users():
         date = datetime.now(TZ)
         end_time = datetime2time(datetime.now(TZ))
@@ -156,7 +156,22 @@ def api_handle_hold_event():
         return {"status": "success"}, 200
     else:
         return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 400
-
+    
+@app.route("/api/interval", methods=["POST"])
+def api_handle_interval_event():
+    data = json.loads(request.data)
+    username = data[USERNAME]
+    if username in dbapi.all_users():
+        date = datetime.now(TZ)
+        start_time = data[START_TIME]
+        end_time = data[END_TIME]
+        if varify_time(start_time) and varify_time(end_time):
+            dbapi.into_interval(username, date, start_time, end_time)
+        else:
+            return {"status": "error", "message": FlashMessages.WRONG_DURATION}, 400
+        return {"status": "success"}, 200
+    else:
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 400
 
 @app.route("/api/studying_users", methods=["GET"])
 def api_studying_users():

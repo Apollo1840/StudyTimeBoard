@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Link } from "react-router-dom";
 import store from "../../../redux-store";
 import AuthService from "../../../services/AuthService";
@@ -70,6 +70,57 @@ function HoldButton(props) {
   );
 }
 
+function DurationForm(props) {
+  const [StartTime, SetStartTime] = useState("");
+  const [EndTime, SetEndTime] = useState("");
+
+  const handleSubmit = () => {
+    props.handleSubmitInterval(StartTime, EndTime);
+  };
+
+  return (
+    <form id="record_time" onSubmit={handleSubmit}>
+      <div className="row">
+        <div className="col input-group mb-3 mr-5">
+          <div className="input-group-prepend">
+            <span className="input-group-text" id="basic-addon1">
+              start time
+            </span>
+          </div>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="eg. 09:00"
+            name="start_time"
+            onChange={(e) => SetStartTime(e.target.value)}
+          />
+        </div>
+
+        <div className="col input-group mb-3 ml-5">
+          <div className="input-group-prepend">
+            <span className="input-group-text" id="basic-addon2">
+              end time
+            </span>
+          </div>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="eg. 18:00"
+            name="end_time"
+            onChange={(e) => SetEndTime(e.target.value)}
+          />
+        </div>
+
+        <div className="col mb-3 ml-5">
+          <button type="submit" className="btn btn-primary float-right mr-2">
+            Submit
+          </button>
+        </div>
+      </div>
+    </form>
+  );
+}
+
 class RecordForm extends Component {
   state = {
     user_name: "unknown",
@@ -122,14 +173,22 @@ class RecordForm extends Component {
       });
   };
 
+  handleSubmitInterval = (start_time, end_time) => {
+    let username = AuthService.isAuthenticated()
+      ? store.getState().auth.username
+      : this.state.user_name;
+
+    // todo: catch error and alert user, for example: username not exists
+    SubmitRecordService.submit_interval(username, start_time, end_time)
+      .then(() => {})
+      .catch((msg) => {
+        console.error(msg);
+        alert(msg);
+      });
+  };
+
   render() {
     let isAuthenticated = AuthService.isAuthenticated();
-    let greeting = isAuthenticated ? (
-      <GreetUser />
-    ) : (
-      <AskForUser handleUsername={this.handleUsername} />
-    );
-
     let buttons;
     if (AuthService.isAuthenticated() && this.state.user_status === "holding") {
       buttons = <GoButton handleSubmitGo={this.handleSubmitGo}> Go </GoButton>;
@@ -159,7 +218,11 @@ class RecordForm extends Component {
 
         <div className="jumbotron">
           <div className="row" id="greeting_user">
-            {greeting}
+            {isAuthenticated ? (
+              <GreetUser />
+            ) : (
+              <AskForUser handleUsername={this.handleUsername} />
+            )}
           </div>
 
           <div id="go_hold_buttons">
@@ -174,52 +237,10 @@ class RecordForm extends Component {
           <hr />
 
           <div id="duration_input">
-            <div className="row">
-              <p style={{ color: "#AAA" }} className="ml-3">
-                Or input concrete time interval:
-              </p>
+            <div className="row ml-3" style={{ color: "#AAA" }}>
+              Or input concrete time interval:
             </div>
-
-            <form id="record_time" onSubmit={this.submit_duration}>
-              <div className="row">
-                <div className="col input-group mb-3 mr-5">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text" id="basic-addon1">
-                      start time
-                    </span>
-                  </div>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="eg. 09:00"
-                    name="start_time"
-                  />
-                </div>
-
-                <div className="col input-group mb-3 ml-5">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text" id="basic-addon2">
-                      end time
-                    </span>
-                  </div>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="eg. 18:00"
-                    name="end_time"
-                  />
-                </div>
-
-                <div className="col mb-3 ml-5">
-                  <button
-                    type="submit"
-                    className="btn btn-primary float-right mr-2"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
-            </form>
+            <DurationForm handleSubmitInterval={this.handleSubmitInterval} />
           </div>
         </div>
       </div>

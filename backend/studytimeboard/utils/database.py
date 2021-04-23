@@ -21,7 +21,7 @@ class BaseAPI():
     def into_hold(self, username, date, end_time):
         raise NotImplemented
 
-    def into_duration(self, username, date, start_time, end_time):
+    def into_interval(self, username, date, start_time, end_time):
         raise NotImplemented
 
     def into_user(self, username, password):
@@ -105,7 +105,7 @@ class GSAPI(BaseAPI):
                   "when someone clicked hold".format(self.sheetname,
                                                      username))
 
-    def into_duration(self, username, date, start_time, end_time):
+    def into_interval(self, username, date, start_time, end_time):
         self.refresh()
 
         row = [username, datetime2date(date), start_time, end_time]
@@ -157,7 +157,7 @@ class FlaskSQLAPI(BaseAPI):
         else:
             print("there is no go event in flask_sql for {} , when someone clicked hold".format(username))
 
-    def into_duration(self, username, date, start_time, end_time):
+    def into_interval(self, username, date, start_time, end_time):
         study_event = StudyEventDB(username=username, date=date, start_time=start_time, end_time=end_time)
         self.db.session.add(study_event)
         self.db.session.commit()
@@ -242,7 +242,7 @@ class DataBaseAPI():
             end_time = request.form.get(END_TIME)
 
             if varify_time(start_time) and varify_time(end_time):
-                self.into_duration(username, date, start_time, end_time)
+                self.into_interval(username, date, start_time, end_time)
             else:
                 return False
 
@@ -266,12 +266,12 @@ class DataBaseAPI():
 
         self.fsqlapi.into_hold(username, date, end_time)
 
-    def into_duration(self, username, date, start_time, end_time):
+    def into_interval(self, username, date, start_time, end_time):
         # first backup, then add into DB, because backup has higher priority in this case
         if self.gsapi_main is not None:
-            self.gsapi_main.into_duration(username, date, start_time, end_time)
+            self.gsapi_main.into_interval(username, date, start_time, end_time)
 
-        self.fsqlapi.into_duration(username, date, start_time, end_time)
+        self.fsqlapi.into_interval(username, date, start_time, end_time)
 
     def into_user(self, username, password):
         if self.gsapi_user is not None:
@@ -356,37 +356,37 @@ class DataBaseAPI():
         yesterday2 = datetime.today() - timedelta(days=2)
         yesterday3 = datetime.today() - timedelta(days=3)
 
-        self.into_duration(username="Alpha",
+        self.into_interval(username="Alpha",
                            date=yesterday3,
                            start_time="08:00",
                            end_time="12:00")
 
-        self.into_duration(username="Alpha",
+        self.into_interval(username="Alpha",
                            date=yesterday,
                            start_time="08:00",
                            end_time="12:00")
 
-        self.into_duration(username="Beta",
+        self.into_interval(username="Beta",
                            date=yesterday3,
                            start_time="14:00",
                            end_time="16:00")
 
-        self.into_duration(username="Beta",
+        self.into_interval(username="Beta",
                            date=yesterday2,
                            start_time="14:00",
                            end_time="16:00")
 
-        self.into_duration(username="Beta",
+        self.into_interval(username="Beta",
                            date=yesterday,
                            start_time="11:00",
                            end_time="12:00")
 
-        self.into_duration(username="Beta",
+        self.into_interval(username="Beta",
                            date=datetime.today(),
                            start_time="07:00",
                            end_time="12:00")
 
-        self.into_duration(username="Theta",
+        self.into_interval(username="Theta",
                            date=datetime.today(),
                            start_time="08:00",
                            end_time="19:00")
