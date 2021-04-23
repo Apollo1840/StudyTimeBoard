@@ -31,14 +31,16 @@ class DashboardActiveUser extends Component {
     this._interval = null;
   }
 
+  getActiveUsers = () => {
+    ActiveUsersService.getActiveUsers()
+      .then((users) => this.setState({ studying_users: users }))
+      .catch((msg) => console.error(msg));
+  };
+
   componentDidMount() {
     //todo: handle error
-    this._interval = setInterval(
-      ActiveUsersService.getActiveUsers()
-        .then((users) => this.setState({ studying_users: users }))
-        .catch((msg) => console.error(msg)),
-      10000
-    );
+    this.getActiveUsers();
+    this._interval = setInterval(this.getActiveUsers, 10000);
   }
 
   componentWillUnmount() {

@@ -135,7 +135,7 @@ def analysis():
 @app.route("/api/go", methods=["POST"])
 def api_handle_go_event():
     data = json.loads(request.data)
-    username = data["username"]
+    username = data[USERNAME]
     if username in dbapi.all_users():
         date = datetime.now(TZ)
         start_time = datetime2time(datetime.now(TZ))
@@ -148,7 +148,7 @@ def api_handle_go_event():
 @app.route("/api/hold", methods=["POST"])
 def api_handle_hold_event():
     data = json.loads(request.data)
-    username = data["username"]
+    username = data[USERNAME]
     if username in dbapi.all_users():
         date = datetime.now(TZ)
         end_time = datetime2time(datetime.now(TZ))
@@ -156,13 +156,56 @@ def api_handle_hold_event():
         return {"status": "success"}, 200
     else:
         return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 400
-
+    
+@app.route("/api/interval", methods=["POST"])
+def api_handle_interval_event():
+    data = json.loads(request.data)
+    username = data[USERNAME]
+    if username in dbapi.all_users():
+        date = datetime.now(TZ)
+        start_time = data[START_TIME]
+        end_time = data[END_TIME]
+        if varify_time(start_time) and varify_time(end_time):
+            dbapi.into_interval(username, date, start_time, end_time)
+        else:
+            return {"status": "error", "message": FlashMessages.WRONG_DURATION}, 400
+        return {"status": "success"}, 200
+    else:
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 400
 
 @app.route("/api/studying_users", methods=["GET"])
 def api_studying_users():
     df_all = get_df_ana(dbapi)
     studying_users = info_studying_users(df_all)
     return {"status": "success", "data": studying_users}, 200
+
+
+
+@app.route("/api/studying_king", methods=["GET"])
+def api_studying_king():
+    
+    df_all = get_df_ana(dbapi)
+    df_last_week = to_this_week_table(df_all)
+    df_today = df_last_week.loc[df_last_week[TODAY_OR_NOT] == IS_TODAY, :]
+    # todo: query todays data directly from dbapi
+    
+    if len(df_today) > 0:
+        df_minutes = to_minutes_leaderboard(df_today)
+        name_winner = list(df_minutes[NAME])[0]
+        duration_str = min2duration_str(df_minutes.loc[df_minutes[NAME]==name_winner, MINUTES])
+        
+        df_user_today = df_today.loc[df_today[NAME] == name_winner, :]
+        timeline = [(row[START_TIME], row[END_TIME]) for _,row in df_user_today.iterrows() if row[END_TIME]!=UNKNOWN]
+    else:
+        name_winner = "nobody"
+        duration_str = "0 seconds"
+        
+        timeline = []
+    return {"status": "success", "data": {
+        "winner": name_winner,
+        "winnerMinutes": duration_str,
+        "timeline": timeline}
+    }, 200
 
 
 @app.route("/api/minutes_lastweek", methods=["GET"])
