@@ -1,7 +1,6 @@
 import React, { useState, useContext, createContext } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import store from "../../../redux-store";
-import AuthService from "../../../services/AuthService";
+import store from "../../redux-store";
 
 // css modules
 
@@ -14,7 +13,7 @@ const workTimerProps = {
   colors: [["#49DD78", 0.33], ["#6C6CE0", 0.66], ["#E71A1A"]],
   strokeWidth: 8,
   size: 240,
-  trailColor: "#151932",
+  trailColor: "#F2F3F4",
 };
 
 const breakTimerProps = {
@@ -25,7 +24,7 @@ const breakTimerProps = {
   ],
   strokeWidth: 6,
   size: 240,
-  trailColor: "#151932",
+  trailColor: "#F2F3F4",
 };
 
 // js helper functions
@@ -269,4 +268,12 @@ function PomodoroClockApp() {
   );
 }
 
-export default PomodoroClockApp;
+function PomodoroView() {
+  return (
+    <div className="container">
+      <PomodoroClockApp />
+    </div>
+  );
+}
+
+export default PomodoroView;

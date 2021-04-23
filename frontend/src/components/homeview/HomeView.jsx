@@ -4,7 +4,6 @@ import RecordForm from "./homeview_components/RecordForm";
 import DashboardActiveUser from "./homeview_components/DashboardActiveUser";
 import DashboardStudyKing from "./homeview_components/DashboardStudyKing";
 import DashboarLeaderboardWeek from "./homeview_components/DashboardLeaderboardWeek";
-import PomodoroClockApp from "./homeview_components/PomodoroClock";
 
 class HomeView extends Component {
   constructor(props) {
@@ -20,7 +19,6 @@ class HomeView extends Component {
         <DashboardActiveUser />
         <DashboardStudyKing />
         <DashboarLeaderboardWeek />
-        <PomodoroClockApp />
       </main>
     );
   }
