@@ -40,7 +40,9 @@ class NavBar extends Component {
   avatar = () => {
     return (
       <div className="navbar-nav">
-        <Nav.Link to={""} as={Link}>Hello {this.props.auth.username}</Nav.Link>
+        <Nav.Link to={""} as={Link}>
+          Hello {this.props.auth.username}
+        </Nav.Link>
         <Nav.Link to={""} as={Link} onClick={this.handleLogout}>
           Logout
         </Nav.Link>
@@ -75,6 +77,10 @@ class NavBar extends Component {
             <div className="navbar-nav mr-auto">
               <Nav.Link as={Link} to="/" id="nav-home">
                 Home
+              </Nav.Link>
+
+              <Nav.Link as={Link} to="/pomodoro" id="nav-pomodoro">
+                Pomodoro
               </Nav.Link>
 
               <Nav.Link
