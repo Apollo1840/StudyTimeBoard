@@ -28,7 +28,7 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
     # set up your work virtualenv, for example: workon web.
    python backend/app.py
 
-   # open a new gnome tab: strl+tab+t
+   # open a new gnome tab: strl+shift+t
    cd frontend/
    npm start
 ```
