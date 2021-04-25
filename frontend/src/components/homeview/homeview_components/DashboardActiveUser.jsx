@@ -34,7 +34,10 @@ class DashboardActiveUser extends Component {
   getActiveUsers = () => {
     ActiveUsersService.getActiveUsers()
       .then((users) => this.setState({ studying_users: users }))
-      .catch((msg) => console.error(msg));
+      .catch((msg) => {
+        alert(msg);
+        console.error(msg);
+      });
   };
 
   componentDidMount() {
