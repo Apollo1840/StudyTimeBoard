@@ -13,4 +13,5 @@ utils/creds/**
 
 **.pyc
 
-backend/stb_app_backend.log
+*stb_app_backend.log
+*db_status.txt

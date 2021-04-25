@@ -1,8 +1,8 @@
 import React from "react";
 import {
-  BarchartMinutesPerPerson,
-  BarchartMinutesPerPersonPerWeekday,
-} from "./barchart_minutes_per_person";
+  BarChartMinutesPerPerson,
+  BarChartMinutesPerPersonPerWeekday,
+} from "../shared/charts/BarChartPerPerson";
 import TimeboardService from "../../services/TimeboardService";
 
 class LeaderboardView extends React.Component {
@@ -104,7 +104,7 @@ class LeaderboardView extends React.Component {
             </p>
           </div>
 
-          <BarchartMinutesPerPersonPerWeekday
+          <BarChartMinutesPerPersonPerWeekday
             title="Leaderboard of the last week (minutes)"
             data={this.state.weeklyData}
           />
@@ -117,7 +117,7 @@ class LeaderboardView extends React.Component {
               (with {this.state.totalWinnerMinutes} minutes)
             </p>
           </div>
-          <BarchartMinutesPerPerson
+          <BarChartMinutesPerPerson
             title="Leaderboard of entire time (minutes)"
             data={this.state.totalData}
           />

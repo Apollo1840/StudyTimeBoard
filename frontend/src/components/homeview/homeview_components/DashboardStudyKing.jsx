@@ -1,17 +1,21 @@
 import React, { Component } from "react";
-import LineChartTimeStream from "./linechart_time_stream.js";
+import { LineChartIntervalSingleDay } from "../../shared/charts/LineChartInterval";
 import StudyKingService from "../../../services/StudyKingService";
 class DashboardStudyKing extends Component {
   state = {
     winner: "some user",
     winnerMinutes: "some time", // todo: considering receiving it as Double and change it to str via js code
     timeline: [
-      ["08:00", "12:00"],
-      ["12:30", "12:40"],
-      //[13, 14],
-      //[15.5, 15.8],
-      //[16, 18],
-      //[20, 23],
+      [
+        new Date(2021, 3, 1),
+        new Date("2000.1.1 9:25"),
+        new Date("2000.1.1  12:30"),
+      ],
+      [
+        new Date(2021, 3, 2),
+        new Date("2000.1.1 18:25"),
+        new Date("2000.1.1  22:30"),
+      ],
     ],
   };
 
@@ -34,7 +38,7 @@ class DashboardStudyKing extends Component {
           <b> 🔥 {this.state.winner} </b> (with {this.state.winnerMinutes})
         </p>
         <div className="text-center">
-          <LineChartTimeStream data={this.state.timeline} />
+          <LineChartIntervalSingleDay data={this.state.timeline} />
         </div>
       </div>
     );
