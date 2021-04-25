@@ -13,10 +13,13 @@ const mapStateToProps = (state) => ({
 class NavBar extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = { isNavCollapsed: true };
 
     this.handleLogout = this.handleLogout.bind(this);
   }
+
+  handleNavCollapse = () =>
+    this.setState({ isNavCollapsed: !this.state.isNavCollapsed });
 
   handleLogout() {
     AuthService.logout().then(() => {
@@ -67,13 +70,19 @@ class NavBar extends Component {
             data-toggle="collapse"
             data-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup"
-            aria-expanded="false"
+            aria-expanded={!this.isNavCollapsed ? true : false}
             aria-label="Toggle navigation"
+            onClick={this.handleNavCollapse}
           >
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div
+            className={`${
+              this.state.isNavCollapsed ? "collapse" : ""
+            } navbar-collapse`}
+            id="navbarNavAltMarkup"
+          >
             <div className="navbar-nav mr-auto">
               <Nav.Link as={Link} to="/" id="nav-home">
                 Home
