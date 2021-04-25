@@ -13,8 +13,6 @@ utils/creds/**
 
 **.pyc
 
-backend/stb_app_backend.log
-
 # project specific caches
-db_status.txt
-stb_app_backend.log
+*db_status.txt
+*stb_app_backend.log
