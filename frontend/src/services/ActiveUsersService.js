@@ -7,7 +7,6 @@ export default class ActiveUsersService {
       HttpService.get(
         SERVER_BASE_URL + ACTIVE_USERS_URL,
         (data) => {
-          console.log(data);
           resolve(data);
         },
         (errorMsg) => {
