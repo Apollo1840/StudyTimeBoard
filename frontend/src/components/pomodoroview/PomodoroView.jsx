@@ -1,6 +1,7 @@
 import React, { useState, useContext, createContext } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import store from "../../redux-store";
+import SubmitRecordService from "../../services/SubmitRecordService";
 
 // css modules
 
@@ -34,6 +35,12 @@ function getCurrentTime() {
   return today.getHours() + ":" + today.getMinutes();
 }
 
+function datetime2timeStr(datetime) {
+  let hour = datetime.getHours();
+  let min = datetime.getMinutes();
+  return `${hour}:${min}`;
+}
+
 function submitRecord(startTime, doAlert = false) {
   //todo: submit the record via some http service to the backend
   let username = store.getState().auth.username;
@@ -44,6 +51,11 @@ function submitRecord(startTime, doAlert = false) {
     endTime: getCurrentTime(),
   };
   console.log(recordData);
+  SubmitRecordService().submit_interval(
+    recordData.username,
+    datetime2timeStr(recordData.startTime),
+    datetime2timeStr(recordData.endTime)
+  );
   if (doAlert) {
     alert(
       `${recordData.username}: ${recordData.startTime} to ${recordData.endTime}`
@@ -97,11 +109,12 @@ function ClockController() {
     isUserBreaking,
     setIsUserBreaking,
   } = useContext(remainingTimeContext);
-  const goHandler = () => {
+
+  const handleGo = () => {
     setIsClockPlaying(true);
     setStartTime(getCurrentTime());
   };
-  const holdHandler = () => {
+  const handleHold = () => {
     if (!isUserBreaking) {
       submitRecord(startTime, true);
     }
@@ -111,8 +124,8 @@ function ClockController() {
   };
   return (
     <div className="row">
-      <button onClick={goHandler}>GO</button>
-      <button onClick={holdHandler}>Hold</button>
+      <button onClick={handleGo}>GO</button>
+      <button onClick={handleHold}>Hold</button>
     </div>
   );
 }
