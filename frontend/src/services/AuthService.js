@@ -5,10 +5,6 @@ import {SERVER_BASE_URL, REGISTRATION_URL, LOGIN_URL, LOGOUT_URL} from "../share
 
 export default class AuthService {
 
-    static frontEndURL() {
-      return "http://localhost:3000/";
-    }
-
     static register(user,pass, userData) {
       return new Promise((resolve,reject) => {
           HttpService.post(SERVER_BASE_URL + REGISTRATION_URL, {
@@ -17,7 +13,7 @@ export default class AuthService {
               userData: userData
           }, (data) => {
               resolve(data);
-              window.location.assign(AuthService.frontEndURL());
+              this.props.history.push('/');  // redirect to homepage
           }, (errorMsg) => {
               reject(errorMsg);
           });
@@ -34,7 +30,7 @@ export default class AuthService {
           },
           (data) => {
             resolve(data);
-            window.location.assign(AuthService.frontEndURL());
+            this.props.history.push('/');  // redirect to homepage
           },
           (errorMsg) => {
             reject(errorMsg);
