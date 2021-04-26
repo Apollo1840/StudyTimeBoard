@@ -35,12 +35,6 @@ function getCurrentTime() {
   return today.getHours() + ":" + today.getMinutes();
 }
 
-function datetime2timeStr(datetime) {
-  let hour = datetime.getHours();
-  let min = datetime.getMinutes();
-  return `${hour}:${min}`;
-}
-
 function submitRecord(startTime, doAlert = false) {
   //todo: submit the record via some http service to the backend
   let username = store.getState().auth.username;
@@ -53,8 +47,8 @@ function submitRecord(startTime, doAlert = false) {
   console.log(recordData);
   SubmitRecordService.submit_interval(
     recordData.username,
-    datetime2timeStr(recordData.startTime),
-    datetime2timeStr(recordData.endTime)
+    recordData.startTime,
+    recordData.endTime
   );
   if (doAlert) {
     alert(
@@ -74,7 +68,6 @@ function RemainingTimeContextProvider(props) {
   const [isClockPlaying, setIsClockPlaying] = useState(false);
   const [workDurationMinutes, setWorkDurationMinutes] = useState(0.2);
   const [breakDurationMinutes, setBreakDurationMinutes] = useState(0.1);
-  const [remainingTime, setRemainingTime] = useState(0);
 
   return (
     <remainingTimeContext.Provider
@@ -91,8 +84,6 @@ function RemainingTimeContextProvider(props) {
         setWorkDurationMinutes,
         breakDurationMinutes,
         setBreakDurationMinutes,
-        remainingTime,
-        setRemainingTime,
       }}
     >
       {props.children}
@@ -183,8 +174,6 @@ function RenderTimeWork({ remainingTime }) {
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
 
-  const { setRemainingTime } = useContext(remainingTimeContext);
-  setRemainingTime(parseInt(remainingTime));
   return (
     <div>
       <div className="text-center"> work </div>
@@ -193,12 +182,11 @@ function RenderTimeWork({ remainingTime }) {
   );
 }
 
+// in the future might be different with RenderTimeWork, now is the same
 function RenderTimeBreak({ remainingTime }) {
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
 
-  const { setRemainingTime } = useContext(remainingTimeContext);
-  setRemainingTime(parseInt(remainingTime));
   return (
     <div>
       <div className="text-center"> break </div>
