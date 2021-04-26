@@ -7,7 +7,7 @@ export default class StudyKingService {
       HttpService.get(
         SERVER_BASE_URL + STUDYKING_URL,
         (data) => {
-          resolve(JSON.parse(data));
+          resolve(data);
         },
         (errorMsg) => {
           reject(errorMsg);
