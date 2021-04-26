@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Plot from "react-plotly.js";
-import { WeekdayColorWay } from "../../shared/colorThemes";
+import { WeekdayColorWay } from "../../../shared/colorThemes";
 
 // test data for this.props.data
 const testData = {
@@ -10,7 +10,7 @@ const testData = {
 
 //TODO: layouts can be put in props
 
-function BarchartMinutesPerPerson(props) {
+function BarChartMinutesPerPerson(props) {
   return (
     <div>
       <Plot
@@ -23,10 +23,11 @@ function BarchartMinutesPerPerson(props) {
           },
         ]}
         layout={{
-          width: 1000,
-          height: 1200,
+          autosize: true,
           title: props.title,
         }}
+        useResizeHandler={true}
+        style={{ width: "100%", height: "100%" }}
       ></Plot>
     </div>
   );
@@ -48,17 +49,18 @@ function BarChartMinutesPerPersonByCategory(props) {
           marker: { color: WeekdayColorWay[index] },
         }))}
         layout={{
-          width: 1000,
-          height: 800,
+          autosize: true,
           title: props.title,
           barmode: "stack",
         }}
+        useResizeHandler={true}
+        style={{ width: "100%", height: "100%" }}
       ></Plot>
     </div>
   );
 }
 
-function BarchartMinutesPerPersonPerWeekday(props) {
+function BarChartMinutesPerPersonPerWeekday(props) {
   const dayCategory = [
     "Monday",
     "Tuesday",
@@ -72,13 +74,13 @@ function BarchartMinutesPerPersonPerWeekday(props) {
   return BarChartMinutesPerPersonByCategory({ ...props, dayCategory });
 }
 
-function BarchartMinutesPerPersonPerToday(props) {
+function BarChartMinutesPerPersonPerToday(props) {
   const dayCategory = ["Previous", "Today"];
   return BarChartMinutesPerPersonByCategory({ ...props, dayCategory });
 }
 
 export {
-  BarchartMinutesPerPerson,
-  BarchartMinutesPerPersonPerToday,
-  BarchartMinutesPerPersonPerWeekday,
+  BarChartMinutesPerPerson,
+  BarChartMinutesPerPersonPerToday,
+  BarChartMinutesPerPersonPerWeekday,
 };
