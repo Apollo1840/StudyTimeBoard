@@ -51,7 +51,7 @@ function submitRecord(startTime, doAlert = false) {
     endTime: getCurrentTime(),
   };
   console.log(recordData);
-  SubmitRecordService().submit_interval(
+  SubmitRecordService.submit_interval(
     recordData.username,
     datetime2timeStr(recordData.startTime),
     datetime2timeStr(recordData.endTime)
