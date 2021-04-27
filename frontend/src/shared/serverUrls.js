@@ -1,5 +1,7 @@
-export const SERVER_BASE_URL = "http://0.0.0.0:5555";
-//export const SERVER_BASE_URL = "https://studytimeboard-backend.herokuapp.com";
+// All urls of server web api
+
+const SERVER_BASE_URL_DEV = "http://0.0.0.0:5555";
+const SERVER_BASE_URL_PROD = "https://studytimeboard-backend.herokuapp.com";
 
 // homeview API
 export const GO_URL = "/api/go";
@@ -21,3 +23,4 @@ export const DURATIONS_TOTAL_URL = "/api/minutes_total";
 // personalanalysisview API
 export const PERSONAL_INTERVALS_URL = "/api/personal_intervals";
 export const PERSONAL_DURATIONS_URL = "/api/personal_durations";
+export const SERVER_BASE_URL = process.env.NODE_ENV === "development" ? SERVER_BASE_URL_DEV : SERVER_BASE_URL_PROD;
