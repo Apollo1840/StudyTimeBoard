@@ -8,10 +8,6 @@ import {
 } from "../shared/serverUrls.js";
 
 export default class TimeboardService {
-  // TODO: move this to somewhere robust
-  static frontEndURL() {
-    return "http://localhost:3000/";
-  }
 
   // Get logged minutes of all users of last week
   static getMinutesLastWeek() {
