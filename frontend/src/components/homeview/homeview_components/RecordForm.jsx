@@ -79,7 +79,7 @@ function DurationForm(props) {
   };
 
   return (
-    <form id="record_time" onSubmit={handleSubmit}>
+    <div id="record_time">
       <div className="row">
         <div className="col input-group mb-3 mr-5">
           <div className="input-group-prepend">
@@ -112,12 +112,15 @@ function DurationForm(props) {
         </div>
 
         <div className="col mb-3 ml-5">
-          <button type="submit" className="btn btn-primary float-right mr-2">
+          <button
+            className="btn btn-primary float-right mr-2"
+            onClick={handleSubmit}
+          >
             Submit
           </button>
         </div>
       </div>
-    </form>
+    </div>
   );
 }
 

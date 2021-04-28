@@ -15,27 +15,28 @@ export default class HttpService {
       method: "GET",
       headers: header,
     })
-    .then((resp) => {
-      // level 1: check if status=401, return resp.json
-      if (!this.isauthorized(resp)) {
-        if (window.location.pathname !== "/login") window.location.replace("/login");
-        return;
-      } else {
-        return resp.json();
-      }
-    })
-    .then((resp) => {
-      // level 2: check if return status is "success"
-      if (resp.status == "success") {
-        onSuccess(resp.data);
-      } else {
-        // TODO: refresh jwt token
-        onError(resp.message);
-      }
-    })
-    .catch((e) => {
-      onError(e.message);
-    });
+      .then((resp) => {
+        // level 1: check if status=401, return resp.json
+        if (!this.isauthorized(resp)) {
+          if (window.location.pathname !== "/login")
+            window.location.replace("/login");
+          return;
+        } else {
+          return resp.json();
+        }
+      })
+      .then((resp) => {
+        // level 2: check if return status is "success"
+        if (resp.status == "success") {
+          onSuccess(resp.data);
+        } else {
+          // TODO: refresh jwt token
+          onError(resp.message);
+        }
+      })
+      .catch((e) => {
+        onError(e.message);
+      });
   }
 
   static put(url, data, onSuccess, onError) {
@@ -51,27 +52,28 @@ export default class HttpService {
       headers: header,
       body: JSON.stringify(data),
     })
-    .then((resp) => {
-      // level 1: check if status=401, return resp.json
-      if (!this.isauthorized(resp)) {
-        if (window.location.pathname !== "/login") window.location = "/login";
-        return;
-      } else {
-        return resp.json();
-      }
-    })
-    .then((resp) => {
-      // level 2: check if return status is "success"
-      if (resp.status == "success") {
-        onSuccess(resp.data);
-      } else {
-        // TODO: refresh jwt token
-        onError(resp.message);
-      }
-    })
-    .catch((e) => {
-      onError(e.message);
-    });
+      .then((resp) => {
+        // level 1: check if status=401, return resp.json
+        if (!this.isauthorized(resp)) {
+          if (window.location.pathname !== "/login")
+            window.location.replace("/login");
+          return;
+        } else {
+          return resp.json();
+        }
+      })
+      .then((resp) => {
+        // level 2: check if return status is "success"
+        if (resp.status == "success") {
+          onSuccess(resp.data);
+        } else {
+          // TODO: refresh jwt token
+          onError(resp.message);
+        }
+      })
+      .catch((e) => {
+        onError(e.message);
+      });
   }
 
   static post(url, data, onSuccess, onError) {
@@ -90,7 +92,8 @@ export default class HttpService {
       .then((resp) => {
         // level 1: check if status=401, return resp.json
         if (!this.isauthorized(resp)) {
-          if (window.location.pathname !== "/login") window.location = "/login";
+          if (window.location.pathname !== "/login")
+            window.location.replace("/login");
           return;
         } else {
           return resp.json();
@@ -121,27 +124,28 @@ export default class HttpService {
       method: "DELETE",
       headers: header,
     })
-    .then((resp) => {
-      // level 1: check if status=401, return resp.json
-      if (!this.isauthorized(resp)) {
-        if (window.location.pathname !== "/login") window.location = "/login";
-        return;
-      } else {
-        return resp.json();
-      }
-    })
-    .then((resp) => {
-      // level 2: check if return status is "success"
-      if (resp.status == "success") {
-        onSuccess(resp.data);
-      } else {
-        // TODO: refresh jwt token
-        onError(resp.message);
-      }
-    })
-    .catch((e) => {
-      onError(e.message);
-    });
+      .then((resp) => {
+        // level 1: check if status=401, return resp.json
+        if (!this.isauthorized(resp)) {
+          if (window.location.pathname !== "/login")
+            window.location.replace("/login");
+          return;
+        } else {
+          return resp.json();
+        }
+      })
+      .then((resp) => {
+        // level 2: check if return status is "success"
+        if (resp.status == "success") {
+          onSuccess(resp.data);
+        } else {
+          // TODO: refresh jwt token
+          onError(resp.message);
+        }
+      })
+      .catch((e) => {
+        onError(e.message);
+      });
   }
 
   static isauthorized(res) {
