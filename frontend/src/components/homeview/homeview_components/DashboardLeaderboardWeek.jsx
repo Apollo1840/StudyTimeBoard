@@ -10,34 +10,8 @@ class DashboardLeaderboardWeek extends Component {
   };
 
   componentDidMount() {
-    this.updateWeeklyData();
+    //this.updateWeeklyData();
   }
-
-  // fetch logged study time of current week, data is grouped by week day, example:
-  // {"Monday": {"tom": 12, "jerry": 20}, "Tuesday": {"tom": 20, "jerry": 12}}
-  updateWeeklyData = () => {
-    TimeboardService.getMinutesLastWeek(CURRENT)
-      .then((data) => {
-        // TODO: check js object data structure
-        let leaderboard = {}; // weekly leaderboard
-        Object.keys(data).forEach((weekday) => {
-          Object.keys(data[weekday]).forEach((name) => {
-            if (!leaderboard[name]) leaderboard[name] = 0;
-            leaderboard[name] += data[weekday][name];
-          });
-        });
-        let weeklyWinner = this.getKeyWithMaxValue(leaderboard);
-        this.setState({
-          weeklyData: data,
-          weeklyWinner: weeklyWinner,
-          weeklyWinnerMinutes: leaderboard[weeklyWinner],
-        });
-      })
-      .catch((e) => {
-        alert(e);
-      });
-  };
-
   render() {
     return (
       <div id="lastweek_leaderboard_display" className="mt-5 mb-5">
