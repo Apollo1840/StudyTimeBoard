@@ -10,7 +10,7 @@ class DashboardLeaderboardWeek extends Component {
   };
 
   componentDidMount() {
-    //this.updateWeeklyData();
+    // update state with TimeboardService
   }
   render() {
     return (

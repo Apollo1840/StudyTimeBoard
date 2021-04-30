@@ -1,5 +1,7 @@
 """
+    
     UseCase design & Display information generation through app_utils.py ( info_...() )
+    
     JSON API Style: JSend https://github.com/omniti-labs/jsend
     example 1:
     {
@@ -11,6 +13,7 @@
         "status" : "error",
         "message" : "Unable to communicate with database"
     }
+    
 """
 
 # external utils
