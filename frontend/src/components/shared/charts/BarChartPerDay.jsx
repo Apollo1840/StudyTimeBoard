@@ -9,7 +9,7 @@ const dummyData = [
 ];
 
 // Display a bar chart, input data from this.props.data should follow the structure of dummyData
-class BarChart extends Component {
+class BarChartPerDay extends Component {
   render() {
     // Convert input data to the format compatible with react-plotly
     let data = [
@@ -41,4 +41,4 @@ class BarChart extends Component {
   }
 }
 
-export default BarChart;
+export default BarChartPerDay;

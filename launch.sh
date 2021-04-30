@@ -1,6 +1,7 @@
 
 # sudo apt install xdotool
 
+# workon web
 xdotool type "python backend/app.py"
 xdotool key Return
 

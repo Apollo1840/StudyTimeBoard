@@ -1,6 +1,7 @@
 import React, { useState, useContext, createContext } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import store from "../../redux-store";
+import SubmitRecordService from "../../services/SubmitRecordService";
 
 // css modules
 
@@ -44,6 +45,11 @@ function submitRecord(startTime, doAlert = false) {
     endTime: getCurrentTime(),
   };
   console.log(recordData);
+  SubmitRecordService.submit_interval(
+    recordData.username,
+    recordData.startTime,
+    recordData.endTime
+  );
   if (doAlert) {
     alert(
       `${recordData.username}: ${recordData.startTime} to ${recordData.endTime}`
@@ -62,7 +68,6 @@ function RemainingTimeContextProvider(props) {
   const [isClockPlaying, setIsClockPlaying] = useState(false);
   const [workDurationMinutes, setWorkDurationMinutes] = useState(0.2);
   const [breakDurationMinutes, setBreakDurationMinutes] = useState(0.1);
-  const [remainingTime, setRemainingTime] = useState(0);
 
   return (
     <remainingTimeContext.Provider
@@ -79,8 +84,6 @@ function RemainingTimeContextProvider(props) {
         setWorkDurationMinutes,
         breakDurationMinutes,
         setBreakDurationMinutes,
-        remainingTime,
-        setRemainingTime,
       }}
     >
       {props.children}
@@ -97,11 +100,12 @@ function ClockController() {
     isUserBreaking,
     setIsUserBreaking,
   } = useContext(remainingTimeContext);
-  const goHandler = () => {
+
+  const handleGo = () => {
     setIsClockPlaying(true);
     setStartTime(getCurrentTime());
   };
-  const holdHandler = () => {
+  const handleHold = () => {
     if (!isUserBreaking) {
       submitRecord(startTime, true);
     }
@@ -111,8 +115,8 @@ function ClockController() {
   };
   return (
     <div className="row">
-      <button onClick={goHandler}>GO</button>
-      <button onClick={holdHandler}>Hold</button>
+      <button onClick={handleGo}>GO</button>
+      <button onClick={handleHold}>Hold</button>
     </div>
   );
 }
@@ -170,8 +174,6 @@ function RenderTimeWork({ remainingTime }) {
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
 
-  const { setRemainingTime } = useContext(remainingTimeContext);
-  setRemainingTime(parseInt(remainingTime));
   return (
     <div>
       <div className="text-center"> work </div>
@@ -180,12 +182,11 @@ function RenderTimeWork({ remainingTime }) {
   );
 }
 
+// in the future might be different with RenderTimeWork, now is the same
 function RenderTimeBreak({ remainingTime }) {
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
 
-  const { setRemainingTime } = useContext(remainingTimeContext);
-  setRemainingTime(parseInt(remainingTime));
   return (
     <div>
       <div className="text-center"> break </div>

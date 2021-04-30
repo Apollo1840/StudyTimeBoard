@@ -8,10 +8,6 @@ import {
 } from "../shared/serverUrls.js";
 
 export default class TimeboardService {
-  // TODO: move this to somewhere robust
-  static frontEndURL() {
-    return "http://localhost:3000/";
-  }
 
   // Get logged minutes of all users of last week
   static getMinutesLastWeek() {
@@ -19,7 +15,7 @@ export default class TimeboardService {
       HttpService.get(
         SERVER_BASE_URL + DURATIONS_LASTWEEK_URL,
         (data) => {
-          resolve(JSON.parse(data));
+          resolve(data);
         },
         (errorMsg) => {
           reject(errorMsg);
@@ -34,7 +30,7 @@ export default class TimeboardService {
       HttpService.get(
         SERVER_BASE_URL + DURATIONS_TOTAL_URL,
         (data) => {
-          resolve(JSON.parse(data));
+          resolve(data);
         },
         (errorMsg) => {
           reject(errorMsg);
@@ -50,7 +46,7 @@ export default class TimeboardService {
       HttpService.get(
         SERVER_BASE_URL + PERSONAL_INTERVALS_URL,
         (data) => {
-          resolve(JSON.parse(data));
+          resolve(data);
         },
         (errorMsg) => {
           reject(errorMsg);
@@ -66,7 +62,7 @@ export default class TimeboardService {
       HttpService.get(
         SERVER_BASE_URL + PERSONAL_DURATIONS_URL,
         (data) => {
-          resolve(JSON.parse(data));
+          resolve(data);
         },
         (errorMsg) => {
           reject(errorMsg);

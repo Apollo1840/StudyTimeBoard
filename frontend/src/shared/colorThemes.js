@@ -1,4 +1,4 @@
-export const LineChartTimeStreamColorWay = [
+export const LineChartIntervalColorWay = [
   "#f3cec9",
   "#e7a4b6",
   "#cd7eaf",

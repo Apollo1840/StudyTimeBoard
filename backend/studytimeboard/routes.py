@@ -213,7 +213,7 @@ def api_dashboard_leaderboard_week():
     df_all = get_df_ana(dbapi)
     df_last_week = to_this_week_table(df_all)  # filter only the data for last week
     result = info_duration_by_weekday(df_last_week)  # list of entries -> data grouped by weekdays
-    result_json = result.unstack(level=0).to_json()  # to proper json format
+    result_json = result.unstack(level=0).to_dict()  # to proper json format
     return {"status": "success", "data": result_json}, 200
 
 
@@ -221,7 +221,7 @@ def api_dashboard_leaderboard_week():
 def api_get_leaderboards():
     df_all = get_df_ana(dbapi)
     result = info_duration_by_name(df_all)
-    result_json = result.to_json()
+    result_json = result.to_dict()
     return {"status": "success", "data": result_json}, 200
 
 @app.route("/api/personal_intervals", methods=["GET"])
@@ -239,7 +239,7 @@ def api_personal_intervals():
         df_user = df_all.loc[df_all[NAME] == username]
         df_user = df_user.loc[df_user[END_TIME] != UNKNOWN]
         durations_by_date = df_user[[DATE, START_TIME, END_TIME]]
-        result_json = durations_by_date.to_json(orient="records")
+        result_json = durations_by_date.to_dict(orient="records")
         return {"status": "success", "data": result_json}, 200  # TODO: use JWT token
     else:
         # error user not found?
@@ -263,7 +263,7 @@ def api_personal_durations():
         df_user = df_all.loc[df_all[NAME] == username]
         df_user = df_user.loc[df_user[MINUTES].notnull()]
         durations_by_date = df_user[[DATE, MINUTES]]
-        result_json = durations_by_date.to_json(orient="records")
+        result_json = durations_by_date.to_dict(orient="records")
         # TODO: use JWT token
         return {"status": "success", "data": result_json}, 200
     else:

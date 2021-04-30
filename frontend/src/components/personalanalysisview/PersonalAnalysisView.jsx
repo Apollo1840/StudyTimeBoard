@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import AuthService from "../../services/AuthService";
 import TimeboardService from "../../services/TimeboardService";
-import IntervalChart from "../shared/IntervalChart";
-import BarChart from "../shared/BarChart";
+import { LineChartInterval } from "../shared/charts/LineChartInterval";
+import BarChartPerDay from "../shared/charts/BarChartPerDay";
 import store from "../../redux-store";
 
 class PersonalAnalysisView extends Component {
@@ -111,7 +111,7 @@ class PersonalAnalysisView extends Component {
         <div style={{ fontSize: "120%" }}>
           <div class="jumbotron">
             {this.state.barChartData ? (
-              <BarChart data={this.state.barChartData} />
+              <BarChartPerDay data={this.state.barChartData} />
             ) : (
               <div>loading</div>
             )}
@@ -120,7 +120,7 @@ class PersonalAnalysisView extends Component {
 
           <div class="jumbotron">
             {this.state.intervalChartData ? (
-              <IntervalChart data={this.state.intervalChartData} />
+              <LineChartInterval data={this.state.intervalChartData} />
             ) : (
               <div>loading</div>
             )}
