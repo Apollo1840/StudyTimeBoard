@@ -96,6 +96,8 @@ function LineChartIntervalSingleDay(props) {
     line: { color: "#bdbdbd" },
   });
 
+  console.log(data);
+
   return (
     <div>
       <Plot

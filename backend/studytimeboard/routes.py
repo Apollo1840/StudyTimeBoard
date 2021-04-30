@@ -159,13 +159,27 @@ def api_handle_hold_event():
     
 @app.route("/api/interval", methods=["POST"])
 def api_handle_interval_event():
+    
+    print(">> receive interval")
+    print(request.data)
+    
     data = json.loads(request.data)
+    
+    print(data)
+    
     username = data[USERNAME]
     if username in dbapi.all_users():
-        date = datetime.now(TZ)
+        # todo: use frontend given date
+        date = datetime.now(TZ)  
         start_time = data[START_TIME]
         end_time = data[END_TIME]
+        
+        print(date, start_time, end_time)
+        
         if varify_time(start_time) and varify_time(end_time):
+            
+            print("into interval", date, start_time, end_time)
+            
             dbapi.into_interval(username, date, start_time, end_time)
         else:
             return {"status": "error", "message": FlashMessages.WRONG_DURATION}, 400
@@ -208,12 +222,17 @@ def api_studying_king():
     }, 200
 
 
-@app.route("/api/minutes_lastweek", methods=["GET"])
+@app.route("/api/minutes_lastweek", methods=["GET", "POST"])
 def api_dashboard_leaderboard_week():
+    
+    # data = json.loads(request.data)
+    # print(data)
+    
     df_all = get_df_ana(dbapi)
     df_last_week = to_this_week_table(df_all)  # filter only the data for last week
     result = info_duration_by_weekday(df_last_week)  # list of entries -> data grouped by weekdays
     result_json = result.unstack(level=0).to_dict()  # to proper json format
+    print(result_json)
     return {"status": "success", "data": result_json}, 200
 
 

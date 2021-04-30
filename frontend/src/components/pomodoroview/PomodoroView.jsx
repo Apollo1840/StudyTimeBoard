@@ -196,6 +196,8 @@ function RenderTimeBreak({ remainingTime }) {
 }
 
 function PomodoroClock() {
+  //todo: useEffect: on component dismount == click hold
+
   const {
     startTime,
     setStartTime,
