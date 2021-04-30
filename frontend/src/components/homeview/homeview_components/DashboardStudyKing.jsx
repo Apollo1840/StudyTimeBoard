@@ -41,7 +41,6 @@ class DashboardStudyKing extends Component {
   };
 
   render() {
-    console.log(this.transformTimeLine(this.state.timeline));
     return (
       <div id="today_study_king_display" className="mt-5 mb-5">
         <h3 style={{ fontSize: "150%" }}>Today's study king:</h3>
