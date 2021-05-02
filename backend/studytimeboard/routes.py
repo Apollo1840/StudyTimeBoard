@@ -114,9 +114,6 @@ def api_minutes_lastweek():
     df_last_week = to_this_week_table(df_all)  # filter only the data for last week
     result = info_duration(df_last_week, by=group_type)  # list of entries -> data grouped by weekdays
     result_json = result.unstack(level=0).to_json()  # to proper json format
-    
-    print(result_json)
-    
     return {"status": "success", "data": json.loads(result_json)}, 200
 
 
