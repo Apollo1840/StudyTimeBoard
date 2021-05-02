@@ -31,7 +31,7 @@ class DashboardStudyKing extends Component {
   }
 
   transformTimeLine = (timeline) => {
-    // input:  array of arrays of strs, each array of strs contains 2 str, stands for : startTIme, endTime
+    // input:  array of arrays of strs, each array of strs contains 2 str, stands for : startTime, endTime
     // output: array of arrays of Dates, each array of Dates contains three Date, stands for : Date, startTime, EndTime
     return timeline.map((strTimeArray) => [
       new Date("2000.1.1"),
