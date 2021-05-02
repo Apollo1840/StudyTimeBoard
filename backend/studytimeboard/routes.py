@@ -157,7 +157,6 @@ def api_personal_durations():
         df_user = df_user.loc[df_user[MINUTES].notnull()]
         durations_by_date = df_user[[DATE, MINUTES]]
         result_json = durations_by_date.to_json(orient="records")
-        print(type(result_json))
         # TODO: use JWT token
         return {"status": "success", "data": json.loads(result_json)}, 200
     else:
