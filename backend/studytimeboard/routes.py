@@ -103,8 +103,11 @@ def api_studying_king():
     }, 200
 
 
-@app.route("/api/minutes_lastweek", methods=["GET"])
+@app.route("/api/minutes_lastweek", methods=["GET", "POST"])
 def api_minutes_lastweek():
+    group_type = json.loads(request.data)[GROUPATTR]
+    print(group_type)
+    
     df_all = get_df_ana(dbapi)
     df_last_week = to_this_week_table(df_all)  # filter only the data for last week
     result = info_duration_by_weekday(df_last_week)  # list of entries -> data grouped by weekdays

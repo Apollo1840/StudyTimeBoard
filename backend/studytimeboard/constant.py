@@ -53,6 +53,7 @@ UNKNOWN = "unknown"
 STUDY_USERS = "studying_users"
 INITIED = "initialized"
 UNBORN = "unborn"
+GROUPATTR = "groupAttr"
 
 class FlashMessages:
     UNAUTHENTICATED = "User not authenticated, " \

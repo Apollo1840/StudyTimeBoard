@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { BarChartMinutesPerPersonPerToday } from "../../shared/charts/BarChartPerPerson";
 import TimeboardService from "../../../services/TimeboardService";
-// import { CURRENT } from "../../../services/TimeboardService";
+import { CURRENT } from "../../../services/TimeboardService";
 class DashboardLeaderboardWeek extends Component {
   state = {
     data: [], // similar to weeklyData in LeaderboardView
@@ -10,7 +10,12 @@ class DashboardLeaderboardWeek extends Component {
   };
 
   componentDidMount() {
-    // update state with TimeboardService
+    TimeboardService.getMinutesLastWeek(CURRENT)
+      .then((data) => this.setState(data))
+      .catch((msg) => {
+        console.error(msg);
+        alert(msg);
+      });
   }
 
   render() {

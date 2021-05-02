@@ -8,13 +8,12 @@ import {
 } from "../shared/serverUrls.js";
 
 export default class TimeboardService {
-
   // Get logged minutes of all users of last week
   static getMinutesLastWeek(groupAttr) {
     return new Promise((resolve, reject) => {
-      HttpService.get(
+      HttpService.post(
         SERVER_BASE_URL + DURATIONS_LASTWEEK_URL,
-        //{ groupAttr: groupAttr },
+        { groupAttr: groupAttr },
         (data) => {
           resolve(data);
         },
