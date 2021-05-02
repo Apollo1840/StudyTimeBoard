@@ -23,8 +23,8 @@ START_TIME_DT = "start_time_datetime"
 END_TIME_DT = "end_time_datetime"
 DATE_DT = "date_datetime"
 TODAY_OR_NOT = "today_or_not"
-IS_TODAY = "is_today"
-NOT_TODAY = "not_today"
+IS_TODAY = "Today"
+NOT_TODAY = "Previous"
 
 # sheet 2 columns
 ACT = "act"
@@ -50,10 +50,12 @@ TZ = pytz.timezone('Europe/Berlin')
 # constants
 SOMEONE = "someone"
 UNKNOWN = "unknown"
-STUDY_USERS = "studying_users"
 INITIED = "initialized"
 UNBORN = "unborn"
+
+# frontend keys
 GROUPATTR = "groupAttr"
+CURRENT = "current"
 
 class FlashMessages:
     UNAUTHENTICATED = "User not authenticated, " \

@@ -15,6 +15,8 @@ from ..models import StudyEvent
 
 
 def add_analysis_columns(df):
+    # add very foudamental analysis columns
+    
     df[START_TIME_DT] = df[START_TIME].apply(time2datetime)
     df[END_TIME_DT] = df[END_TIME].apply(time2datetime)
     df[MINUTES] = [(t_end - t_start).seconds / 60 for t_start, t_end in zip(df[START_TIME_DT], df[END_TIME_DT])]

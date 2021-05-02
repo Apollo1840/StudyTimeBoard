@@ -11,7 +11,7 @@ class DashboardLeaderboardWeek extends Component {
 
   componentDidMount() {
     TimeboardService.getMinutesLastWeek(CURRENT)
-      .then((data) => this.setState(data))
+      .then((data) => this.setState({ data: data }))
       .catch((msg) => {
         console.error(msg);
         alert(msg);
@@ -19,6 +19,7 @@ class DashboardLeaderboardWeek extends Component {
   }
 
   render() {
+    console.log(this.state.data);
     return (
       <div id="lastweek_leaderboard_display" className="mt-5 mb-5">
         <h3 style={{ fontSize: "150%" }}> Leaderboard of this week: </h3>
