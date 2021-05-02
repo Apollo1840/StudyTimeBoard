@@ -2,9 +2,11 @@ import pytz
 
 APP_PATH = "./studytimeboard"
 PATH_TO_LOCALDB = "./studytimeboard/data/db"
+PATH_TO_DB_STATUS = "db_status.txt"
+# PATH_TO_BARCHART = "static/charts/barchart.png"
 
+# table name and sheet name for google sheet
 STUDY_TIME_TABLE_NAME = "record_study_time"
-
 SHEET1 = "duration"
 SHEET2 = "event"
 SHEET_EVENTS = "data"
@@ -42,37 +44,15 @@ ID_WEEK = "id_week"
 ORDERED_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 WEEKDAY_COLORS = ["tab:pink", "tab:purple", "tab:blue", "tab:cyan", "tab:green", "tab:olive", "tab:orange"]
 
-PATH_TO_BARCHART = "static/charts/barchart.png"
-PATH_TO_DB_STATUS = "db_status.txt"
-INITIED = "initialized"
-UNBORN = "unborn"
-
-
-REGISTED_USERS = [
-    "Congyu",
-    "Shangsu",
-    "Nia.Dai",
-    "Amber",
-    "LiuYang",
-    "Lanlan",
-    "L.path",
-    "Hanyu",
-    "Ye Liu",
-    "Chen Dong",
-    "Diqing",
-    "vivi",
-    "Vicky.Huang",
-    
-    "Alpha",
-    "Beta",
-    "Theta",
-]
-
-SOMEONE = "someone"
-UNKNOWN = "unknown"
 
 TZ = pytz.timezone('Europe/Berlin')
 
+# constants
+SOMEONE = "someone"
+UNKNOWN = "unknown"
+STUDY_USERS = "studying_users"
+INITIED = "initialized"
+UNBORN = "unborn"
 
 class FlashMessages:
     UNAUTHENTICATED = "User not authenticated, " \
