@@ -20,6 +20,11 @@ function BarChartMinutesPerPerson(props) {
             y: Object.keys(props.data),
             x: Object.values(props.data),
             orientation: "h",
+            transforms: [{
+              type: 'sort',
+              target: 'x',
+              order: 'ascending'
+            }]
           },
         ]}
         layout={{

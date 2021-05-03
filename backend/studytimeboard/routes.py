@@ -365,5 +365,3 @@ def analysis():
             return redirect(url_for("api_login"))
     else:
         return redirect(url_for("api_login"))
-
-# Backend APIs

@@ -1,7 +1,13 @@
+import os
 from .constant import SHEET_EVENTS, SHEET_EVENTS_DEBUG, SHEET_USERBANK, SHEET_USERBANK_DEBUG
 
 user_amount_limit = 100
-debug_mode = True
+
+
+if os.environ.get("PHASE", "DEV") == "PROD":
+    debug_mode = False
+else:
+    debug_mdoel = True
 
 if debug_mode:
     has_gs_auth = True
