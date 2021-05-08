@@ -23,4 +23,5 @@ export const DURATIONS_TOTAL_URL = "/api/minutes_total";
 // personalanalysisview API
 export const PERSONAL_INTERVALS_URL = "/api/personal_intervals";
 export const PERSONAL_DURATIONS_URL = "/api/personal_durations";
+export const PERSONAL_STUDY_EVENTS_PER_WEEK_URL = "/api/personal_study_events_per_week";
 export const SERVER_BASE_URL = process.env.NODE_ENV === "development" ? SERVER_BASE_URL_DEV : SERVER_BASE_URL_PROD;
