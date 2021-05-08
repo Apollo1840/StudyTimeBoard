@@ -163,8 +163,8 @@ def api_personal_durations():
         # error user not found?
         return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
 
-@app.route("/api/personal_study_events_per_week", methods=["GET"])
-def api_personal_study_events_per_week():
+@app.route("/api/personal_intervals_per_week", methods=["GET"])
+def api_personal_intervals_per_week():
     # TODO: Authentication with JWT
     df_all = get_df_ana(dbapi)
     authHeader = request.headers.get('jwt')

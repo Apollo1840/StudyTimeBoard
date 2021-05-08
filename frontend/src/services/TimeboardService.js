@@ -5,7 +5,7 @@ import {
   DURATIONS_TOTAL_URL,
   PERSONAL_DURATIONS_URL,
   PERSONAL_INTERVALS_URL,
-  PERSONAL_STUDY_EVENTS_PER_WEEK_URL
+  PERSONAL_INTERVALS_PER_WEEK_URL
 } from "../shared/serverUrls.js";
 
 export default class TimeboardService {
@@ -74,10 +74,10 @@ export default class TimeboardService {
 
   // Get logged intervals of current user of all time with calender week ID. Data from server contains start time, end time, week id and year. Date could
   // be transfered only as string and must be converted to type `Date'.
-  static getPersonalStudyEventsPerWeek() {
+  static getPersonalIntervalsPerWeek() {
     return new Promise((resolve, reject) => {
       HttpService.get(
-        SERVER_BASE_URL + PERSONAL_STUDY_EVENTS_PER_WEEK_URL,
+        SERVER_BASE_URL + PERSONAL_INTERVALS_PER_WEEK_URL,
         (data) => {
           resolve(data);
         },
