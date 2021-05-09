@@ -241,30 +241,39 @@ def admin_log():
         infos = f.readlines()
     for info in infos:
         print(info)
+    return {"status": "success"}, 200
 
-@app.route('/admin_reload_data')
+@app.route('/admin_reload_data', methods=['GET'])
 def admin_reload_data():
-    logger.info("ADMIN: admin_reload_data")
+    msg = "ADMIN: admin_reload_data"
+    print(msg)
+    logger.info(msg)
     dbapi.init_db()
+    return {"status": "success"}, 200
 
 @app.route('/admin_clean_data')
 def admin_clean_data():
     dbapi.init_empty()
+    return {"status": "success"}, 200
   
 @app.route('/admin_create_some_data')
 def admin_create_some_data():
     dbapi.into_some_examples()
+    return {"status": "success"}, 200
 
 @app.route('/admin_create_some_users')
 def admin_create_some_user():
     dbapi.into_some_users()
+    return {"status": "success"}, 200
 
 @app.route('/admin_star', methods=['GET', 'POST'])
 def admin_star():
     if USERNAME in request.args:
         username = request.args[USERNAME]
         dbapi.into_user_onestar(username)
+    return {"status": "success"}, 200
 
 @app.route('/api/admin/clean_chart_folder', methods=['GET'])
 def api_admin_clean_chart_folder():
     clean_chart_folder()
+    return {"status": "success"}, 200
