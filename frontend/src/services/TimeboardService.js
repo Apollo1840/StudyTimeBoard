@@ -42,13 +42,10 @@ export default class TimeboardService {
     });
   }
 
-  // Get logged durations of current user of all time,
-  // data from server contains pairs of date and integer,
-  // date could be transfered only as string and must be converted to type `Date'.
-  static getPersonalDurations() {
+  static getPersonalDurationAvg() {
     return new Promise((resolve, reject) => {
       HttpService.get(
-        SERVER_BASE_URL + PERSONAL_DURATIONS_URL,
+        SERVER_BASE_URL + PERSONAL_DURATION_AVG_URL,
         (data) => {
           resolve(data);
         },
@@ -59,10 +56,13 @@ export default class TimeboardService {
     });
   }
 
-  static getPersonalDurationAvg() {
+  // Get logged durations of current user of all time,
+  // data from server contains pairs of date and integer,
+  // date could be transfered only as string and must be converted to type `Date'.
+  static getPersonalDurations() {
     return new Promise((resolve, reject) => {
       HttpService.get(
-        SERVER_BASE_URL + PERSONAL_DURATION_AVG_URL,
+        SERVER_BASE_URL + PERSONAL_DURATIONS_URL,
         (data) => {
           resolve(data);
         },
