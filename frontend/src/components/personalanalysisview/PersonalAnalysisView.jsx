@@ -3,6 +3,7 @@ import AuthService from "../../services/AuthService";
 import TimeboardService from "../../services/TimeboardService";
 import { LineChartInterval } from "../shared/charts/LineChartInterval";
 import BarChartPerDay from "../shared/charts/BarChartPerDay";
+import LineChartPerDay from "../shared/charts/LineChartPerDay";
 import store from "../../redux-store";
 
 class PersonalAnalysisView extends Component {
@@ -115,7 +116,7 @@ class PersonalAnalysisView extends Component {
             ) : (
               <div>loading</div>
             )}
-            <div>loading</div>
+            <LineChartPerDay />
           </div>
 
           <div class="jumbotron">
