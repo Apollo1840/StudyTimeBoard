@@ -179,7 +179,7 @@ def api_personal_durations():
         # TODO: move this to app_utils
         df_user = df_all.loc[df_all[NAME] == username]
         df_user = df_user.loc[df_user[MINUTES].notnull()]
-        df_durations = df_user[[DATE, MINUTES]]
+        df_durations = to_minutes_by_day_table(df_user)[[DATE, MINUTES]]
         
         result_json = df_durations.to_json(orient="records")
         # TODO: use JWT token
@@ -204,7 +204,7 @@ def api_personal_durations_averages():
         # TODO: move this to app_utils
         df_user = df_all.loc[df_all[NAME] == username]
         df_user = df_user.loc[df_user[MINUTES].notnull()]
-        df_durations = df_user[[DATE, MINUTES]]
+        df_durations = to_minutes_by_day_table(df_user)[[DATE, MINUTES]]
     
         df_durations[HOURS] = df_durations[MINUTES] / 60
         df_durations[HOURS_AVG] = along_average(df_durations[HOURS])

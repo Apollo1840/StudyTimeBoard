@@ -84,8 +84,8 @@ function LineChartIntervalPerWeek(props) {
       line: {
         color:
           entry[0] == last_weekid
-            ? "rgba(247, 186, 186, 0.2)"
-            : "rgba(186, 238, 247, 0.2)",
+            ? "rgba(247, 186, 186, 0.3)"
+            : "rgba(186, 238, 247, 0.3)",
         width: 10,
       },
     };
