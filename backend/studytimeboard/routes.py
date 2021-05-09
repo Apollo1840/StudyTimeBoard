@@ -104,11 +104,16 @@ def api_studying_king():
     }, 200
 
 
-@app.route("/api/minutes_lastweek", methods=["GET"])
+@app.route("/api/minutes_lastweek", methods=["POST"])
 def api_minutes_lastweek():
+    
+    # parse request
+    group_type = json.loads(request.data)[GROUPATTR]  # WEEKDAY or CURRENT
+    
+    # get result
     df_all = get_df_ana(dbapi)
     df_last_week = to_this_week_table(df_all)  # filter only the data for last week
-    result = info_duration_by_weekday(df_last_week)  # list of entries -> data grouped by weekdays
+    result = info_duration(df_last_week, by=group_type)  # list of entries -> data grouped by weekdays
     result_json = result.unstack(level=0).to_json()  # to proper json format
     return {"status": "success", "data": json.loads(result_json)}, 200
 
@@ -116,9 +121,27 @@ def api_minutes_lastweek():
 @app.route("/api/minutes_total", methods=["GET"])
 def api_minutes_total():
     df_all = get_df_ana(dbapi)
-    result = info_duration_by_name(df_all)
-    result_json = result.to_json()
+    result_json = info_duration(df_all, by=NAME).to_json()
     return {"status": "success", "data": json.loads(result_json)}, 200
+
+
+@app.route("/api/personal_n_stars", methods=["GET"])
+def api_personal_n_stars():
+    # TODO: Authentication with JWT
+    df_all = get_df_ana(dbapi)
+    authHeader = request.headers.get('jwt')
+    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
+    # and JWT, there is still a long way to go...
+    username = authHeader
+
+    # Check if name is found
+    if username in df_all[NAME].unique():
+        n_stars = dbapi.out_user_n_stars(username)
+        return {"status": "success", "data": {N_STARS: n_stars}}, 200  # TODO: use JWT token
+    else:
+        # error user not found?
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
+
 
 @app.route("/api/personal_intervals", methods=["GET"])
 def api_personal_intervals():

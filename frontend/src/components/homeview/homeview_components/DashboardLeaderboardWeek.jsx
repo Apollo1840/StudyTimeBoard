@@ -1,16 +1,44 @@
 import React, { Component } from "react";
 import { BarChartMinutesPerPersonPerToday } from "../../shared/charts/BarChartPerPerson";
 import TimeboardService from "../../../services/TimeboardService";
+import { CURRENT } from "../../../services/TimeboardService";
 class DashboardLeaderboardWeek extends Component {
   state = {
-    data: [], // similar to weeklyData in LeaderboardView
-    winner: "someone",
-    winnerTime: "sometime",
+    weeklyData: [], // similar to weeklyData in LeaderboardView
+    weeklyWinner: "someone",
+    weeklyWinnerMinutes: 0,
   };
 
   componentDidMount() {
-    // update state with TimeboardService
+    TimeboardService.getMinutesLastWeek(CURRENT)
+      .then((data) => {
+        // TODO: check js object data structure
+        let leaderboard = {}; // weekly leaderboard
+        Object.keys(data).forEach((weekday) => {
+          Object.keys(data[weekday]).forEach((name) => {
+            if (!leaderboard[name]) leaderboard[name] = 0;
+            leaderboard[name] += data[weekday][name];
+          });
+        });
+        let weeklyWinner = this.getKeyWithMaxValue(leaderboard);
+        this.setState({
+          weeklyData: data,
+          weeklyWinner: weeklyWinner,
+          weeklyWinnerMinutes: leaderboard[weeklyWinner],
+        });
+      })
+      .catch((msg) => {
+        console.error(msg);
+        alert(msg);
+      });
   }
+
+  // get the key with max value, json object must contain multiple key value pairs
+  getKeyWithMaxValue = (jsonObject) => {
+    return Object.keys(jsonObject).reduce((a, b) =>
+      jsonObject[a] > jsonObject[b] ? a : b
+    );
+  };
 
   render() {
     return (
@@ -20,13 +48,13 @@ class DashboardLeaderboardWeek extends Component {
 
         <div>
           <p style={{ fontSize: "120%" }}>
-            🏆 The leader of this board is:<b> {this.state.winner} </b> (with{" "}
-            {this.state.winnerTime})
+            🏆 The leader of this board is:<b> {this.state.weeklyWinner} </b>{" "}
+            (with {this.state.weeklyWinnerMinutes} minutes)
           </p>
         </div>
 
         <div className="text-center">
-          <BarChartMinutesPerPersonPerToday data={this.state.data} />
+          <BarChartMinutesPerPersonPerToday data={this.state.weeklyData} />
         </div>
       </div>
     );
