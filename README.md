@@ -10,25 +10,29 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 
 ### 1. Dev setup:
 
-(if you have not worked with python or node, please read ['How to install dependencies.md'](https://github.com/Apollo1840/StudyTimeBoard/blob/master/project_docs/How%20to%20install%20dependencies.md)')
+(if you have not worked with python, virtual environment, or node, please read ['How to install dependencies.md'](https://github.com/Apollo1840/StudyTimeBoard/blob/master/project_docs/How%20to%20install%20dependencies.md)')
 
 2 ways to start the server:
 
 **Way 1**
 
+Suitable for Linux machine.
+
 ```shell
-    # set up your work virtualenv, for example: workon web.
+    # Before this, you need set up your work virtualenv, for example: workon web.
    ./launch.sh
 
 ```
 
 **Way 2**
 
+Suitable for windows machine.
+
 ```shell
-    # set up your work virtualenv, for example: workon web.
+    # Before this, you need set up your work virtualenv, for example: workon web.
    python backend/app.py
 
-   # open a new gnome tab: strl+shift+t
+   # Before this, you need to open a new console
    cd frontend/
    npm start
 ```
@@ -37,11 +41,13 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 
 You may found out that this dev web is different from demo web app.
 That is because we deployed "main" branch, whereas we are developing on "master" branch.
-The biggest difference of these two are "main" branch use Flask as full-stack,
-but "master" branch use React as frontend and Flask only as backend.
-We are still working on rebuild the web app piece by piece.
 
-#### Full dev setup (with Google Sheet as Manager(backup) database) [ 4 steps ]
+(The biggest difference of these two are "main" branch use Flask as full-stack,
+but "master" branch use React as frontend and Flask only as backend)
+
+by the way, We are still working on rebuild the web app piece by piece.
+
+#### (optional) Full dev setup (with Google Sheet as Manager(backup) database) [ 4 steps ]
 
 1. follow the steps from：
 
@@ -54,7 +60,14 @@ We are still working on rebuild the web app piece by piece.
 
 3. Add the "client_email" in `./studytimeboard/utils/creds/client_secret.json` to the share list of that google sheet.
 
-### 2. Todos:
+### 2. Code structure explanation
+
+- Structure UML-like: see https://drive.google.com/file/d/1aKUYA_8heqd9J4BFsBoivuQ1iEqZ1aJE/view?usp=sharing.
+- Video description: see https://www.bilibili.com/video/BV1nU4y1Y7yn (in Chinese)
+
+editing ...
+
+### 3. Todos:
 
 - more leaderboards, eg. weekday king bar chart.
 - less information on the record form block, hover on question mark to see how to use.
@@ -70,19 +83,12 @@ We are still working on rebuild the web app piece by piece.
 - earn study-coin within group
 - visit others study zone
 
-### 3. Code structure explanation
-
-- Structure UML-like: see https://drive.google.com/file/d/1aKUYA_8heqd9J4BFsBoivuQ1iEqZ1aJE/view?usp=sharing.
-- Video description: see https://www.bilibili.com/video/BV1nU4y1Y7yn (in Chinese)
-
-editing ...
-
 ### 4. Contributions:
 
 项目将保持开源。
 非常欢迎加入我们的开发。
 你的名字将会出现在本文档和部署版网站的 About 界面。
-寻求合作具体见 ['CONTRIBUTING.md'](https://github.com/Apollo1840/StudyTimeBoard/blob/master/Opensource%20Manual.md)
+寻求合作具体见 ['CONTRIBUTING.md'](https://github.com/Apollo1840/StudyTimeBoard/blob/master/CONTRIBUTING.md)
 
 - 主要联系人：(github)Apollo1840[https://github.com/Apollo1840]
 
