@@ -13,16 +13,29 @@ class PersonalAnalysisView extends Component {
   state = {
     username: "someone",
     numberStars: 10,
-    averageHoursPerDay: 0,
+    averageHoursPerDay: "",
     intervalChartData: null, // logged intervals of current user, displayed by waterfall chart
     barChartData: null, // logged durations of current user, displayed by bar chart
   };
 
   componentDidMount() {
     this.setState({ username: store.getState().auth.username });
+    this.updateDurationAvg();
     this.updateDurations();
     this.updateIntervals();
   }
+
+  updateDurationAvg = () => {
+    TimeboardService.getPersonalDurationAvg()
+      .then((data) => {
+        this.setState({
+          averageHoursPerDay: data["avg_hours"],
+        });
+      })
+      .catch((e) => {
+        alert(e);
+      });
+  };
 
   updateDurations = () => {
     TimeboardService.getPersonalDurations()
@@ -102,14 +115,14 @@ class PersonalAnalysisView extends Component {
         <br />
         <br />
 
-        <div>Average Hours per day: {this.averageHoursPerDay}</div>
+        <div>Average Hours per day: {this.state.averageHoursPerDay}</div>
 
         <br />
         <hr />
         <br />
 
         <div style={{ fontSize: "120%" }}>
-          <div class="jumbotron">
+          <div className="jumbotron">
             {this.state.barChartData ? (
               <BarChartPerDay data={this.state.barChartData} />
             ) : (
@@ -118,7 +131,7 @@ class PersonalAnalysisView extends Component {
             <div>loading</div>
           </div>
 
-          <div class="jumbotron">
+          <div className="jumbotron">
             {this.state.intervalChartData ? (
               <LineChartInterval data={this.state.intervalChartData} />
             ) : (

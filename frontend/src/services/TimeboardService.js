@@ -3,13 +3,13 @@ import {
   SERVER_BASE_URL,
   DURATIONS_LASTWEEK_URL,
   DURATIONS_TOTAL_URL,
+  PERSONAL_DURATION_AVG_URL,
   PERSONAL_DURATIONS_URL,
   PERSONAL_INTERVALS_URL,
-  PERSONAL_INTERVALS_PER_WEEK_URL
+  PERSONAL_INTERVALS_PER_WEEK_URL,
 } from "../shared/serverUrls.js";
 
 export default class TimeboardService {
-
   // Get logged minutes of all users of last week
   static getMinutesLastWeek() {
     return new Promise((resolve, reject) => {
@@ -30,6 +30,20 @@ export default class TimeboardService {
     return new Promise((resolve, reject) => {
       HttpService.get(
         SERVER_BASE_URL + DURATIONS_TOTAL_URL,
+        (data) => {
+          resolve(data);
+        },
+        (errorMsg) => {
+          reject(errorMsg);
+        }
+      );
+    });
+  }
+
+  static getPersonalDurationAvg() {
+    return new Promise((resolve, reject) => {
+      HttpService.get(
+        SERVER_BASE_URL + PERSONAL_DURATION_AVG_URL,
         (data) => {
           resolve(data);
         },
