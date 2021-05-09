@@ -18,21 +18,39 @@ class PersonalAnalysisView extends Component {
     username: "someone",
     numberStars: 10,
     averageHoursPerDay: 0,
-    intervalChartData: null, // logged intervals of current user, displayed by waterfall chart
+
     barChartData: null, // logged durations of current user, displayed by bar chart
+    LineChartData: null,
+    intervalChartData: null, // logged intervals of current user, displayed by waterfall chart
+    intervalPerWeekChartData: null, // logged intervals of current user, displayed by waterfall chart
   };
 
   componentDidMount() {
     this.setState({ username: store.getState().auth.username });
     this.updateDurations();
+    this.updateDurationsAverage();
     this.updateIntervals();
+    this.updateIntervalsPerWeek();
   }
 
+  // updaters
   updateDurations = () => {
     TimeboardService.getPersonalDurations()
       .then((data) => {
         this.setState({
           barChartData: this.buildBarChartData(data),
+        });
+      })
+      .catch((e) => {
+        alert(e);
+      });
+  };
+
+  updateDurationsAverage = () => {
+    TimeboardService.getPersonalDurationsAverage()
+      .then((data) => {
+        this.setState({
+          LineChartData: this.buildLineChartData(data),
         });
       })
       .catch((e) => {
@@ -52,34 +70,92 @@ class PersonalAnalysisView extends Component {
       });
   };
 
-  buildIntervalChartData = (data) => {
-    let result = data.map((entry) =>
-      Object.values(entry).map((timeStr, index) =>
-        index == 0 ? new Date(timeStr) : new Date("2000.1.1 " + timeStr)
-      )
-    );
-    // check if first column contains invalid date
-    let hasInvalidDate = result.some((entry) => isNaN(entry[0]));
-    if (hasInvalidDate) {
-      console.error(this.ERROR_INVALID_DATE);
-      alert(this.ERROR_INVALID_DATE);
-      result = null;
-    }
-    return result;
+  updateIntervalsPerWeek = () => {
+    TimeboardService.getPersonalIntervalsPerWeek()
+      .then((data) => {
+        this.setState({
+          intervalPerWeekChartData: this.buildIntervalPerWeekChartData(data),
+        });
+      })
+      .catch((e) => {
+        alert(e);
+      });
   };
 
+  // dataBuliders
   buildBarChartData = (data) => {
+    if (
+      this.constainsInvalidDate(data.map((entry) => new Date(entry["date"])))
+    ) {
+      return null;
+    }
+
     let result = data.map((entry) => {
       return [new Date(entry["date"]), entry["minutes"]];
     });
-    // check if first column contains invalid date
-    let hasInvalidDate = result.some((entry) => isNaN(entry[0]));
+    return result;
+  };
+
+  buildLineChartData = (data) => {
+    if (
+      this.constainsInvalidDate(data.map((entry) => new Date(entry["date"])))
+    ) {
+      return null;
+    }
+
+    let hours = data.map((entry) => {
+      return [new Date(entry["date"]), entry["hours"]];
+    });
+    let hours_avg = data.map((entry) => {
+      return [new Date(entry["date"]), entry["hours_avg"]];
+    });
+    let hours_expo_avg = data.map((entry) => {
+      return [new Date(entry["date"]), entry["hours_expo_avg"]];
+    });
+
+    let result = {
+      hours: hours,
+      hours_avg: hours_avg,
+      hours_expo_avg,
+    };
+    return result;
+  };
+
+  buildIntervalChartData = (data) => {
+    if (
+      this.constainsInvalidDate(data.map((entry) => new Date(entry["date"])))
+    ) {
+      return null;
+    }
+
+    let result = data.map((entry) => [
+      new Date(entry["date"]),
+      new Date("2000.1.1 " + entry["start_time"]),
+      new Date("2000.1.1 " + entry["end_time"]),
+    ]);
+
+    return result;
+  };
+
+  buildIntervalPerWeekChartData = (data) => {
+    let result = data.map((entry) => [
+      entry["id_week"],
+      new Date("2000.1.1 " + entry["start_time"]),
+      new Date("2000.1.1 " + entry["end_time"]),
+    ]);
+    return result;
+  };
+
+  // helper function
+  constainsInvalidDate = (dates) => {
+    let hasInvalidDate = dates.some((date) => isNaN(date));
     if (hasInvalidDate) {
       console.error(this.ERROR_INVALID_DATE);
       alert(this.ERROR_INVALID_DATE);
-      result = null;
+      return true;
+    } else {
+      return false;
     }
-    return result;
   };
 
   render() {
@@ -113,22 +189,32 @@ class PersonalAnalysisView extends Component {
         <br />
 
         <div style={{ fontSize: "120%" }}>
-          <div class="jumbotron">
+          <div className="jumbotron">
             {this.state.barChartData ? (
               <BarChartPerDay data={this.state.barChartData} />
             ) : (
               <div>loading</div>
             )}
-            <LineChartPerDay />
+            {this.state.LineChartData ? (
+              <LineChartPerDay data={this.state.LineChartData} />
+            ) : (
+              <div>loading</div>
+            )}
           </div>
 
-          <div class="jumbotron">
+          <div className="jumbotron">
             {this.state.intervalChartData ? (
               <LineChartInterval data={this.state.intervalChartData} />
             ) : (
               <div>loading</div>
             )}
-            <LineChartIntervalPerWeek />
+            {this.state.intervalPerWeekChartData ? (
+              <LineChartIntervalPerWeek
+                data={this.state.intervalPerWeekChartData}
+              />
+            ) : (
+              <div>loading</div>
+            )}
           </div>
         </div>
       </div>

@@ -3,17 +3,17 @@ import Plot from "react-plotly.js";
 
 // Dummy data for testing, unit should be hours, eg. 1.25
 const dummyData = {
-  exact: [
+  hours: [
     [new Date(2021, 4, 14), 1],
     [new Date(2021, 4, 20), 1.5],
     [new Date(2021, 4, 30), 2],
   ],
-  average: [
+  hours_avg: [
     [new Date(2021, 4, 14), 0.8],
     [new Date(2021, 4, 20), 1.25],
     [new Date(2021, 4, 30), 1.75],
   ],
-  average_exponential: [
+  hours_expo_avg: [
     [new Date(2021, 4, 14), 1.1],
     [new Date(2021, 4, 20), 1.4],
     [new Date(2021, 4, 30), 1.9],
@@ -22,12 +22,10 @@ const dummyData = {
 
 // Display a bar chart, input data from this.props.data should follow the structure of dummyData
 function LineChartPerDay(props) {
-  props = { data: dummyData };
-
   // Convert input data to the format compatible with react-plotly
   let exact_trace = {
-    x: props.data.exact.map((entry) => entry[0]),
-    y: props.data.exact.map((entry) => entry[1]),
+    x: props.data.hours.map((entry) => entry[0]),
+    y: props.data.hours.map((entry) => entry[1]),
     type: "scatter",
     mode: "lines",
     name: "exact",
@@ -39,8 +37,8 @@ function LineChartPerDay(props) {
   };
 
   let average_trace = {
-    x: props.data.average.map((entry) => entry[0]),
-    y: props.data.average.map((entry) => entry[1]),
+    x: props.data.hours_avg.map((entry) => entry[0]),
+    y: props.data.hours_avg.map((entry) => entry[1]),
     type: "scatter",
     mode: "lines",
     name: "average",
@@ -51,8 +49,8 @@ function LineChartPerDay(props) {
   };
 
   let average_exponetial_trace = {
-    x: props.data.average_exponential.map((entry) => entry[0]),
-    y: props.data.average_exponential.map((entry) => entry[1]),
+    x: props.data.hours_expo_avg.map((entry) => entry[0]),
+    y: props.data.hours_expo_avg.map((entry) => entry[1]),
     type: "scatter",
     mode: "lines",
     name: "average_exponential",

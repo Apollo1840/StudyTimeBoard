@@ -119,26 +119,6 @@ def api_minutes_total():
     result_json = result.to_json()
     return {"status": "success", "data": json.loads(result_json)}, 200
 
-@app.route("/api/personal_intervals", methods=["GET"])
-def api_personal_intervals():
-    # TODO: Authentication with JWT
-    df_all = get_df_ana(dbapi)
-    authHeader = request.headers.get('jwt')
-    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
-    # and JWT, there is still a long way to go...
-    username = authHeader
-
-    # Check if name is found
-    if username in df_all[NAME].unique():
-        # TODO: move this to app_utils
-        df_user = df_all.loc[df_all[NAME] == username]
-        df_user = df_user.loc[df_user[END_TIME] != UNKNOWN]
-        durations_by_date = df_user[[DATE, START_TIME, END_TIME]]
-        result_json = durations_by_date.to_json(orient="records")
-        return {"status": "success", "data": json.loads(result_json)}, 200  # TODO: use JWT token
-    else:
-        # error user not found?
-        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
 
 # replace minutes with durations
 @app.route("/api/personal_durations", methods=["GET"])
@@ -155,10 +135,64 @@ def api_personal_durations():
         # TODO: move this to app_utils
         df_user = df_all.loc[df_all[NAME] == username]
         df_user = df_user.loc[df_user[MINUTES].notnull()]
-        durations_by_date = df_user[[DATE, MINUTES]]
-        result_json = durations_by_date.to_json(orient="records")
+        df_durations = df_user[[DATE, MINUTES]]
+        result_json = df_durations.to_json(orient="records")
         # TODO: use JWT token
         return {"status": "success", "data": json.loads(result_json)}, 200
+    else:
+        # error user not found?
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
+
+@app.route("/api/personal_durations_averages", methods=["GET"])
+def api_personal_durations_averages():
+    # TODO: Authentication with JWT
+    df_all = get_df_ana(dbapi)
+    authHeader = request.headers.get('jwt')
+    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
+    # and JWT, there is still a long way to go...
+    username = authHeader
+
+    # Check if name is found
+    if username in df_all[NAME].unique():
+        # TODO: move this to app_utils
+        df_user = df_all.loc[df_all[NAME] == username]
+        df_user = df_user.loc[df_user[MINUTES].notnull()]
+        df_durations = df_user[[DATE, MINUTES]]
+        
+        HOURS = "hours"
+        HOURS_AVG = "hours_avg"
+        HOURS_AVG_EXP = "hours_expo_avg"
+
+        df_durations[HOURS] = df_durations[MINUTES] / 60
+        df_durations[HOURS_AVG] = along_average(df_durations[HOURS])
+        df_durations[HOURS_AVG_EXP] = exponential_moving_average(list(df_durations[HOURS]), 0.1)
+        
+        result_json = df_durations.to_json(orient="records")
+    
+        
+        # TODO: use JWT token
+        return {"status": "success", "data": json.loads(result_json)}, 200
+    else:
+        # error user not found?
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
+
+@app.route("/api/personal_intervals", methods=["GET"])
+def api_personal_intervals():
+    # TODO: Authentication with JWT
+    df_all = get_df_ana(dbapi)
+    authHeader = request.headers.get('jwt')
+    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
+    # and JWT, there is still a long way to go...
+    username = authHeader
+
+    # Check if name is found
+    if username in df_all[NAME].unique():
+        # TODO: move this to app_utils
+        df_user = df_all.loc[df_all[NAME] == username]
+        df_user = df_user.loc[df_user[END_TIME] != UNKNOWN]
+        df_intervals = df_user[[DATE, START_TIME, END_TIME]]
+        result_json = df_intervals.to_json(orient="records")
+        return {"status": "success", "data": json.loads(result_json)}, 200  # TODO: use JWT token
     else:
         # error user not found?
         return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
@@ -177,8 +211,8 @@ def api_personal_intervals_per_week():
         # TODO: move this to app_utils
         df_user = df_all.loc[df_all[NAME] == username]
         df_user = df_user.loc[df_user[END_TIME] != UNKNOWN]
-        durations_by_date = df_user[[START_TIME, END_TIME, ID_WEEK, YEAR]]
-        result_json = durations_by_date.to_json(orient="records")
+        df_intervals_by_week = df_user[[ID_WEEK, START_TIME, END_TIME, YEAR]]
+        result_json = df_intervals_by_week.to_json(orient="records")
         # TODO: use JWT token
         return {"status": "success", "data": json.loads(result_json)}, 200
     else:

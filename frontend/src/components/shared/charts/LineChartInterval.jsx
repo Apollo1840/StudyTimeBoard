@@ -72,27 +72,34 @@ function LineChartInterval(props) {
 }
 
 function LineChartIntervalPerWeek(props) {
-  props = {
-    data: [
-      [1, new Date("2000.1.1 20:25"), new Date("2000.1.1  21:30")],
-      [1, new Date("2000.1.1 19:25"), new Date("2000.1.1  22:30")],
-      [1, new Date("2000.1.1 13:25"), new Date("2000.1.1  21:30")],
-      [2, new Date("2000.1.1 14:25"), new Date("2000.1.1  23:30")],
-      [2, new Date("2000.1.1 17:25"), new Date("2000.1.1  19:30")],
-    ],
-  };
+  let last_weekid = props.data[props.data.length - 1][0];
 
   // Convert input data to the format compatible with react-plotly
-  let data = props.data.map((entry) => ({
-    // entry: 0: weekID, 1: start_time, 2: end_time
-    x: [entry[0], entry[0]], // Duplicate x-axis to build two 2D coordinates
-    y: [entry[1], entry[2]],
-    mode: "lines",
-    line: {
-      color: "rgba(128, 0, 128, 0.2)",
-      width: 10,
-    },
-  }));
+  let data = props.data.map((entry) => {
+    if (entry[0] == last_weekid) {
+      return {
+        // entry: 0: weekID, 1: start_time, 2: end_time
+        x: [entry[0], entry[0]], // Duplicate x-axis to build two 2D coordinates
+        y: [entry[1], entry[2]],
+        mode: "lines",
+        line: {
+          color: "rgba(247, 186, 186, 0.2)",
+          width: 10,
+        },
+      };
+    } else {
+      return {
+        // entry: 0: weekID, 1: start_time, 2: end_time
+        x: [entry[0], entry[0]], // Duplicate x-axis to build two 2D coordinates
+        y: [entry[1], entry[2]],
+        mode: "lines",
+        line: {
+          color: "rgba(186, 238, 247, 0.2)",
+          width: 10,
+        },
+      };
+    }
+  });
 
   return (
     <Plot
