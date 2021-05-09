@@ -163,6 +163,28 @@ def api_personal_durations():
         # error user not found?
         return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
 
+@app.route("/api/personal_intervals_per_week", methods=["GET"])
+def api_personal_intervals_per_week():
+    # TODO: Authentication with JWT
+    df_all = get_df_ana(dbapi)
+    authHeader = request.headers.get('jwt')
+    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
+    # and JWT, there is still a long way to go...
+    username = authHeader
+
+    # Check if name is found
+    if username in df_all[NAME].unique():
+        # TODO: move this to app_utils
+        df_user = df_all.loc[df_all[NAME] == username]
+        df_user = df_user.loc[df_user[END_TIME] != UNKNOWN]
+        durations_by_date = df_user[[START_TIME, END_TIME, ID_WEEK, YEAR]]
+        result_json = durations_by_date.to_json(orient="records")
+        # TODO: use JWT token
+        return {"status": "success", "data": json.loads(result_json)}, 200
+    else:
+        # error user not found?
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
+
 
 # Minispec for authentication response:
 #   on success: response should contain token: String
