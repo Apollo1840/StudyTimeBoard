@@ -38,4 +38,3 @@ export const PERSONAL_INTERVALS_PER_WEEK_URL =
 
 // admin API
 export const RELOAD_DATA_FROM_GS_URL = "/admin_reload_data";
-vvvvvvvvv;
