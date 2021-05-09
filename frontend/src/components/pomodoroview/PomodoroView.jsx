@@ -66,8 +66,8 @@ function RemainingTimeContextProvider(props) {
   const [isUserBreaking, setIsUserBreaking] = useState(false); // define which clock to run
   const [ClockKey, setClockKey] = useState(0);
   const [isClockPlaying, setIsClockPlaying] = useState(false);
-  const [workDurationMinutes, setWorkDurationMinutes] = useState(0.2);
-  const [breakDurationMinutes, setBreakDurationMinutes] = useState(0.1);
+  const [workDurationMinutes, setWorkDurationMinutes] = useState(25);
+  const [breakDurationMinutes, setBreakDurationMinutes] = useState(5);
 
   return (
     <remainingTimeContext.Provider
@@ -122,8 +122,8 @@ function ClockController() {
 }
 
 function ClockSettings() {
-  const [workMinutes, setWorkMinutes] = useState(20);
-  const [breakMinutes, setBreakMinutes] = useState(2);
+  const [workMinutes, setWorkMinutes] = useState(25);
+  const [breakMinutes, setBreakMinutes] = useState(5);
   const {
     setClockKey,
     setIsClockPlaying,

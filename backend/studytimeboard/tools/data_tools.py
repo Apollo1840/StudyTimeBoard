@@ -7,7 +7,7 @@ def date2datetime(time: str):
     try:
         return datetime.strptime(str(time), "%Y.%m.%d")
     except:
-        print("invalid input:", time)
+        # print("in data analysising: invalid input:", time)
         return None
 
 
@@ -15,7 +15,7 @@ def time2datetime(time: str):
     try:
         return datetime.strptime(str(time), "%H:%M")
     except:
-        print("invalid input:", time)
+        # print("in data analysising: invalid input:", time)
         return None
 
 
