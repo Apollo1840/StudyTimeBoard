@@ -20,7 +20,7 @@
 import json
 import numpy as np
 
-from flask import Flask, request, 
+from flask import Flask, request
 from flask_login import login_user, logout_user
 
 # internal utils
