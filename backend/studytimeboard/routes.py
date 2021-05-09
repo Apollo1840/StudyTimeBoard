@@ -164,6 +164,29 @@ def api_personal_intervals():
         # error user not found?
         return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
 
+@app.route("/api/personal_duration_avg", methods=["GET"])
+def api_personal_duration_avg():
+    # TODO: Authentication with JWT
+    df_all = get_df_ana(dbapi)
+    authHeader = request.headers.get('jwt')
+    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
+    # and JWT, there is still a long way to go...
+    username = authHeader
+
+    # Check if name is found
+    if username in df_all[NAME].unique():
+        # TODO: move this to app_utils
+        df_user = df_all.loc[df_all[NAME] == username]
+        df_user = df_user.loc[df_user[MINUTES].notnull()]
+        df_durations = to_minutes_by_day_table(df_user)[[DATE, MINUTES]]
+        minutes_avg = np.mean(df_durations[MINUTES])
+        # TODO: use JWT token
+        return {"status": "success", "data": {HOURS_AVG: min2duration_str(minutes_avg)}}, 200
+    else:
+        # error user not found?
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
+
+
 # replace minutes with durations
 @app.route("/api/personal_durations", methods=["GET"])
 def api_personal_durations():

@@ -17,17 +17,30 @@ class PersonalAnalysisView extends Component {
   state = {
     username: "someone",
     numberStars: 10,
-    averageHoursPerDay: 0,
+    averageHoursPerDay: "",
     intervalChartData: null, // logged intervals of current user, displayed by waterfall chart
     barChartData: null, // logged durations of current user, displayed by bar chart
   };
 
   componentDidMount() {
     this.setState({ username: store.getState().auth.username });
+    this.updateDurationAvg();
     this.updateNumberStars();
     this.updateDurations();
     this.updateIntervals();
   }
+
+  updateDurationAvg = () => {
+    TimeboardService.getPersonalDurationAvg()
+      .then((data) => {
+        this.setState({
+          averageHoursPerDay: data["avg_hours"],
+        });
+      })
+      .catch((e) => {
+        alert(e);
+      });
+  };
 
   updateNumberStars = () => {
     PersonalInfoService.getNumberStars()
@@ -119,7 +132,7 @@ class PersonalAnalysisView extends Component {
         <br />
         <br />
 
-        <div>Average Hours per day: {this.averageHoursPerDay}</div>
+        <div>Average Hours per day: {this.state.averageHoursPerDay}</div>
 
         <br />
         <hr />
