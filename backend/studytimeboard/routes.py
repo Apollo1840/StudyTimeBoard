@@ -17,10 +17,11 @@
 """
 
 # external utils
-import numpy as np
 import json
-from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_login import login_user, current_user, logout_user, login_required
+import numpy as np
+
+from flask import Flask, request, 
+from flask_login import login_user, logout_user
 
 # internal utils
 from . import app, dbapi, logger
