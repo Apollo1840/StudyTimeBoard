@@ -10,7 +10,7 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 
 ### 1. Dev setup:
 
-(if you have not worked with python, virtual environment, or node, please read ['How to install dependencies.md'](https://github.com/Apollo1840/StudyTimeBoard/blob/master/project_docs/How%20to%20install%20dependencies.md)')
+(**HIGHLY RECOMMEND**: if you have not worked with python, virtual environment, or node before, please read ['How to install dependencies.md'](https://github.com/Apollo1840/StudyTimeBoard/blob/master/project_docs/How%20to%20install%20dependencies.md)')
 
 2 ways to start the server:
 
@@ -19,7 +19,9 @@ Use your browser, go to https://study-time-board.herokuapp.com/.
 Suitable for Linux machine.
 
 ```shell
-    # Before this, you need set up your work virtualenv, for example: workon web.
+   # optional
+   workon stb_dev
+
    ./launch.sh
 
 ```
@@ -29,7 +31,9 @@ Suitable for Linux machine.
 Suitable for windows machine.
 
 ```shell
-    # Before this, you need set up your work virtualenv, for example: workon web.
+   # optional
+   workon stb_dev
+
    python backend/app.py
 
    # Before this, you need to open a new console
