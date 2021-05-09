@@ -18,8 +18,7 @@ class NavBar extends Component {
     this.handleLogout = this.handleLogout.bind(this);
   }
 
-  handleNavCollapse = () =>
-    this.setState({ isNavCollapsed: !this.state.isNavCollapsed });
+  handleNavCollapse = () => this.setState({ isNavCollapsed: !this.state.isNavCollapsed });
 
   handleLogout() {
     AuthService.logout().then(() => {
@@ -61,7 +60,7 @@ class NavBar extends Component {
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <a className="navbar-brand" href="#">
             StudyTimeBoard
-            <div style={{ color: "gray", fontSize: "50%" }}>(Beta v0.5.0)</div>
+            <div style={{ color: "gray", fontSize: "50%" }}>(Beta v0.6.0-pre)</div>
           </a>
 
           <button
@@ -77,12 +76,7 @@ class NavBar extends Component {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div
-            className={`${
-              this.state.isNavCollapsed ? "collapse" : ""
-            } navbar-collapse`}
-            id="navbarNavAltMarkup"
-          >
+          <div className={`${this.state.isNavCollapsed ? "collapse" : ""} navbar-collapse`} id="navbarNavAltMarkup">
             <div className="navbar-nav mr-auto">
               <Nav.Link as={Link} to="/" id="nav-home">
                 Home
@@ -92,11 +86,7 @@ class NavBar extends Component {
                 Pomodoro
               </Nav.Link>
 
-              <Nav.Link
-                as={Link}
-                to="/personal_analysis"
-                id="nav-personal-analysis"
-              >
+              <Nav.Link as={Link} to="/personal_analysis" id="nav-personal-analysis">
                 Personal Analysis
               </Nav.Link>
 
