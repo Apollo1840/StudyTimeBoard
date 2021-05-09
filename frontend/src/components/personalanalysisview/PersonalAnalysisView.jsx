@@ -109,7 +109,7 @@ class PersonalAnalysisView extends Component {
         <br />
 
         <div style={{ fontSize: "120%" }}>
-          <div class="jumbotron">
+          <div className="jumbotron">
             {this.state.barChartData ? (
               <BarChartPerDay data={this.state.barChartData} />
             ) : (
@@ -118,7 +118,7 @@ class PersonalAnalysisView extends Component {
             <div>loading</div>
           </div>
 
-          <div class="jumbotron">
+          <div className="jumbotron">
             {this.state.intervalChartData ? (
               <LineChartInterval data={this.state.intervalChartData} />
             ) : (
