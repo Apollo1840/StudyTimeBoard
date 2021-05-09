@@ -35,6 +35,12 @@ class PersonalAnalysisView extends Component {
       .then((data) => {
         this.setState({
           averageHoursPerDay: data["avg_hours"],
+        });
+      })
+      .catch((e) => {
+        alert(e);
+      });
+  };
 
   updateNumberStars = () => {
     PersonalInfoService.getNumberStars()
