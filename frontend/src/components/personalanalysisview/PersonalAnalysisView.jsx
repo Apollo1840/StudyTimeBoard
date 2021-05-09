@@ -4,8 +4,12 @@ import AuthService from "../../services/AuthService";
 import TimeboardService from "../../services/TimeboardService";
 import PersonalInfoService from "../../services/PersonalInfoService";
 
-import { LineChartInterval } from "../shared/charts/LineChartInterval";
+import {
+  LineChartInterval,
+  LineChartIntervalPerWeek,
+} from "../shared/charts/LineChartInterval";
 import BarChartPerDay from "../shared/charts/BarChartPerDay";
+import LineChartPerDay from "../shared/charts/LineChartPerDay";
 
 import store from "../../redux-store";
 
@@ -16,10 +20,14 @@ class PersonalAnalysisView extends Component {
 
   state = {
     username: "someone",
+
     numberStars: 10,
     averageHoursPerDay: "",
-    intervalChartData: null, // logged intervals of current user, displayed by waterfall chart
+
     barChartData: null, // logged durations of current user, displayed by bar chart
+    LineChartData: null, // logged durations of current user, displayed by line chart
+    intervalChartData: null, // logged intervals of current user, displayed by waterfall chart
+    intervalPerWeekChartData: null, // logged intervals of current user, displayed by waterfall chart
   };
 
   componentDidMount() {
@@ -27,7 +35,9 @@ class PersonalAnalysisView extends Component {
     this.updateDurationAvg();
     this.updateNumberStars();
     this.updateDurations();
+    this.updateDurationsAverage();
     this.updateIntervals();
+    this.updateIntervalsPerWeek();
   }
 
   updateDurationAvg = () => {
@@ -66,6 +76,18 @@ class PersonalAnalysisView extends Component {
       });
   };
 
+  updateDurationsAverage = () => {
+    TimeboardService.getPersonalDurationsAverage()
+      .then((data) => {
+        this.setState({
+          LineChartData: this.buildLineChartData(data),
+        });
+      })
+      .catch((e) => {
+        alert(e);
+      });
+  };
+
   updateIntervals = () => {
     TimeboardService.getPersonalIntervals()
       .then((data) => {
@@ -78,34 +100,78 @@ class PersonalAnalysisView extends Component {
       });
   };
 
-  buildIntervalChartData = (data) => {
-    let result = data.map((entry) =>
-      Object.values(entry).map((timeStr, index) =>
-        index == 0 ? new Date(timeStr) : new Date("2000.1.1 " + timeStr)
-      )
-    );
-    // check if first column contains invalid date
-    let hasInvalidDate = result.some((entry) => isNaN(entry[0]));
-    if (hasInvalidDate) {
-      console.error(this.ERROR_INVALID_DATE);
-      alert(this.ERROR_INVALID_DATE);
-      result = null;
-    }
-    return result;
+  updateIntervalsPerWeek = () => {
+    TimeboardService.getPersonalIntervalsPerWeek()
+      .then((data) => {
+        this.setState({
+          intervalPerWeekChartData: this.buildIntervalPerWeekChartData(data),
+        });
+      })
+      .catch((e) => {
+        alert(e);
+      });
   };
 
+  // dataBuliders
   buildBarChartData = (data) => {
-    let result = data.map((entry) => {
-      return [new Date(entry["date"]), entry["minutes"]];
-    });
-    // check if first column contains invalid date
-    let hasInvalidDate = result.some((entry) => isNaN(entry[0]));
-    if (hasInvalidDate) {
+    return this.buildData(data, this.buildSingleMetricEntry("minutes"));
+  };
+
+  buildLineChartData = (data) => {
+    if (this.hasInvalidDate(data.map((entry) => new Date(entry["date"])))) {
+      return null;
+    }
+
+    return {
+      hours: data.map(this.buildSingleMetricEntry("hours")),
+      hours_avg: data.map(this.buildSingleMetricEntry("hours_avg")),
+      hours_expo_avg: data.map(this.buildSingleMetricEntry("hours_expo_avg")),
+    };
+  };
+
+  buildIntervalChartData = (data) => {
+    return this.buildData(data, this.buildIntervalChartEntry);
+  };
+
+  buildIntervalPerWeekChartData = (data) => {
+    return this.buildData(data, this.buildIntervalPerWeekEntry, false);
+  };
+
+  // EntryBuilders
+  buildSingleMetricEntry = (metric) => {
+    return (entry) => [new Date(entry["date"]), entry[metric]];
+  };
+  buildIntervalChartEntry = (entry) => [
+    new Date(entry["date"]),
+    new Date("2000.1.1 " + entry["start_time"]),
+    new Date("2000.1.1 " + entry["end_time"]),
+  ];
+  buildIntervalPerWeekEntry = (entry) => [
+    entry["id_week"],
+    new Date("2000.1.1 " + entry["start_time"]),
+    new Date("2000.1.1 " + entry["end_time"]),
+  ];
+
+  // helper function
+  buildData = (data, EntryBuilder, checkDate = true) => {
+    if (
+      checkDate &&
+      this.hasInvalidDate(data.map((entry) => new Date(entry["date"])))
+    ) {
+      return null;
+    }
+    return data.map(EntryBuilder);
+  };
+
+  hasInvalidDate = (dates) => {
+    let constainsInvalidDate = dates.some((date) => isNaN(date));
+    if (constainsInvalidDate) {
       console.error(this.ERROR_INVALID_DATE);
       alert(this.ERROR_INVALID_DATE);
-      result = null;
+      return true;
+    } else {
+      return false;
     }
-    return result;
   };
 
   render() {
@@ -145,7 +211,11 @@ class PersonalAnalysisView extends Component {
             ) : (
               <div>loading</div>
             )}
-            <div>loading</div>
+            {this.state.LineChartData ? (
+              <LineChartPerDay data={this.state.LineChartData} />
+            ) : (
+              <div>loading</div>
+            )}
           </div>
 
           <div className="jumbotron">
@@ -154,7 +224,13 @@ class PersonalAnalysisView extends Component {
             ) : (
               <div>loading</div>
             )}
-            <div>loading</div>
+            {this.state.intervalPerWeekChartData ? (
+              <LineChartIntervalPerWeek
+                data={this.state.intervalPerWeekChartData}
+              />
+            ) : (
+              <div>loading</div>
+            )}
           </div>
         </div>
       </div>

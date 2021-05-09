@@ -71,6 +71,48 @@ function LineChartInterval(props) {
   );
 }
 
+function LineChartIntervalPerWeek(props) {
+  let last_weekid = props.data[props.data.length - 1][0];
+
+  // Convert input data to the format compatible with react-plotly
+  let data = props.data.map((entry) => {
+    return {
+      // entry: 0: weekID, 1: start_time, 2: end_time
+      x: [entry[0], entry[0]], // Duplicate x-axis to build two 2D coordinates
+      y: [entry[1], entry[2]],
+      mode: "lines",
+      line: {
+        color:
+          entry[0] == last_weekid
+            ? "rgba(247, 186, 186, 0.3)"
+            : "rgba(186, 238, 247, 0.3)",
+        width: 10,
+      },
+    };
+  });
+
+  return (
+    <Plot
+      data={data}
+      layout={{
+        autosize: true,
+        showlegend: false,
+        yaxis: {
+          tickformat: "%H:%M:%S",
+          range: onedayTimerangeReversed,
+        },
+        xaxis: {
+          showgrid: true,
+          zeroline: false,
+          autotick: true,
+        },
+      }}
+      useResizeHandler={true}
+      style={{ width: "100%", height: "100%" }}
+    />
+  );
+}
+
 // array of array of size 3 specifying x-axis, y-axis start and y-axis end, e.g. see dummyData.
 function LineChartIntervalSingleDay(props) {
   // props are:
@@ -83,7 +125,6 @@ function LineChartIntervalSingleDay(props) {
     y: [new Date("2000.1.1"), new Date("2000.1.1")],
     mode: "lines",
     line: {
-      //color: "rgb(128, 0, 128)",
       width: 15,
     },
   }));
@@ -122,4 +163,8 @@ function LineChartIntervalSingleDay(props) {
 }
 
 export default LineChartInterval;
-export { LineChartInterval, LineChartIntervalSingleDay };
+export {
+  LineChartInterval,
+  LineChartIntervalSingleDay,
+  LineChartIntervalPerWeek,
+};

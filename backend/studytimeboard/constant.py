@@ -41,11 +41,15 @@ N_STARS = "n_stars"
 
 # analysis columns
 MINUTES = "minutes"
-WEEKDAY = "weekday"
-ID_WEEK = "id_week"
-YEAR = "year"
+HOURS = "hours"
+HOURS_AVG = "hours_avg"
+HOURS_AVG_EXP = "hours_expo_avg"
 
-HOURS_AVG = "avg_hours"
+YEAR = "year"
+ID_WEEK = "id_week"
+WEEKDAY = "weekday"
+
+AVG_HOURS = "avg_hours"
 
 ORDERED_WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 WEEKDAY_COLORS = ["tab:pink", "tab:purple", "tab:blue", "tab:cyan", "tab:green", "tab:olive", "tab:orange"]
@@ -53,8 +57,6 @@ WEEKDAY_COLORS = ["tab:pink", "tab:purple", "tab:blue", "tab:cyan", "tab:green",
 # others
 PATH_TO_BARCHART = "static/charts/barchart.png"
 PATH_TO_DB_STATUS = "db_status.txt"
-INITIED = "initialized"
-UNBORN = "unborn"
 
 # constants
 SOMEONE = "someone"
@@ -86,3 +88,25 @@ class FlashMessages:
     @staticmethod
     def WELCOME_NEW_USER(username):
         return "hi, {}. Welcome to study-time-board, you are successfully regiseterd, now please login".format(username)
+
+
+# for debugs? todo: remove those ?
+REGISTED_USERS = [
+    "Congyu",
+    "Shangsu",
+    "Nia.Dai",
+    "Amber",
+    "LiuYang",
+    "Lanlan",
+    "L.path",
+    "Hanyu",
+    "Ye Liu",
+    "Chen Dong",
+    "Diqing",
+    "vivi",
+    "Vicky.Huang",
+    
+    "Alpha",
+    "Beta",
+    "Theta",
+]
