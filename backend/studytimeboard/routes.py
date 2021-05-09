@@ -124,6 +124,25 @@ def api_minutes_total():
     result_json = info_duration(df_all, by=NAME).to_json()
     return {"status": "success", "data": json.loads(result_json)}, 200
 
+
+@app.route("/api/personal_n_stars", methods=["GET"])
+def api_personal_n_stars():
+    # TODO: Authentication with JWT
+    df_all = get_df_ana(dbapi)
+    authHeader = request.headers.get('jwt')
+    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
+    # and JWT, there is still a long way to go...
+    username = authHeader
+
+    # Check if name is found
+    if username in df_all[NAME].unique():
+        n_stars = dbapi.out_user_n_stars(username)
+        return {"status": "success", "data": {N_STARS: n_stars}}, 200  # TODO: use JWT token
+    else:
+        # error user not found?
+        return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
+
+
 @app.route("/api/personal_intervals", methods=["GET"])
 def api_personal_intervals():
     # TODO: Authentication with JWT
