@@ -82,7 +82,7 @@ class FlashMessages:
         return "hi, {}. Welcome to study-time-board, you are successfully regiseterd, now please login".format(username)
 
 
-# for debugs ?
+# for debugs? todo: remove those ?
 REGISTED_USERS = [
     "Congyu",
     "Shangsu",
