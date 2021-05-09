@@ -22,7 +22,8 @@ def add_analysis_columns(df):
     df[MINUTES] = [(t_end - t_start).seconds / 60 for t_start, t_end in zip(df[START_TIME_DT], df[END_TIME_DT])]
 
     df[DATE_DT] = pd.to_datetime(df[DATE])
-    df[ID_WEEK] = df[DATE_DT].dt.isocalendar().week  # todo: add year
+    df[ID_WEEK] = df[DATE_DT].dt.isocalendar().week
+    df[YEAR] = df[DATE_DT].dt.isocalendar().year
     df[WEEKDAY] = df[DATE_DT].dt.day_name()
 
     return df

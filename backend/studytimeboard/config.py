@@ -7,7 +7,7 @@ user_amount_limit = 100
 if os.environ.get("PHASE", "DEV") == "PROD":
     debug_mode = False
 else:
-    debug_mdoel = True
+    debug_mode = True
 
 if debug_mode:
     has_gs_auth = True
