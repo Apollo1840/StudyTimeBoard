@@ -20,7 +20,7 @@ class PersonalAnalysisView extends Component {
     averageHoursPerDay: 0,
 
     barChartData: null, // logged durations of current user, displayed by bar chart
-    LineChartData: null,
+    LineChartData: null, // logged durations of current user, displayed by line chart
     intervalChartData: null, // logged intervals of current user, displayed by waterfall chart
     intervalPerWeekChartData: null, // logged intervals of current user, displayed by waterfall chart
   };
@@ -84,72 +84,58 @@ class PersonalAnalysisView extends Component {
 
   // dataBuliders
   buildBarChartData = (data) => {
-    if (
-      this.constainsInvalidDate(data.map((entry) => new Date(entry["date"])))
-    ) {
-      return null;
-    }
-
-    let result = data.map((entry) => {
-      return [new Date(entry["date"]), entry["minutes"]];
-    });
-    return result;
+    return this.buildData(data, this.buildSingleMetricEntry("minutes"));
   };
 
   buildLineChartData = (data) => {
-    if (
-      this.constainsInvalidDate(data.map((entry) => new Date(entry["date"])))
-    ) {
+    if (this.hasInvalidDate(data.map((entry) => new Date(entry["date"])))) {
       return null;
     }
 
-    let hours = data.map((entry) => {
-      return [new Date(entry["date"]), entry["hours"]];
-    });
-    let hours_avg = data.map((entry) => {
-      return [new Date(entry["date"]), entry["hours_avg"]];
-    });
-    let hours_expo_avg = data.map((entry) => {
-      return [new Date(entry["date"]), entry["hours_expo_avg"]];
-    });
-
-    let result = {
-      hours: hours,
-      hours_avg: hours_avg,
-      hours_expo_avg,
+    return {
+      hours: data.map(this.buildSingleMetricEntry("hours")),
+      hours_avg: data.map(this.buildSingleMetricEntry("hours_avg")),
+      hours_expo_avg: data.map(this.buildSingleMetricEntry("hours_expo_avg")),
     };
-    return result;
   };
 
   buildIntervalChartData = (data) => {
-    if (
-      this.constainsInvalidDate(data.map((entry) => new Date(entry["date"])))
-    ) {
-      return null;
-    }
-
-    let result = data.map((entry) => [
-      new Date(entry["date"]),
-      new Date("2000.1.1 " + entry["start_time"]),
-      new Date("2000.1.1 " + entry["end_time"]),
-    ]);
-
-    return result;
+    return this.buildData(data, this.buildIntervalChartEntry);
   };
 
   buildIntervalPerWeekChartData = (data) => {
-    let result = data.map((entry) => [
-      entry["id_week"],
-      new Date("2000.1.1 " + entry["start_time"]),
-      new Date("2000.1.1 " + entry["end_time"]),
-    ]);
-    return result;
+    return this.buildData(data, this.buildIntervalPerWeekEntry, false);
   };
 
+  // EntryBuilders
+  buildSingleMetricEntry = (metric) => {
+    return (entry) => [new Date(entry["date"]), entry[metric]];
+  };
+  buildIntervalChartEntry = (entry) => [
+    new Date(entry["date"]),
+    new Date("2000.1.1 " + entry["start_time"]),
+    new Date("2000.1.1 " + entry["end_time"]),
+  ];
+  buildIntervalPerWeekEntry = (entry) => [
+    entry["id_week"],
+    new Date("2000.1.1 " + entry["start_time"]),
+    new Date("2000.1.1 " + entry["end_time"]),
+  ];
+
   // helper function
-  constainsInvalidDate = (dates) => {
-    let hasInvalidDate = dates.some((date) => isNaN(date));
-    if (hasInvalidDate) {
+  buildData = (data, EntryBuilder, checkDate = true) => {
+    if (
+      checkDate &&
+      this.hasInvalidDate(data.map((entry) => new Date(entry["date"])))
+    ) {
+      return null;
+    }
+    return data.map(EntryBuilder);
+  };
+
+  hasInvalidDate = (dates) => {
+    let constainsInvalidDate = dates.some((date) => isNaN(date));
+    if (constainsInvalidDate) {
       console.error(this.ERROR_INVALID_DATE);
       alert(this.ERROR_INVALID_DATE);
       return true;

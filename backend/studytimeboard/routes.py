@@ -136,6 +136,7 @@ def api_personal_durations():
         df_user = df_all.loc[df_all[NAME] == username]
         df_user = df_user.loc[df_user[MINUTES].notnull()]
         df_durations = df_user[[DATE, MINUTES]]
+        
         result_json = df_durations.to_json(orient="records")
         # TODO: use JWT token
         return {"status": "success", "data": json.loads(result_json)}, 200
@@ -158,18 +159,13 @@ def api_personal_durations_averages():
         df_user = df_all.loc[df_all[NAME] == username]
         df_user = df_user.loc[df_user[MINUTES].notnull()]
         df_durations = df_user[[DATE, MINUTES]]
-        
-        HOURS = "hours"
-        HOURS_AVG = "hours_avg"
-        HOURS_AVG_EXP = "hours_expo_avg"
-
+    
         df_durations[HOURS] = df_durations[MINUTES] / 60
         df_durations[HOURS_AVG] = along_average(df_durations[HOURS])
         df_durations[HOURS_AVG_EXP] = exponential_moving_average(list(df_durations[HOURS]), 0.1)
         
         result_json = df_durations.to_json(orient="records")
     
-        
         # TODO: use JWT token
         return {"status": "success", "data": json.loads(result_json)}, 200
     else:
@@ -191,6 +187,7 @@ def api_personal_intervals():
         df_user = df_all.loc[df_all[NAME] == username]
         df_user = df_user.loc[df_user[END_TIME] != UNKNOWN]
         df_intervals = df_user[[DATE, START_TIME, END_TIME]]
+        
         result_json = df_intervals.to_json(orient="records")
         return {"status": "success", "data": json.loads(result_json)}, 200  # TODO: use JWT token
     else:
@@ -212,6 +209,7 @@ def api_personal_intervals_per_week():
         df_user = df_all.loc[df_all[NAME] == username]
         df_user = df_user.loc[df_user[END_TIME] != UNKNOWN]
         df_intervals_by_week = df_user[[ID_WEEK, START_TIME, END_TIME, YEAR]]
+        
         result_json = df_intervals_by_week.to_json(orient="records")
         # TODO: use JWT token
         return {"status": "success", "data": json.loads(result_json)}, 200
