@@ -1,12 +1,16 @@
 import React, { Component } from "react";
+
 import AuthService from "../../services/AuthService";
 import TimeboardService from "../../services/TimeboardService";
+import PersonalInfoService from "../../services/PersonalInfoService";
+
 import {
   LineChartInterval,
   LineChartIntervalPerWeek,
 } from "../shared/charts/LineChartInterval";
 import BarChartPerDay from "../shared/charts/BarChartPerDay";
 import LineChartPerDay from "../shared/charts/LineChartPerDay";
+
 import store from "../../redux-store";
 
 class PersonalAnalysisView extends Component {
@@ -16,8 +20,9 @@ class PersonalAnalysisView extends Component {
 
   state = {
     username: "someone",
+
     numberStars: 10,
-    averageHoursPerDay: 0,
+    averageHoursPerDay: "",
 
     barChartData: null, // logged durations of current user, displayed by bar chart
     LineChartData: null, // logged durations of current user, displayed by line chart
@@ -27,13 +32,38 @@ class PersonalAnalysisView extends Component {
 
   componentDidMount() {
     this.setState({ username: store.getState().auth.username });
+    this.updateDurationAvg();
+    this.updateNumberStars();
     this.updateDurations();
     this.updateDurationsAverage();
     this.updateIntervals();
     this.updateIntervalsPerWeek();
   }
 
-  // updaters
+  updateDurationAvg = () => {
+    TimeboardService.getPersonalDurationAvg()
+      .then((data) => {
+        this.setState({
+          averageHoursPerDay: data["avg_hours"],
+        });
+      })
+      .catch((e) => {
+        alert(e);
+      });
+  };
+
+  updateNumberStars = () => {
+    PersonalInfoService.getNumberStars()
+      .then((data) => {
+        this.setState({
+          numberStars: data["n_stars"],
+        });
+      })
+      .catch((e) => {
+        alert(e);
+      });
+  };
+
   updateDurations = () => {
     TimeboardService.getPersonalDurations()
       .then((data) => {
@@ -168,7 +198,7 @@ class PersonalAnalysisView extends Component {
         <br />
         <br />
 
-        <div>Average Hours per day: {this.averageHoursPerDay}</div>
+        <div>Average Hours per day: {this.state.averageHoursPerDay}</div>
 
         <br />
         <hr />

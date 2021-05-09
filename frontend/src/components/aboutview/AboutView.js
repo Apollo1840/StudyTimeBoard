@@ -1,9 +1,18 @@
 import React from "react";
+import AdminService from "../../services/AdminService";
 
 function AboutView() {
+  const reloadData = () => {
+    AdminService.reloadDataFromGooglesheet()
+      .then(window.location.replace("/"))
+      .catch((msg) => {
+        alert(msg);
+      });
+  };
+
   return (
     <div className="container text-left">
-      <p className="mt-5"> Author: Congyu Zou ; Diqing Chang </p>
+      <p className="mt-5"> Author: Congyu Zou ; Diqing Chang; Sa Li </p>
 
       <p> Develop history: </p>
       <ul>
@@ -37,6 +46,7 @@ function AboutView() {
           user input varificaiton
         </li>
       </ul>
+      <button onClick={reloadData}>reload_data</button>
     </div>
   );
 }
