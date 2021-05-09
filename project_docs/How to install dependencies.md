@@ -21,7 +21,7 @@ This manuscript is for Ubuntu 18 with Linux 5.4.0-70-generic kernel. Hopefully s
         cd /path/to/this/project
         cd backend/
         workon stb_dev
-        pip install -r requiremnts.txt
+        pip install -r requirements.txt
 
 4.  install node etw.
 

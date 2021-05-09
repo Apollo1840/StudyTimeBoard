@@ -1,8 +1,12 @@
 import React, { Component } from "react";
+
 import AuthService from "../../services/AuthService";
 import TimeboardService from "../../services/TimeboardService";
+import PersonalInfoService from "../../services/PersonalInfoService";
+
 import { LineChartInterval } from "../shared/charts/LineChartInterval";
 import BarChartPerDay from "../shared/charts/BarChartPerDay";
+
 import store from "../../redux-store";
 
 class PersonalAnalysisView extends Component {
@@ -21,6 +25,7 @@ class PersonalAnalysisView extends Component {
   componentDidMount() {
     this.setState({ username: store.getState().auth.username });
     this.updateDurationAvg();
+    this.updateNumberStars();
     this.updateDurations();
     this.updateIntervals();
   }
@@ -30,6 +35,12 @@ class PersonalAnalysisView extends Component {
       .then((data) => {
         this.setState({
           averageHoursPerDay: data["avg_hours"],
+
+  updateNumberStars = () => {
+    PersonalInfoService.getNumberStars()
+      .then((data) => {
+        this.setState({
+          numberStars: data["n_stars"],
         });
       })
       .catch((e) => {

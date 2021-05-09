@@ -11,10 +11,11 @@ import {
 
 export default class TimeboardService {
   // Get logged minutes of all users of last week
-  static getMinutesLastWeek() {
+  static getMinutesLastWeek(groupAttr) {
     return new Promise((resolve, reject) => {
-      HttpService.get(
+      HttpService.post(
         SERVER_BASE_URL + DURATIONS_LASTWEEK_URL,
+        { groupAttr: groupAttr },
         (data) => {
           resolve(data);
         },
@@ -102,3 +103,6 @@ export default class TimeboardService {
     });
   }
 }
+
+export const WEEKDAY = "weekday";
+export const CURRENT = "current";
