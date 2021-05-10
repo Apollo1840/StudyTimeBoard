@@ -32,7 +32,11 @@ const breakTimerProps = {
 
 function getCurrentTime() {
   let today = new Date();
-  return today.getHours() + ":" + today.getMinutes();
+  let currentHours = today.getHours();
+  currentHours = ("0" + currentHours).slice(-2);
+  let currentMinutes = today.getMinutes();
+  currentMinutes = ("0" + currentMinutes).slice(-2);
+  return currentHours + ":" + currentMinutes;
 }
 
 function submitRecord(startTime, doAlert = false) {
@@ -44,16 +48,9 @@ function submitRecord(startTime, doAlert = false) {
     startTime: startTime,
     endTime: getCurrentTime(),
   };
-  console.log(recordData);
-  SubmitRecordService.submit_interval(
-    recordData.username,
-    recordData.startTime,
-    recordData.endTime
-  );
+  SubmitRecordService.submit_interval(recordData.username, recordData.startTime, recordData.endTime);
   if (doAlert) {
-    alert(
-      `${recordData.username}: ${recordData.startTime} to ${recordData.endTime}`
-    );
+    alert(`${recordData.username}: ${recordData.startTime} to ${recordData.endTime}`);
   }
 }
 
@@ -92,14 +89,9 @@ function RemainingTimeContextProvider(props) {
 }
 
 function ClockController() {
-  const {
-    startTime,
-    setStartTime,
-    setClockKey,
-    setIsClockPlaying,
-    isUserBreaking,
-    setIsUserBreaking,
-  } = useContext(remainingTimeContext);
+  const { startTime, setStartTime, setClockKey, setIsClockPlaying, isUserBreaking, setIsUserBreaking } = useContext(
+    remainingTimeContext
+  );
 
   const handleGo = () => {
     setIsClockPlaying(true);
