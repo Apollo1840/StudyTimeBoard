@@ -12,3 +12,6 @@ oauth2client
 Flask-Login
 Flask-SQLAlchemy==2.5.1
 Flask-Cors
+jwt
+bcrypt
+pymongo[snappy,gssapi,srv,tls]
