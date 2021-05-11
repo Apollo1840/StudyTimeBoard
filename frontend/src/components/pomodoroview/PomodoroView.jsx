@@ -1,17 +1,19 @@
-import React, { useState, useContext, createContext } from "react";
+
+import React, { useState, useContext, createContext} from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import store from "../../redux-store";
 import SubmitRecordService from "../../services/SubmitRecordService";
+import './PomodoroView.css'
+
 
 // css modules
-
 const timerWrapper = {
   display: "flex",
   justifyContent: "center",
 };
 
 const workTimerProps = {
-  colors: [["#49DD78", 0.33], ["#6C6CE0", 0.66], ["#E71A1A"]],
+  colors: [["#007bff", 0.33], ["#6C6CE0", 0.66], ["#E71A1A"]],
   strokeWidth: 8,
   size: 240,
   trailColor: "#F2F3F4",
@@ -19,9 +21,9 @@ const workTimerProps = {
 
 const breakTimerProps = {
   colors: [
-    ["#49DD78", 0.33],
-    ["#49DD78", 0.33],
-    ["#49DD78", 0.33],
+    ["#007bff", 0.33],
+    ["#007bff", 0.33],
+    ["#007bff", 0.33],
   ],
   strokeWidth: 6,
   size: 240,
@@ -32,11 +34,7 @@ const breakTimerProps = {
 
 function getCurrentTime() {
   let today = new Date();
-  let currentHours = today.getHours();
-  currentHours = ("0" + currentHours).slice(-2);
-  let currentMinutes = today.getMinutes();
-  currentMinutes = ("0" + currentMinutes).slice(-2);
-  return currentHours + ":" + currentMinutes;
+  return today.getHours() + ":" + today.getMinutes();
 }
 
 function submitRecord(startTime, doAlert = false) {
@@ -48,9 +46,16 @@ function submitRecord(startTime, doAlert = false) {
     startTime: startTime,
     endTime: getCurrentTime(),
   };
-  SubmitRecordService.submit_interval(recordData.username, recordData.startTime, recordData.endTime);
+  console.log(recordData);
+  SubmitRecordService.submit_interval(
+    recordData.username,
+    recordData.startTime,
+    recordData.endTime
+  );
   if (doAlert) {
-    alert(`${recordData.username}: ${recordData.startTime} to ${recordData.endTime}`);
+    alert(
+      `${recordData.username}: ${recordData.startTime} to ${recordData.endTime}`
+    );
   }
 }
 
@@ -89,26 +94,36 @@ function RemainingTimeContextProvider(props) {
 }
 
 function ClockController() {
-  const { startTime, setStartTime, setClockKey, setIsClockPlaying, isUserBreaking, setIsUserBreaking } = useContext(
-    remainingTimeContext
-  );
+  const {
+    startTime,
+    setStartTime,
+    setClockKey,
+    setIsClockPlaying,
+    isUserBreaking,
+    setIsUserBreaking,
+    isClockPlaying
+  } = useContext(remainingTimeContext);
 
-  const handleGo = () => {
-    setIsClockPlaying(true);
-    setStartTime(getCurrentTime());
-  };
-  const handleHold = () => {
-    if (!isUserBreaking) {
-      submitRecord(startTime, true);
+  const [isGoing,setChangeGo] = useState('Go') // change Go/Hold button
+  const handleGo = (flag) => {
+    if(!flag){
+      setIsClockPlaying(true);
+      setStartTime(getCurrentTime());
+      setChangeGo('Hold')
+    }else{
+      if (!isUserBreaking) {
+        submitRecord(startTime, true);
+      }
+      setClockKey((prevKey) => prevKey + 1);
+      setIsClockPlaying(false);
+      setIsUserBreaking(false);
+      setChangeGo('Go')
     }
-    setClockKey((prevKey) => prevKey + 1);
-    setIsClockPlaying(false);
-    setIsUserBreaking(false);
   };
+  
   return (
-    <div className="row">
-      <button onClick={handleGo}>GO</button>
-      <button onClick={handleHold}>Hold</button>
+    <div className="row justify-content-center">
+      <button className="btn btn-primary col-lg-1 col-md-2 col-sm-3" onClick={()=>{handleGo(isClockPlaying)}}>{isGoing}</button>
     </div>
   );
 }
@@ -123,41 +138,62 @@ function ClockSettings() {
     setWorkDurationMinutes,
     setBreakDurationMinutes,
   } = useContext(remainingTimeContext);
-
-  const handleChange = (variableSetter) => {
+  const handleDown = (value,changeValue) =>{
+    return ()=>{
+      if(value <= 0) return
+      changeValue(value-1)
+    }
+  }
+  const handleUp = (value,changeValue) =>{
+    return ()=>{
+      changeValue(value+1)
+    }
+  }
+  const handleChange = (variableSetter) => {    // change value
     return (event) => variableSetter(event.target.value);
   };
 
   return (
-    <div>
-      <div>set work duration</div>
-      <input
-        className="input"
-        type="number"
-        name="minutes"
-        onChange={handleChange(setWorkMinutes)}
-        value={workMinutes}
-      />
-
-      <div>set break duration</div>
-      <input
-        className="input"
-        type="number"
-        name="minutes"
-        onChange={handleChange(setBreakMinutes)}
-        value={breakMinutes}
-      />
-      <button
+    <div style={{textAlign:'center'}} className="row justify-content-center">
+      <div className="setWork">  
+        <div><span className="title">set work duration</span></div>
+        <button className="iconfont changeValueBtn" onClick={handleDown(workMinutes,setWorkMinutes)}>&#xe68a;</button>
+        <input
+          className="input"
+          type="number"
+          name="minutes"
+          onChange={handleChange(setWorkMinutes)}
+          value={workMinutes}
+        />
+        <button className="iconfont changeValueBtn" onClick={handleUp(workMinutes,setWorkMinutes)}>&#xe62b;</button>
+      </div>
+      <div className="setBreak">
+        <div><span className="title">set break duration</span></div>
+        <button className="iconfont changeValueBtn" onClick={handleDown(breakMinutes,setBreakMinutes)}>&#xe68a;</button>
+        <input
+          className="input"
+          type="number"
+          name="minutes"
+          onChange={handleChange(setBreakMinutes)}
+          value={breakMinutes}
+        />
+        <button className="iconfont changeValueBtn" onClick={handleUp(breakMinutes,setBreakMinutes)}>&#xe62b;</button>
+      </div>
+      
+     <div className="align-self-end setTimer">
+     <button
         onClick={() => {
           setWorkDurationMinutes(workMinutes);
           setBreakDurationMinutes(breakMinutes);
           setIsUserBreaking(false);
           setIsClockPlaying(false);
           setClockKey((prevKey) => prevKey + 1);
-        }}
+        }} 
+        className ="btn btn-primary"
       >
         Set Timer
       </button>
+     </div>
     </div>
   );
 }
@@ -228,6 +264,7 @@ function PomodoroClock() {
     <>
       <div className="mt-5 mb-5" style={timerWrapper}>
         {isUserBreaking ? (
+          //倒计时组件
           <CountdownCircleTimer
             {...breakTimerProps}
             key={100 + ClockKey}
@@ -272,3 +309,4 @@ function PomodoroView() {
 }
 
 export default PomodoroView;
+
