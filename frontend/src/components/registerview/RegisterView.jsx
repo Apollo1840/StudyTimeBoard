@@ -9,7 +9,8 @@ class RegisterView extends Component {
     super(props);
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      confirm_password: ''
     }
 
 
@@ -20,6 +21,7 @@ class RegisterView extends Component {
     event.preventDefault()
     let username= this.state.username
     let password = this.state.password
+    let confirm_password = this.state.confirm_password
 
     AuthService.register(username, password)
     .then((data) => {
@@ -44,6 +46,10 @@ class RegisterView extends Component {
           <Form.Group>
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" placeholder="Enter password" onChange={e => this.setState({password: e.target.value})}/>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Confirm password</Form.Label>
+            <Form.Control type="password" placeholder="Confirm password" onChange={e => this.setState({confirm_password: e.target.value})}/>
           </Form.Group>
           <Button variant="primary" type="submit">Submit</Button>
         </Form>
