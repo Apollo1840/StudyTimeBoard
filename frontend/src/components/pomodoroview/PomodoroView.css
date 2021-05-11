@@ -1,0 +1,56 @@
+
+/* remove the up and down arrows */
+input[type=number] {  
+    -moz-appearance:textfield;
+    border: none;
+    width: 50px;
+    font-size: 26px;
+    text-align: center;
+    padding-top: 10px;
+}
+input[type=number]::-webkit-inner-spin-button,  
+input[type=number]::-webkit-outer-spin-button {  
+    -webkit-appearance: none;
+}
+.setWork,.setBreak{
+    padding: 20px;
+    position: relative;
+}
+.setTimer{
+    padding-bottom:20px;
+}
+.changeValueBtn{
+    border:none;
+    outline: none;
+    background-color: transparent;
+    text-align: center;
+    font-size: 38px;
+}
+.title{
+    font-size: 12px;
+}
+
+/* Icon font */
+
+@font-face {
+    font-family: "iconfont"; /* Project id  */
+    src: url('iconfont.ttf?t=1620709964454') format('truetype');
+  }
+  
+  .iconfont {
+    font-family: "iconfont" !important;
+    font-size: 20px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .icon-jianqu:before {
+    content: "\e68a";
+  }
+  
+  .icon-jia:before {
+    content: "\e62b";
+  }
+  
+  
