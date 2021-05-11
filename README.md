@@ -100,6 +100,7 @@ editing ...
 
 - (Repo Manager) Apollo1840 [https://github.com/Apollo1840]
 - (Repo Manager) changdiqing [https://github.com/changdiqing])
+- theSaLi [https://github.com/theSaLi]
 
 ## Reference: How to build web app
 
