@@ -7,13 +7,8 @@ import './PomodoroView.css'
 
 
 // css modules
-const timerWrapper = {
-  display: "flex",
-  justifyContent: "center",
-};
-
 const workTimerProps = {
-  colors: [["#007bff", 0.33], ["#6C6CE0", 0.66], ["#E71A1A"]],
+  colors: [["#14B14B", 0.33], ["#6C6CE0", 0.66], ["#E71A1A"]],
   strokeWidth: 8,
   size: 240,
   trailColor: "#F2F3F4",
@@ -21,9 +16,9 @@ const workTimerProps = {
 
 const breakTimerProps = {
   colors: [
-    ["#007bff", 0.33],
-    ["#007bff", 0.33],
-    ["#007bff", 0.33],
+    ["#14B14B", 0.33],
+    ["#14B14B", 0.33],
+    ["#14B14B", 0.33],
   ],
   strokeWidth: 6,
   size: 240,
@@ -104,12 +99,10 @@ function ClockController() {
     isClockPlaying
   } = useContext(remainingTimeContext);
 
-  const [isGoing,setChangeGo] = useState('Go') // change Go/Hold button
-  const handleGo = (flag) => {
+  const handleSwitch = (flag) => {
     if(!flag){
       setIsClockPlaying(true);
       setStartTime(getCurrentTime());
-      setChangeGo('Hold')
     }else{
       if (!isUserBreaking) {
         submitRecord(startTime, true);
@@ -117,13 +110,12 @@ function ClockController() {
       setClockKey((prevKey) => prevKey + 1);
       setIsClockPlaying(false);
       setIsUserBreaking(false);
-      setChangeGo('Go')
     }
   };
   
   return (
     <div className="row justify-content-center">
-      <button className="btn btn-primary col-lg-1 col-md-2 col-sm-3" onClick={()=>{handleGo(isClockPlaying)}}>{isGoing}</button>
+      <button className="btn btn-success col-lg-1 col-md-2 col-sm-3" onClick={()=>{handleSwitch(isClockPlaying)}}>{isClockPlaying? 'Hold':'Go'}</button>
     </div>
   );
 }
@@ -138,15 +130,15 @@ function ClockSettings() {
     setWorkDurationMinutes,
     setBreakDurationMinutes,
   } = useContext(remainingTimeContext);
-  const handleDown = (value,changeValue) =>{
+  const handleDown = (value,variableSetter) =>{
     return ()=>{
       if(value <= 0) return
-      changeValue(value-1)
+      variableSetter(value-1)
     }
   }
-  const handleUp = (value,changeValue) =>{
+  const handleUp = (value,variableSetter) =>{
     return ()=>{
-      changeValue(value+1)
+      variableSetter(value+1)
     }
   }
   const handleChange = (variableSetter) => {    // change value
@@ -189,7 +181,7 @@ function ClockSettings() {
           setIsClockPlaying(false);
           setClockKey((prevKey) => prevKey + 1);
         }} 
-        className ="btn btn-primary"
+        className ="btn btn-success"
       >
         Set Timer
       </button>
@@ -262,9 +254,8 @@ function PomodoroClock() {
 
   return (
     <>
-      <div className="mt-5 mb-5" style={timerWrapper}>
+      <div className="mt-5 mb-5 timerWrapper">
         {isUserBreaking ? (
-          //倒计时组件
           <CountdownCircleTimer
             {...breakTimerProps}
             key={100 + ClockKey}
