@@ -12,13 +12,18 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {  
     -webkit-appearance: none;
 }
+
+/* timer css */
+.timerWrapper{
+  display: flex;
+  justify-content: center;
+};
+
 .setWork,.setBreak{
     padding: 20px;
     position: relative;
 }
-.setTimer{
-    padding-bottom:20px;
-}
+
 .changeValueBtn{
     border:none;
     outline: none;
