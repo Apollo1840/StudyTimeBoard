@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 import AuthService from "../../services/AuthService";
 import { login } from "../../redux/authActions";
