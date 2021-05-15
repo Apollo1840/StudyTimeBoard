@@ -13,10 +13,10 @@ JWT_SECRET = os.getenv('JWT_SECRET')
 # Encode user id, user name into a json web token 
 def jwt_encode(id,username):
     return jwt.encode({'id': str(id),
-                          'username': username,
-                          "exp":datetime.datetime.utcnow() + datetime.timedelta(seconds=int(JWT_DURATION))},
-                          JWT_SECRET,
-                          algorithm = 'HS256')
+                      'username': username,
+                      'exp':datetime.datetime.utcnow() + datetime.timedelta(seconds=int(JWT_DURATION))},
+                      JWT_SECRET,
+                      algorithm = 'HS256')
 
 # Decode user id, user name from json web token
 def jwt_decode(encoded_jwt):
@@ -25,15 +25,10 @@ def jwt_decode(encoded_jwt):
 # Twins implementation of jwt_decode to have pythonic return value
 def jwt_decode_identity(encoded_jwt):
     jwt_decoded = jwt_decode(encoded_jwt)
-    print("####### jwt decoded")
-    print(jwt_decoded)
     return jwt_decoded["username"], jwt_decoded["id"]
 
 # Check authentication of http reques by extracting and validate the jwt
 def jwt_verify(jwt_encoded):
-    print("jwt_encoded")
-    print(jwt_encoded)
-    ##jwt.decode(jwt_encoded, JWT_SECRET, algorithms = [ALGORITHM])
     try:
         jwt.decode(jwt_encoded, JWT_SECRET, algorithms = [ALGORITHM])
         return True

@@ -9,5 +9,4 @@ def hash_password(password):
 # validate password with hashed password from database
 # return: bool
 def validate_password(password, hashed):
-    print("password" + password)
     return bcrypt.checkpw(password.encode(encoding='UTF-8',errors='strict'), hashed)
