@@ -29,7 +29,11 @@ const breakTimerProps = {
 
 function getCurrentTime() {
   let today = new Date();
-  return today.getHours() + ":" + today.getMinutes();
+  let currentHours = today.getHours();
+  currentHours = ("0" + currentHours).slice(-2);
+  let currentMinutes = today.getMinutes();
+  currentMinutes = ("0" + currentMinutes).slice(-2);
+  return currentHours + ":" + currentMinutes;
 }
 
 function submitRecord(startTime, doAlert = false) {
