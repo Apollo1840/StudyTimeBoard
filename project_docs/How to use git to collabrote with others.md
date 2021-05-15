@@ -1,6 +1,7 @@
 # How to use git to collaborate with others
 
 This documentation is for the official collaboraters of this project.
+For unofficial collaboraters please see [CONTRIBUTING.md](https://github.com/Apollo1840/StudyTimeBoard/blob/master/CONTRIBUTING.md). 
 
 ## Normal process
 
@@ -14,18 +15,22 @@ This documentation is for the official collaboraters of this project.
 
     ```shell
          git checkout master
-         git branch /yourname/youridea/   # following the branch name convention
+         git pull origin master             # get the latest master branch before branch from it
+         git branch /yourname/youridea/     # following the branch name convention
          git checkout /yourname/youridea/   # following the branch name convention
     ```
 
-    check branch name convention at the end of ['CONTRIBUTING.md'](https://github.com/Apollo1840/StudyTimeBoard/blob/master/CONTRIBUTING.md):
+    check branch name convention at the end of [CONTRIBUTING.md](https://github.com/Apollo1840/StudyTimeBoard/blob/master/CONTRIBUTING.md):
 
 2.  then you could modify the code as you like. When you confirm with some modification, you could commit it.
 
     ```shell
         # cd to the main folder of this project
-        git add .
-        git commit -m "the content of this modification"
+        git add .                       # stage all modifications you made
+        git add <file>...               # stage specified files
+        git reset HEAD .                # unstage all modifications
+        git reset HEAD <file>...        # unstage specified files
+        git commit -m "the content of this modification"   # commit with commit message
     ```
 
     and remember to keep updated with master **regularly** by:
@@ -38,10 +43,10 @@ This documentation is for the official collaboraters of this project.
 
     ```shell
         git push
-        # you will see a message to ask you create upstearm, just copy the commend and do it.
+        # you will see a message to ask you create upstream, just copy the command and do it.
     ```
 
-4.  then go to the github, find your branch, create a PR, Ask a reviewer, communicate, modify your code after the discussion. Commit your changes and push again. until it got merged to the master.
+4.  then go to the github, find your branch, create a PR, ask a reviewer, communicate, modify your code after the discussion. Commit your changes and push again. until it got merged to the master.
 
 ---
 
@@ -69,14 +74,14 @@ This documentation is for the official collaboraters of this project.
 
    **Unless**: you make some instant small debug on master branch, and you are 100% sure correct, and it is easy to understand. Or it has nothing to with code, eg. documenting.
 
-3. Merge a branch to master on yourself. At least one Repo manager (see README.md) is informed and agreed.
+3. Merge a branch to master on yourself. At least one Repo manager (see [README.md](https://github.com/Apollo1840/StudyTimeBoard/blob/master/README.md)) must be informed and agreed before merging a branch to master.
 
 ---
 
 ## When Things go wrong
 
 ### Conflicts!
-
+Conflicts can happen, when two commits made modification at the same place.
 ```shell
     # action: Go to the conflict files, resolve the conflicts.
     git add .
@@ -89,7 +94,7 @@ This documentation is for the official collaboraters of this project.
 1.  case 1: not committed yet
 
     ```shell
-        git stash
+        git stash                        # Stash the changes in a dirty working directory away 
         git branch /yourname/youridea/   # following the branch name convention
         git stash pop
     ```
@@ -147,7 +152,7 @@ For safety, your old branch is not deleted via this approach.
 You could do it afterwards if you want:
 
 ```shell
-    git branch -d <old_name>
+    git branch -d <old_branch>
 ```
 
 ### Rename a branch
@@ -158,7 +163,7 @@ Diffent from other more 'correct' renaming approaches, this approach is just che
     git branch                   # make sure you are on your old_branch, if not, checkout it.
     git add .
     git commit -m "last commit on old branch"
-    git branch <name_name>
+    git branch <new_name>
     git checkout <new_name>
 ```
 
