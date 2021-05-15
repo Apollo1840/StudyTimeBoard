@@ -13,6 +13,6 @@ Flask-Login
 Flask-SQLAlchemy==2.5.1
 Flask-Cors
 python-dotenv
-jwt
+PyJWT
 bcrypt
 pymongo[snappy,gssapi,srv,tls]

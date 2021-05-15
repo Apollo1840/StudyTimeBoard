@@ -23,10 +23,31 @@ import numpy as np
 from flask import Flask, request
 from flask_login import login_user, logout_user
 
+from functools import wraps
+
 # internal utils
 from . import app, dbapi, logger
 from .constant import *
 from .app_utils import *
+
+# database proxies
+from .utils.mongodb_client import users_collection
+# utils for hasing password and jwt encode/decode
+from .utils.bcrypt_utils import hash_password, validate_password
+from .utils.jwt_utils import jwt_encode, jwt_decode_identity, jwt_verify
+
+def login_required():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            jwt_encoded = request.headers.get('jwt')
+            if jwt_verify(jwt_encoded):
+                return fn(*args, **kwargs)
+            else:
+                return {"status": "error", "message": FlashMessages.UNAUTHENTICATED}, 403
+
+        return decorator
+    return wrapper
 
 @app.route("/api/go", methods=["POST"])
 def api_handle_go_event():
@@ -125,6 +146,7 @@ def api_minutes_total():
     return {"status": "success", "data": json.loads(result_json)}, 200
 
 @app.route("/api/personal_n_stars", methods=["GET"])
+@login_required()
 def api_personal_n_stars():
     # TODO: Authentication with JWT
     df_all = get_df_ana(dbapi)
@@ -142,13 +164,11 @@ def api_personal_n_stars():
         return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
 
 @app.route("/api/personal_duration_avg", methods=["GET"])
+@login_required()
 def api_personal_duration_avg():
-    # TODO: Authentication with JWT
     df_all = get_df_ana(dbapi)
-    authHeader = request.headers.get('jwt')
-    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
-    # and JWT, there is still a long way to go...
-    username = authHeader
+    jwt_encoded = request.headers.get('jwt')
+    username, userid = jwt_decode_identity(jwt_encoded)
 
     # Check if name is found
     if username in df_all[NAME].unique():
@@ -166,13 +186,11 @@ def api_personal_duration_avg():
   
 # replace minutes with durations
 @app.route("/api/personal_durations", methods=["GET"])
+@login_required()
 def api_personal_durations():
-    # TODO: Authentication with JWT
     df_all = get_df_ana(dbapi)
-    authHeader = request.headers.get('jwt')
-    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
-    # and JWT, there is still a long way to go...
-    username = authHeader
+    jwt_encoded = request.headers.get('jwt')
+    username, userid = jwt_decode_identity(jwt_encoded)
 
     # Check if name is found
     if username in df_all[NAME].unique():
@@ -191,13 +209,11 @@ def api_personal_durations():
 
 
 @app.route("/api/personal_durations_averages", methods=["GET"])
+@login_required()
 def api_personal_durations_averages():
-    # TODO: Authentication with JWT
     df_all = get_df_ana(dbapi)
-    authHeader = request.headers.get('jwt')
-    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
-    # and JWT, there is still a long way to go...
-    username = authHeader
+    jwt_encoded = request.headers.get('jwt')
+    username, userid = jwt_decode_identity(jwt_encoded)
 
     # Check if name is found
     if username in df_all[NAME].unique():
@@ -220,13 +236,11 @@ def api_personal_durations_averages():
 
 
 @app.route("/api/personal_intervals", methods=["GET"])
+@login_required()
 def api_personal_intervals():
-    # TODO: Authentication with JWT
     df_all = get_df_ana(dbapi)
-    authHeader = request.headers.get('jwt')
-    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
-    # and JWT, there is still a long way to go...
-    username = authHeader
+    jwt_encoded = request.headers.get('jwt')
+    username, userid = jwt_decode_identity(jwt_encoded)
 
     # Check if name is found
     if username in df_all[NAME].unique():
@@ -242,13 +256,11 @@ def api_personal_intervals():
         return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
 
 @app.route("/api/personal_intervals_per_week", methods=["GET"])
+@login_required()
 def api_personal_intervals_per_week():
-    # TODO: Authentication with JWT
     df_all = get_df_ana(dbapi)
-    authHeader = request.headers.get('jwt')
-    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
-    # and JWT, there is still a long way to go...
-    username = authHeader
+    jwt_encoded = request.headers.get('jwt')
+    username, userid = jwt_decode_identity(jwt_encoded)
 
     # Check if name is found
     if username in df_all[NAME].unique():
@@ -274,37 +286,40 @@ def api_login():
     # body contains only username and password, chose http body over authentication to minimize the code for httpservice
     username = request.json.get('username')
     password = request.json.get("password")
-    user = UserDB.query.filter_by(username=username).first()
+    if(username is None or password is None):
+        return {"status": "error", "message": FlashMessages.BAD_AUTH_REQUEST}, 400
 
+    user = users_collection.find_one({"name": username})
     # fail case 1: no such user, status 401
     if user is None:
         return {"status": "error", "message": FlashMessages.NO_SUCH_USER}, 401
     # fail case 2: invalid/wrong password, status 401
-    elif password is None or user.password != password:  # todo: use bcrypt
+    if not validate_password(password, user["password"]):
         return {"status": "error", "message": FlashMessages.PASSWD_INCORRECT}, 401
     # success, status 200
-    else:
-        login_user(user, remember=True)
-        return {"status": "success", "data": {"token": username}}, 200  # TODO: use JWT token
-
+    # Generate new token as certificate of valid login
+    token = jwt_encode(user["_id"], username)
+    return {"status": "success", "data": {"token": token}}, 200
 
 @app.route('/api/registration', methods=['POST'])
 def api_register():
     username = request.json.get('username')
     password = request.json.get("password")
 
-    all_users = dbapi.all_users()
-    if username not in all_users:
-        if len(all_users) <= user_amount_limit:
-            dbapi.into_user(username, password)
-            user = UserDB.query.filter_by(username=username).first()
-            login_user(user, remember=True)
-            return {"status": "success", "data": {"token": username}}, 200
-        else:
-            return {"status": "error", "message": FlashMessages.TOO_MUCH_USERS}, 400
-    else:
+    if users_collection.find_one({"name":username}):
         return {"status": "error", "message": FlashMessages.REGISTERED_USER}, 409
 
+    if users_collection.estimated_document_count() >= user_amount_limit:
+        return {"status": "error", "message": FlashMessages.TOO_MUCH_USERS}, 400 
+
+    # Create json document for new user
+    new_user = {"name": username, "password": hash_password(password)}
+    # Insert document into database
+    new_id = users_collection.insert_one(new_user)
+    # Generate new token as certificate of valid login
+    token = jwt_encode(new_id, username)
+
+    return {"status": "success", "data": {"token": token}}, 200
 
 @app.route('/api/logout', methods=['POST'])
 def api_logout():
