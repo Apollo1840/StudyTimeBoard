@@ -150,10 +150,8 @@ def api_minutes_total():
 def api_personal_n_stars():
     # TODO: Authentication with JWT
     df_all = get_df_ana(dbapi)
-    authHeader = request.headers.get('jwt')
-    # TODO: decode user id from jwt token, for this we need user model with id, a DB to store user data
-    # and JWT, there is still a long way to go...
-    username = authHeader
+    jwt_encoded = request.headers.get('jwt')
+    username, userid = jwt_decode_identity(jwt_encoded)
 
     # Check if name is found
     if username in df_all[NAME].unique():

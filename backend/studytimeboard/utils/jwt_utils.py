@@ -12,11 +12,12 @@ JWT_SECRET = os.getenv('JWT_SECRET')
 
 # Encode user id, user name into a json web token 
 def jwt_encode(id,username):
-    return jwt.encode({'id': str(id),
-                      'username': username,
-                      'exp':datetime.datetime.utcnow() + datetime.timedelta(seconds=int(JWT_DURATION))},
-                      JWT_SECRET,
-                      algorithm = 'HS256')
+    exp_time = datetime.datetime.utcnow() + datetime.timedelta(seconds=int(JWT_DURATION))
+    return jwt.encode(
+        {'id': str(id),'username':username,'exp': exp_time},
+        JWT_SECRET,
+        algorithm = ALGORITHM
+    )
 
 # Decode user id, user name from json web token
 def jwt_decode(encoded_jwt):

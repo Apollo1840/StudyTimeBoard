@@ -1,4 +1,5 @@
 import store from "../redux-store";
+import { refresh } from "../redux/authActions";
 
 export default class HttpService {
   // add auth.token to the header. let backend decide how to deal with it.
@@ -147,14 +148,14 @@ export default class HttpService {
       });
   }
 
-  static isauthorized(res) {
-    if (res.status === 401) {
+  static isauthorized(resp) {
+    if (resp.status === 401) {
       return false;
     }
     return true;
   }
 
-  static refreshJwtIfNeeded(res) {
+  static refreshJwtIfNeeded(resp) {
     const username = store.getState().auth.username;
     if (resp.hasOwnProperty("token") && username !== null && username !== "null") {
       store.dispatch(refresh(resp.token, username));
