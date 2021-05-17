@@ -11,7 +11,7 @@ class RegisterView extends Component {
       username: '',
       password: '',
       confirm_password: '',
-      password_type: 'password'
+      password_visible: false
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -36,9 +36,6 @@ class RegisterView extends Component {
         })
         .catch((e) => {
           alert(e);
-          this.setState({
-            error: e
-          });
         });
     }
   }
@@ -47,7 +44,7 @@ class RegisterView extends Component {
     event.preventDefault()
     event.stopPropagation()
     this.setState({
-      password_type: this.state.password_type === 'text' ? 'password' : 'text'
+      password_visible: this.state.password_visible ? false : true
     })
   }
 
@@ -68,9 +65,9 @@ class RegisterView extends Component {
               <InputGroup.Prepend>
                 <InputGroup.Text>Password</InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl type={this.state.password_type} placeholder="Enter password" onChange={e => this.setState({ password: e.target.value })} />
+              <FormControl type={this.state.password_visible ? 'text': 'password'} placeholder="Enter password" onChange={e => this.setState({ password: e.target.value })} />
               <InputGroup.Append>
-                <Button variant="outline-secondary" label={this.state.password_type === 'text' ? 'Hide' : 'Show'} onClick={this.toggelPasswordvisiblity}>{this.state.password_type === 'text' ? 'Hide' : 'Show'}</Button>
+                <Button variant="outline-secondary" onClick={this.toggelPasswordvisiblity}>{this.state.password_visible ? 'Hide' : 'Show'}</Button>
               </InputGroup.Append>
             </InputGroup>
             <br />
@@ -78,7 +75,7 @@ class RegisterView extends Component {
               <InputGroup.Prepend>
                 <InputGroup.Text>Confirm password</InputGroup.Text>
               </InputGroup.Prepend>
-              <FormControl type={this.state.password_type} placeholder="Confirm password" onChange={e => this.setState({ confirm_password: e.target.value })} />
+              <FormControl type={this.state.password_visible ? 'text': 'password'} placeholder="Confirm password" onChange={e => this.setState({ confirm_password: e.target.value })} />
             </InputGroup>
           </div>
           <br />
