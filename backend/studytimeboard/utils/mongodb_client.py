@@ -1,5 +1,5 @@
 # 
-import pymongo
+from pymongo import MongoClient
 import datetime
 import bcrypt
 from bson.json_util import dumps
@@ -13,6 +13,6 @@ JWT_SECRET = os.getenv('JWT_SECRET')
 MONGODB_SRV = os.getenv('MONGODB_SRV')
 
 # Instantiate database object and collection object
-client = pymongo.MongoClient(MONGODB_SRV)
-database = pymongo.database.Database(client, 'dev')
-users_collection = pymongo.collection.Collection(database, 'users')
+client = MongoClient(MONGODB_SRV)
+database = client.dev
+users_collection = database.users

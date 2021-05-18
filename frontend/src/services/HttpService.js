@@ -20,10 +20,8 @@ export default class HttpService {
         // level 1: check if status=401, return resp.json
         if (!this.isauthorized(resp)) {
           if (window.location.pathname !== "/login") window.location.replace("/login");
-          return;
-        } else {
-          return resp.json();
         }
+        return resp.json();
       })
       .then((resp) => {
         // level 2: check if return status is "success"
@@ -57,10 +55,8 @@ export default class HttpService {
         // level 1: check if status=401, return resp.json
         if (!this.isauthorized(resp)) {
           if (window.location.pathname !== "/login") window.location.replace("/login");
-          return;
-        } else {
-          return resp.json();
         }
+        return resp.json();
       })
       .then((resp) => {
         // level 2: check if return status is "success"
@@ -94,10 +90,8 @@ export default class HttpService {
         // level 1: check if status=401, return resp.json
         if (!this.isauthorized(resp)) {
           if (window.location.pathname !== "/login") window.location.replace("/login");
-          return;
-        } else {
-          return resp.json();
         }
+        return resp.json();
       })
       .then((resp) => {
         // level 2: check if return status is "success"
@@ -129,10 +123,8 @@ export default class HttpService {
         // level 1: check if status=401, return resp.json
         if (!this.isauthorized(resp)) {
           if (window.location.pathname !== "/login") window.location.replace("/login");
-          return;
-        } else {
-          return resp.json();
         }
+        return resp.json();
       })
       .then((resp) => {
         // level 2: check if return status is "success"
