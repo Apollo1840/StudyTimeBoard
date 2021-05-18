@@ -44,7 +44,7 @@ class RegisterView extends Component {
     event.preventDefault()
     event.stopPropagation()
     this.setState({
-      password_visible: this.state.password_visible ? false : true
+      password_visible: !this.state.password_visible
     })
   }
 
