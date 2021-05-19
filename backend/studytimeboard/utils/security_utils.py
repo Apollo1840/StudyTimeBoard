@@ -1,7 +1,19 @@
+import bcrypt
 import jwt
 import datetime
 from dotenv import load_dotenv
 import os
+
+# create hashed password
+def hash_password(password):
+    passwdBytes = bytes(password, encoding='utf-8')  # Unicode-objects must be encoded before hasing
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(passwdBytes, salt)
+
+# validate password with hashed password from database
+# return: bool
+def validate_password(password, hashed):
+    return bcrypt.checkpw(password.encode(encoding='UTF-8',errors='strict'), hashed)
 
 # JWT Constants
 ALGORITHM = 'HS256'
@@ -35,3 +47,4 @@ def jwt_verify(jwt_encoded):
         return True
     except Exception as err: #there could be incalid signature or expire excaptions
         return False
+

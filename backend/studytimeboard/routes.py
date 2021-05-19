@@ -33,8 +33,7 @@ from .app_utils import *
 # database proxies
 from .utils.mongodb_client import users_collection
 # utils for hasing password and jwt encode/decode
-from .utils.bcrypt_utils import hash_password, validate_password
-from .utils.jwt_utils import jwt_encode, jwt_decode_identity, jwt_verify
+from .utils.security_utils import jwt_encode, jwt_decode_identity, jwt_verify, hash_password, validate_password
 
 def login_required():
     def wrapper(fn):
