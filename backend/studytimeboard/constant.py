@@ -69,6 +69,7 @@ GROUPATTR = "groupAttr"
 CURRENT = "current"
 
 class FlashMessages:
+    BAD_AUTH_REQUEST = "Either username or password is missing in the request."
     UNAUTHENTICATED = "User not authenticated, " \
                    "please login or register one on the right top corner."
     NO_SUCH_USER = "Username not registered, " \

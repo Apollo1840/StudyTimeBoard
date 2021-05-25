@@ -1,4 +1,5 @@
 import store from "../redux-store";
+import { refresh } from "../redux/authActions";
 
 export default class HttpService {
   // add auth.token to the header. let backend decide how to deal with it.
@@ -18,19 +19,16 @@ export default class HttpService {
       .then((resp) => {
         // level 1: check if status=401, return resp.json
         if (!this.isauthorized(resp)) {
-          if (window.location.pathname !== "/login")
-            window.location.replace("/login");
-          return;
-        } else {
-          return resp.json();
+          if (window.location.pathname !== "/login") window.location.replace("/login");
         }
+        return resp.json();
       })
       .then((resp) => {
         // level 2: check if return status is "success"
         if (resp.status == "success") {
+          this.refreshJwtIfNeeded(resp);
           onSuccess(resp.data);
         } else {
-          // TODO: refresh jwt token
           onError(resp.message);
         }
       })
@@ -40,7 +38,8 @@ export default class HttpService {
   }
 
   static put(url, data, onSuccess, onError) {
-    let token = window.localStorage["jwtToken"];
+    //let token = window.localStorage["jwtToken"];
+    let token = store.getState().auth.token;
     let header = new Headers();
     if (token) {
       header.append("jwt", token);
@@ -55,19 +54,16 @@ export default class HttpService {
       .then((resp) => {
         // level 1: check if status=401, return resp.json
         if (!this.isauthorized(resp)) {
-          if (window.location.pathname !== "/login")
-            window.location.replace("/login");
-          return;
-        } else {
-          return resp.json();
+          if (window.location.pathname !== "/login") window.location.replace("/login");
         }
+        return resp.json();
       })
       .then((resp) => {
         // level 2: check if return status is "success"
         if (resp.status == "success") {
+          this.refreshJwtIfNeeded(resp);
           onSuccess(resp.data);
         } else {
-          // TODO: refresh jwt token
           onError(resp.message);
         }
       })
@@ -77,7 +73,8 @@ export default class HttpService {
   }
 
   static post(url, data, onSuccess, onError) {
-    let token = window.localStorage["jwtToken"];
+    //let token = window.localStorage["jwtToken"];
+    let token = store.getState().auth.token;
     let header = new Headers();
     if (token) {
       header.append("jwt", token);
@@ -92,19 +89,16 @@ export default class HttpService {
       .then((resp) => {
         // level 1: check if status=401, return resp.json
         if (!this.isauthorized(resp)) {
-          if (window.location.pathname !== "/login")
-            window.location.replace("/login");
-          return;
-        } else {
-          return resp.json();
+          if (window.location.pathname !== "/login") window.location.replace("/login");
         }
+        return resp.json();
       })
       .then((resp) => {
         // level 2: check if return status is "success"
         if (resp.status == "success") {
+          this.refreshJwtIfNeeded(resp);
           onSuccess(resp.data);
         } else {
-          // TODO: refresh jwt token
           onError(resp.message);
         }
       })
@@ -114,7 +108,8 @@ export default class HttpService {
   }
 
   static delete(url, onSuccess, onError) {
-    let token = window.localStorage["jwtToken"];
+    //let token = window.localStorage["jwtToken"];
+    let token = store.getState().auth.token;
     let header = new Headers();
     if (token) {
       header.append("jwt", "JWT " + token);
@@ -127,19 +122,16 @@ export default class HttpService {
       .then((resp) => {
         // level 1: check if status=401, return resp.json
         if (!this.isauthorized(resp)) {
-          if (window.location.pathname !== "/login")
-            window.location.replace("/login");
-          return;
-        } else {
-          return resp.json();
+          if (window.location.pathname !== "/login") window.location.replace("/login");
         }
+        return resp.json();
       })
       .then((resp) => {
         // level 2: check if return status is "success"
         if (resp.status == "success") {
+          this.refreshJwtIfNeeded(resp);
           onSuccess(resp.data);
         } else {
-          // TODO: refresh jwt token
           onError(resp.message);
         }
       })
@@ -148,10 +140,17 @@ export default class HttpService {
       });
   }
 
-  static isauthorized(res) {
-    if (res.status === 401) {
+  static isauthorized(resp) {
+    if (resp.status === 401) {
       return false;
     }
     return true;
+  }
+
+  static refreshJwtIfNeeded(resp) {
+    const username = store.getState().auth.username;
+    if (resp.hasOwnProperty("token") && username !== null && username !== "null") {
+      store.dispatch(refresh(resp.token, username));
+    }
   }
 }
