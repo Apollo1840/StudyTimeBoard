@@ -1,5 +1,5 @@
 
-import React, { useState, useContext, createContext} from "react";
+import React, { useState, useContext, createContext, useEffect} from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import store from "../../redux-store";
 import SubmitRecordService from "../../services/SubmitRecordService";
@@ -69,7 +69,37 @@ function RemainingTimeContextProvider(props) {
   const [isClockPlaying, setIsClockPlaying] = useState(false);
   const [workDurationMinutes, setWorkDurationMinutes] = useState(25);
   const [breakDurationMinutes, setBreakDurationMinutes] = useState(5);
+  const [m, setM] = useState(25);
+  const [s, setS] = useState(0);
 
+  useEffect ( () => {
+    setData((data) => setStartTime(data), "startTime")
+    setData((data) => setIsUserBreaking(data == "true"), "isUserBreaking")
+    setData((data) => setClockKey(Number(data)), "ClockKey")
+    setData((data) => setIsClockPlaying(data == "true"), "isClockPlaying")
+    setData((data) => setWorkDurationMinutes(Number(data)), "workDurationMinutes")
+    setData((data) => setBreakDurationMinutes(Number(data)), "breakDurationMinutes")
+    setData((data) => setM(Number(data)), "M")
+    setData((data) => setS(Number(data)), "S")
+  }, [])
+
+  useEffect ( () => {
+    localStorage.setItem("startTime", startTime)
+    localStorage.setItem("isUserBreaking", isUserBreaking)
+    localStorage.setItem("ClockKey", ClockKey)
+    localStorage.setItem("isClockPlaying", isClockPlaying)
+    localStorage.setItem("workDurationMinutes", workDurationMinutes)
+    localStorage.setItem("breakDurationMinutes", breakDurationMinutes)
+    localStorage.setItem("M", m)
+    localStorage.setItem("S", s)
+  })
+
+  function setData(func, key) {
+    const data = localStorage.getItem(key)
+    if (data) {
+      func(data)
+    }
+  }
   return (
     <remainingTimeContext.Provider
       value={{
@@ -85,6 +115,10 @@ function RemainingTimeContextProvider(props) {
         setWorkDurationMinutes,
         breakDurationMinutes,
         setBreakDurationMinutes,
+        m,
+        setM,
+        s,
+        setS
       }}
     >
       {props.children}
@@ -100,7 +134,10 @@ function ClockController() {
     setIsClockPlaying,
     isUserBreaking,
     setIsUserBreaking,
-    isClockPlaying
+    isClockPlaying,
+    setM,
+    setS,
+    workDurationMinutes
   } = useContext(remainingTimeContext);
 
   const handleSwitch = (flag) => {
@@ -114,6 +151,8 @@ function ClockController() {
       setClockKey((prevKey) => prevKey + 1);
       setIsClockPlaying(false);
       setIsUserBreaking(false);
+      setM(workDurationMinutes);
+      setS(0)
     }
   };
   
@@ -133,6 +172,8 @@ function ClockSettings() {
     setIsUserBreaking,
     setWorkDurationMinutes,
     setBreakDurationMinutes,
+    setM,
+    setS
   } = useContext(remainingTimeContext);
   const handleDown = (value,variableSetter) =>{
     return ()=>{
@@ -146,7 +187,7 @@ function ClockSettings() {
     }
   }
   const handleChange = (variableSetter) => {    // change value
-    return (event) => variableSetter(event.target.value);
+    return (event) => variableSetter(Number(event.target.value));
   };
 
   return (
@@ -181,6 +222,8 @@ function ClockSettings() {
         onClick={() => {
           setWorkDurationMinutes(workMinutes);
           setBreakDurationMinutes(breakMinutes);
+          setM(workMinutes);
+          setS(0);
           setIsUserBreaking(false);
           setIsClockPlaying(false);
           setClockKey((prevKey) => prevKey + 1);
@@ -195,9 +238,14 @@ function ClockSettings() {
 }
 
 function RenderTimeWork({ remainingTime }) {
+  const {setM, setS, breakDurationMinutes} = useContext(remainingTimeContext);
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
-
+  setM(minutes);
+  setS(seconds);
+  if (minutes == 0 & seconds == 0) {
+    setM(breakDurationMinutes)
+  }
   return (
     <div>
       <div className="text-center"> work </div>
@@ -208,9 +256,14 @@ function RenderTimeWork({ remainingTime }) {
 
 // in the future might be different with RenderTimeWork, now is the same
 function RenderTimeBreak({ remainingTime }) {
+  const {setM, setS, workDurationMinutes} = useContext(remainingTimeContext);
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
-
+  setM(minutes);
+  setS(seconds);
+  if (minutes == 0 & seconds == 0) {
+    setM(workDurationMinutes)
+  }
   return (
     <div>
       <div className="text-center"> break </div>
@@ -232,6 +285,8 @@ function PomodoroClock() {
     breakDurationMinutes,
     isClockPlaying,
     setIsClockPlaying,
+    m,
+    s,
   } = useContext(remainingTimeContext);
 
   // todo: make a soundService
@@ -264,6 +319,7 @@ function PomodoroClock() {
             {...breakTimerProps}
             key={100 + ClockKey}
             isPlaying={isClockPlaying}
+            initialRemainingTime={m * 60 + s}
             duration={breakDurationMinutes * 60}
             onComplete={breakCompleteHandler}
           >
@@ -274,6 +330,7 @@ function PomodoroClock() {
             {...workTimerProps}
             key={ClockKey}
             isPlaying={isClockPlaying}
+            initialRemainingTime={m * 60 + s}
             duration={workDurationMinutes * 60}
             onComplete={workCompleteHandler}
           >
