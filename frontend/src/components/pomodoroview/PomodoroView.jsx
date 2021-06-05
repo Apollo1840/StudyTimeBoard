@@ -69,18 +69,19 @@ function RemainingTimeContextProvider(props) {
   const [isClockPlaying, setIsClockPlaying] = useState(false);
   const [workDurationMinutes, setWorkDurationMinutes] = useState(25);
   const [breakDurationMinutes, setBreakDurationMinutes] = useState(5);
-  const [m, setM] = useState(25);
-  const [s, setS] = useState(0);
+  const [minute, setMinute] = useState(25);
+  const [second, setSecond] = useState(0);
 
   useEffect ( () => {
-    setData((data) => setStartTime(data), "startTime")
-    setData((data) => setIsUserBreaking(data == "true"), "isUserBreaking")
-    setData((data) => setClockKey(Number(data)), "ClockKey")
-    setData((data) => setIsClockPlaying(data == "true"), "isClockPlaying")
-    setData((data) => setWorkDurationMinutes(Number(data)), "workDurationMinutes")
-    setData((data) => setBreakDurationMinutes(Number(data)), "breakDurationMinutes")
-    setData((data) => setM(Number(data)), "M")
-    setData((data) => setS(Number(data)), "S")
+    loadItemFromLocalStorage("startTime", setStartTime, "string")
+    loadItemFromLocalStorage("isUserBreaking", setIsUserBreaking, "boolean")
+    loadItemFromLocalStorage("ClockKey", setClockKey, "number")
+    loadItemFromLocalStorage("isClockPlaying", setIsClockPlaying, "boolean")
+    loadItemFromLocalStorage("workDurationMinutes", setWorkDurationMinutes, "number")
+    loadItemFromLocalStorage("breakDurationMinutes", setBreakDurationMinutes, "number")
+    loadItemFromLocalStorage("Minute", setMinute, "number")
+    loadItemFromLocalStorage("Second", setSecond, "number")
+    loadItemFromLocalStorage("Second", setSecond, "number") 
   }, [])
 
   useEffect ( () => {
@@ -90,16 +91,31 @@ function RemainingTimeContextProvider(props) {
     localStorage.setItem("isClockPlaying", isClockPlaying)
     localStorage.setItem("workDurationMinutes", workDurationMinutes)
     localStorage.setItem("breakDurationMinutes", breakDurationMinutes)
-    localStorage.setItem("M", m)
-    localStorage.setItem("S", s)
+    localStorage.setItem("Minute", minute)
+    localStorage.setItem("Second", second)
   })
 
-  function setData(func, key) {
-    const data = localStorage.getItem(key)
+  /**
+   * Load a item from the local storage with the key itemName and set the item with the itemSetFunc.
+   * itemType indicates what type the item should be converted to. Since local storage only stores strings,
+   * the item needs to be converted. 
+   * @param {*} itemName 
+   * @param {*} itemSetFunc 
+   * @param {*} itemType ONLY choose from "string", "boolean" and "number"
+   */
+  function loadItemFromLocalStorage(itemName, itemSetFunc, itemType) {
+    const data = localStorage.getItem(itemName)
     if (data) {
-      func(data)
+      if (itemType == "boolean") {
+        itemSetFunc(data == "true")
+      } else if (itemType == "number") {
+        itemSetFunc(Number(data))
+      } else if (itemType == "string") {
+        itemSetFunc(data)
+      }
     }
   }
+  
   return (
     <remainingTimeContext.Provider
       value={{
@@ -115,10 +131,10 @@ function RemainingTimeContextProvider(props) {
         setWorkDurationMinutes,
         breakDurationMinutes,
         setBreakDurationMinutes,
-        m,
-        setM,
-        s,
-        setS
+        minute,
+        setMinute,
+        second,
+        setSecond
       }}
     >
       {props.children}
@@ -135,8 +151,8 @@ function ClockController() {
     isUserBreaking,
     setIsUserBreaking,
     isClockPlaying,
-    setM,
-    setS,
+    setMinute,
+    setSecond,
     workDurationMinutes
   } = useContext(remainingTimeContext);
 
@@ -151,8 +167,8 @@ function ClockController() {
       setClockKey((prevKey) => prevKey + 1);
       setIsClockPlaying(false);
       setIsUserBreaking(false);
-      setM(workDurationMinutes);
-      setS(0)
+      setMinute(workDurationMinutes);
+      setSecond(0)
     }
   };
   
@@ -172,8 +188,8 @@ function ClockSettings() {
     setIsUserBreaking,
     setWorkDurationMinutes,
     setBreakDurationMinutes,
-    setM,
-    setS
+    setMinute,
+    setSecond
   } = useContext(remainingTimeContext);
   const handleDown = (value,variableSetter) =>{
     return ()=>{
@@ -222,8 +238,8 @@ function ClockSettings() {
         onClick={() => {
           setWorkDurationMinutes(workMinutes);
           setBreakDurationMinutes(breakMinutes);
-          setM(workMinutes);
-          setS(0);
+          setMinute(workMinutes);
+          setSecond(0);
           setIsUserBreaking(false);
           setIsClockPlaying(false);
           setClockKey((prevKey) => prevKey + 1);
@@ -238,13 +254,13 @@ function ClockSettings() {
 }
 
 function RenderTimeWork({ remainingTime }) {
-  const {setM, setS, breakDurationMinutes} = useContext(remainingTimeContext);
+  const {setMinute, setSecond, breakDurationMinutes} = useContext(remainingTimeContext);
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
-  setM(minutes);
-  setS(seconds);
+  setMinute(minutes);
+  setSecond(seconds);
   if (minutes == 0 & seconds == 0) {
-    setM(breakDurationMinutes)
+    setMinute(breakDurationMinutes)
   }
   return (
     <div>
@@ -256,13 +272,13 @@ function RenderTimeWork({ remainingTime }) {
 
 // in the future might be different with RenderTimeWork, now is the same
 function RenderTimeBreak({ remainingTime }) {
-  const {setM, setS, workDurationMinutes} = useContext(remainingTimeContext);
+  const {setMinute, setSecond, workDurationMinutes} = useContext(remainingTimeContext);
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
-  setM(minutes);
-  setS(seconds);
+  setMinute(minutes);
+  setSecond(seconds);
   if (minutes == 0 & seconds == 0) {
-    setM(workDurationMinutes)
+    setMinute(workDurationMinutes)
   }
   return (
     <div>
@@ -285,8 +301,8 @@ function PomodoroClock() {
     breakDurationMinutes,
     isClockPlaying,
     setIsClockPlaying,
-    m,
-    s,
+    minute,
+    second,
   } = useContext(remainingTimeContext);
 
   // todo: make a soundService
@@ -319,7 +335,7 @@ function PomodoroClock() {
             {...breakTimerProps}
             key={100 + ClockKey}
             isPlaying={isClockPlaying}
-            initialRemainingTime={m * 60 + s}
+            initialRemainingTime={minute * 60 + second}
             duration={breakDurationMinutes * 60}
             onComplete={breakCompleteHandler}
           >
@@ -330,7 +346,7 @@ function PomodoroClock() {
             {...workTimerProps}
             key={ClockKey}
             isPlaying={isClockPlaying}
-            initialRemainingTime={m * 60 + s}
+            initialRemainingTime={minute * 60 + second}
             duration={workDurationMinutes * 60}
             onComplete={workCompleteHandler}
           >
