@@ -1,5 +1,5 @@
 
-import React, { useState, useContext, createContext} from "react";
+import React, { useState, useContext, createContext, useEffect} from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import store from "../../redux-store";
 import SubmitRecordService from "../../services/SubmitRecordService";
@@ -69,7 +69,52 @@ function RemainingTimeContextProvider(props) {
   const [isClockPlaying, setIsClockPlaying] = useState(false);
   const [workDurationMinutes, setWorkDurationMinutes] = useState(25);
   const [breakDurationMinutes, setBreakDurationMinutes] = useState(5);
+  const [minute, setMinute] = useState(25);
+  const [second, setSecond] = useState(0);
 
+  useEffect ( () => {
+    loadItemFromLocalStorage("startTime", setStartTime, "string")
+    loadItemFromLocalStorage("isUserBreaking", setIsUserBreaking, "boolean")
+    loadItemFromLocalStorage("ClockKey", setClockKey, "number")
+    loadItemFromLocalStorage("isClockPlaying", setIsClockPlaying, "boolean")
+    loadItemFromLocalStorage("workDurationMinutes", setWorkDurationMinutes, "number")
+    loadItemFromLocalStorage("breakDurationMinutes", setBreakDurationMinutes, "number")
+    loadItemFromLocalStorage("Minute", setMinute, "number")
+    loadItemFromLocalStorage("Second", setSecond, "number")
+  }, [])
+
+  useEffect ( () => {
+    localStorage.setItem("startTime", startTime)
+    localStorage.setItem("isUserBreaking", isUserBreaking)
+    localStorage.setItem("ClockKey", ClockKey)
+    localStorage.setItem("isClockPlaying", isClockPlaying)
+    localStorage.setItem("workDurationMinutes", workDurationMinutes)
+    localStorage.setItem("breakDurationMinutes", breakDurationMinutes)
+    localStorage.setItem("Minute", minute)
+    localStorage.setItem("Second", second)
+  })
+
+  /**
+   * Load a item from the local storage with the key itemName and set the item with the itemSetFunc.
+   * itemType indicates what type the item should be converted to. Since local storage only stores strings,
+   * the item needs to be converted. 
+   * @param {*} itemName 
+   * @param {*} itemSetFunc 
+   * @param {*} itemType ONLY choose from "string", "boolean" and "number"
+   */
+  function loadItemFromLocalStorage(itemName, itemSetFunc, itemType) {
+    const data = localStorage.getItem(itemName)
+    if (data) {
+      if (itemType == "boolean") {
+        itemSetFunc(data == "true")
+      } else if (itemType == "number") {
+        itemSetFunc(Number(data))
+      } else if (itemType == "string") {
+        itemSetFunc(data)
+      }
+    }
+  }
+  
   return (
     <remainingTimeContext.Provider
       value={{
@@ -85,6 +130,10 @@ function RemainingTimeContextProvider(props) {
         setWorkDurationMinutes,
         breakDurationMinutes,
         setBreakDurationMinutes,
+        minute,
+        setMinute,
+        second,
+        setSecond
       }}
     >
       {props.children}
@@ -100,7 +149,10 @@ function ClockController() {
     setIsClockPlaying,
     isUserBreaking,
     setIsUserBreaking,
-    isClockPlaying
+    isClockPlaying,
+    setMinute,
+    setSecond,
+    workDurationMinutes
   } = useContext(remainingTimeContext);
 
   const handleSwitch = (flag) => {
@@ -114,6 +166,8 @@ function ClockController() {
       setClockKey((prevKey) => prevKey + 1);
       setIsClockPlaying(false);
       setIsUserBreaking(false);
+      setMinute(workDurationMinutes);
+      setSecond(0)
     }
   };
   
@@ -133,6 +187,8 @@ function ClockSettings() {
     setIsUserBreaking,
     setWorkDurationMinutes,
     setBreakDurationMinutes,
+    setMinute,
+    setSecond
   } = useContext(remainingTimeContext);
   const handleDown = (value,variableSetter) =>{
     return ()=>{
@@ -146,7 +202,7 @@ function ClockSettings() {
     }
   }
   const handleChange = (variableSetter) => {    // change value
-    return (event) => variableSetter(event.target.value);
+    return (event) => variableSetter(Number(event.target.value));
   };
 
   return (
@@ -181,6 +237,8 @@ function ClockSettings() {
         onClick={() => {
           setWorkDurationMinutes(workMinutes);
           setBreakDurationMinutes(breakMinutes);
+          setMinute(workMinutes);
+          setSecond(0);
           setIsUserBreaking(false);
           setIsClockPlaying(false);
           setClockKey((prevKey) => prevKey + 1);
@@ -195,9 +253,14 @@ function ClockSettings() {
 }
 
 function RenderTimeWork({ remainingTime }) {
+  const {setMinute, setSecond, breakDurationMinutes} = useContext(remainingTimeContext);
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
-
+  setMinute(minutes);
+  setSecond(seconds);
+  if (minutes == 0 & seconds == 0) {
+    setMinute(breakDurationMinutes)
+  }
   return (
     <div>
       <div className="text-center"> work </div>
@@ -208,9 +271,14 @@ function RenderTimeWork({ remainingTime }) {
 
 // in the future might be different with RenderTimeWork, now is the same
 function RenderTimeBreak({ remainingTime }) {
+  const {setMinute, setSecond, workDurationMinutes} = useContext(remainingTimeContext);
   const minutes = Math.floor(remainingTime / 60);
   const seconds = remainingTime % 60;
-
+  setMinute(minutes);
+  setSecond(seconds);
+  if (minutes == 0 & seconds == 0) {
+    setMinute(workDurationMinutes)
+  }
   return (
     <div>
       <div className="text-center"> break </div>
@@ -232,6 +300,8 @@ function PomodoroClock() {
     breakDurationMinutes,
     isClockPlaying,
     setIsClockPlaying,
+    minute,
+    second,
   } = useContext(remainingTimeContext);
 
   // todo: make a soundService
@@ -264,6 +334,7 @@ function PomodoroClock() {
             {...breakTimerProps}
             key={100 + ClockKey}
             isPlaying={isClockPlaying}
+            initialRemainingTime={minute * 60 + second}
             duration={breakDurationMinutes * 60}
             onComplete={breakCompleteHandler}
           >
@@ -274,6 +345,7 @@ function PomodoroClock() {
             {...workTimerProps}
             key={ClockKey}
             isPlaying={isClockPlaying}
+            initialRemainingTime={minute * 60 + second}
             duration={workDurationMinutes * 60}
             onComplete={workCompleteHandler}
           >
