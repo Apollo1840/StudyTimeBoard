@@ -81,7 +81,6 @@ function RemainingTimeContextProvider(props) {
     loadItemFromLocalStorage("breakDurationMinutes", setBreakDurationMinutes, "number")
     loadItemFromLocalStorage("Minute", setMinute, "number")
     loadItemFromLocalStorage("Second", setSecond, "number")
-    loadItemFromLocalStorage("Second", setSecond, "number") 
   }, [])
 
   useEffect ( () => {
